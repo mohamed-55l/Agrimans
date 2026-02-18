@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.EquipementController">
+
+    <children>
+
+        <Label text="Gestion Equipements"
+               layoutX="200"
+               layoutY="20"/>
+
+        <TextField fx:id="tfNom"
+                   promptText="Nom"
+                   layoutX="50"
+                   layoutY="80"/>
+
+        <TextField fx:id="tfType"
+                   promptText="Type"
+                   layoutX="50"
+                   layoutY="120"/>
+
+        <TextField fx:id="tfPrix"
+                   promptText="Prix"
+                   layoutX="50"
+                   layoutY="160"/>
+
+        <Button text="Ajouter"
+                layoutX="50"
+                layoutY="200"
+                onAction="#ajouterEquipement"/>
+
+    </children>
+</AnchorPane>
