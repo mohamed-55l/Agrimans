@@ -84,6 +84,7 @@ public class CultureService {
         }
     }
 
+
     // DELETE
     public void supprimerCulture(int id) {
         String sql = "DELETE FROM culture WHERE id_culture=?";
