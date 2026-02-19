@@ -1,0 +1,21 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.parcelle_culture.contoller.MainController">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Ajouter Culture " onAction="#loadAjouter"/>
+            <Button text="Liste des Cultures" onAction="#loadListe"/>
+            <Button text="Ajouter Parcelle " onAction="#loadAjouterP"/>
+            <Button text="Liste des Parcelles" onAction="#loadListeP"/>
+        </HBox>
+    </top>
+
+    <center>
+        <AnchorPane fx:id="contentArea"/>
+    </center>
+
+</BorderPane>

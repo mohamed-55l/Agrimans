@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.parcelle_culture.contoller.ModifierParcelleController">
+
+    <children>
+        <VBox spacing="15" alignment="CENTER"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
+
+            <Label text="Modifier Parcelle"
+                   style="-fx-font-size:18px; -fx-font-weight:bold;" />
+
+            <GridPane hgap="10" vgap="10">
+
+                <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="nomField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Superficie :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="superficieField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Localisation :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="localisationField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Type Sol :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="typeSolField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            </GridPane>
+
+            <Button text="Enregistrer"
+                    onAction="#modifierParcelle"/>
+
+        </VBox>
+    </children>
+</AnchorPane>
