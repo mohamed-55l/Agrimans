@@ -28,7 +28,6 @@ public class Add_Culture_Controller {
         etatCultureCombo.getItems().addAll(
                 "En croissance",
                 "Récoltée",
-                "Malade",
                 "En préparation"
         );
 
