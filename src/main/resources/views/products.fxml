@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefWidth="1400" prefHeight="800"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controller.ProductController"
+            stylesheets="@../../java/org/example/styles/style.css">
+
+    <!-- Header -->
+    <top>
+        <VBox style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);">
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20 30;">
+                <VBox>
+                    <Label text="Agrimans Marketplace"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                    <Label text="Fresh farm products directly from local suppliers"
+                           style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <!-- User Info & Cart -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Label fx:id="userNameLabel" text="Welcome, Guest"
+                           style="-fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                    <Button text="🛒 Cart" styleClass="button-primary" onAction="#openCart" prefWidth="100"/>
+                    <MenuButton text="👤 Account" styleClass="button-secondary">
+                        <items>
+                            <MenuItem text="My Profile"/>
+                            <MenuItem text="My Orders"/>
+                            <MenuItem text="My Inventory" onAction="#switchToSellerTab"/>
+                            <MenuItem text="Settings"/>
+                            <MenuItem text="Logout" onAction="#handleLogout"/>
+                        </items>
+                    </MenuButton>
+                </HBox>
+            </HBox>
+
+            <!-- Search Bar -->
+            <HBox spacing="15" style="-fx-padding: 0 30 20 30;">
+                <HBox styleClass="search-box" HBox.hgrow="ALWAYS">
+                    <Label text="🔍" style="-fx-font-size: 16px;"/>
+                    <TextField fx:id="searchField"
+                               promptText="Search products, suppliers..."
+                               HBox.hgrow="ALWAYS"
+                               style="-fx-background-color: transparent;"/>
+                </HBox>
+                <ComboBox fx:id="categoryFilter"
+                          promptText="All Categories"
+                          prefWidth="150"
+                          styleClass="filter-combo"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Center Content with Tabs -->
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: #F5F5F5;">
+            <!-- Buyer Tab - Marketplace -->
+            <Tab text="🛒 Marketplace" closable="false">
+                <content>
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: #F5F5F5; -fx-border-color: transparent;">
+                        <FlowPane fx:id="productsContainer"
+                                  prefWrapLength="1200"
+                                  style="-fx-background-color: #F5F5F5; -fx-padding: 20;"/>
+                    </ScrollPane>
+                </content>
+            </Tab>
+
+            <!-- Seller Tab - My Inventory -->
+            <Tab fx:id="sellerTab" text="📦 My Inventory" closable="false">
+                <content>
+                    <BorderPane>
+                        <top>
+                            <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: white;">
+                                <HBox alignment="CENTER_LEFT" spacing="20">
+                                    <Label text="My Products"
+                                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                                    <Pane HBox.hgrow="ALWAYS"/>
+                                    <Button text="➕ Add New Product"
+                                            styleClass="button-primary"
+                                            onAction="#showAddProductForm"/>
+                                </HBox>
+
+                                <!-- Seller Search -->
+                                <HBox styleClass="search-box" HBox.hgrow="ALWAYS">
+                                    <Label text="🔍" style="-fx-font-size: 16px;"/>
+                                    <TextField fx:id="sellerSearchField"
+                                               promptText="Search your products..."
+                                               HBox.hgrow="ALWAYS"
+                                               style="-fx-background-color: transparent;"/>
+                                </HBox>
+                            </VBox>
+                        </top>
+
+                        <center>
+                            <ScrollPane fitToWidth="true" style="-fx-background-color: #F5F5F5;">
+                                <FlowPane fx:id="sellerProductsContainer"
+                                          prefWrapLength="1200"
+                                          style="-fx-background-color: #F5F5F5; -fx-padding: 20;"/>
+                            </ScrollPane>
+                        </center>
+                    </BorderPane>
+                </content>
+            </Tab>
+        </TabPane>
+    </center>
+
+    <!-- Add Product Form (Hidden by default) -->
+    <bottom>
+        <VBox fx:id="addProductForm" managed="false" visible="false"
+              style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 16;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 10);
+                     -fx-border-color: #E0E0E0; -fx-border-width: 1 0 0 0;">
+
+            <Label text="➕ Add New Product"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2E3D27; -fx-padding: 0 0 20 0;"/>
+
+            <GridPane hgap="15" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="30"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="30"/>
+                </columnConstraints>
+
+                <!-- Row 1 -->
+                <Label text="Product Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="nameField" promptText="e.g., Organic Tomatoes" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Category:" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="categoryField" promptText="Select category" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+                <!-- Row 2 -->
+                <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="descField" promptText="Brief description" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+
+                <!-- Row 3 -->
+                <Label text="Supplier:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="supplierField" promptText="Your farm name" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Price ($):" GridPane.rowIndex="2" GridPane.columnIndex="2" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="priceField" promptText="0.00" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+                <!-- Row 4 -->
+                <Label text="Quantity (kg):" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="quantityField" promptText="0" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Expiry Date:" GridPane.rowIndex="3" GridPane.columnIndex="2" style="-fx-font-weight: bold;"/>
+                <DatePicker fx:id="expiryDatePicker" promptText="Select date" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+
+                <!-- Row 5 -->
+                <Label text="Image URL:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="imageField" promptText="Optional" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+            </GridPane>
+
+            <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding: 20 0 0 0;">
+                <Button text="Cancel" styleClass="button-secondary" onAction="#hideAddProductForm" prefWidth="100"/>
+                <Button text="➕ Add Product" styleClass="button-primary" onAction="#handleAddProduct" prefWidth="150"/>
+            </HBox>
+
+            <Label text="* All fields except Image URL are required"
+                   style="-fx-text-fill: #888; -fx-font-size: 11px; -fx-padding: 10 0 0 0;"/>
+        </VBox>
+    </bottom>
+</BorderPane>

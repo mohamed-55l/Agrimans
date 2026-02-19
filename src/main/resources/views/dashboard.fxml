@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<BorderPane prefWidth="1400" prefHeight="800"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controller.DashboardController"
+            stylesheets="@../../java/org/example/styles/style.css">
+
+    <!-- Left Sidebar -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="280" spacing="10">
+            <padding>
+                <Insets top="30" right="20" bottom="30" left="20"/>
+            </padding>
+
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="AGRIMANS" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F0E8D8;"/>
+            </HBox>
+
+            <Separator style="-fx-background-color: rgba(240,232,216,0.2); -fx-padding: 10 0 10 0;"/>
+
+            <!-- Navigation Items -->
+            <VBox spacing="5">
+                <Button text="📊 Dashboard" styleClass="nav-item, active"/>
+                <Button text="🐄 Animals" styleClass="nav-item"/>
+                <Button text="🌾 Feed Stock" styleClass="nav-item"/>
+                <Button text="📝 Feeding Records" styleClass="nav-item"/>
+                <Button text="📦 Orders" styleClass="nav-item"/>
+                <Button text="📈 Reports" styleClass="nav-item"/>
+                <Button text="⚙️ Settings" styleClass="nav-item"/>
+            </VBox>
+
+            <Separator style="-fx-background-color: rgba(240,232,216,0.2); -fx-padding: 10 0 10 0;"/>
+
+            <!-- User Profile -->
+            <VBox spacing="10" style="-fx-padding: 20 0 0 0;">
+                <Label text="Farm Co." style="-fx-text-fill: #F0E8D8; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="Organic Farm License #12345" style="-fx-text-fill: #7DBF6C; -fx-font-size: 12px;"/>
+                <Button text="🚪 Logout" styleClass="nav-item" onAction="#handleLogout"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Center Content -->
+    <center>
+        <VBox style="-fx-background-color: #F5F5F5;">
+            <!-- Header -->
+            <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+                <VBox>
+                    <Label text="Feed Stock Management" styleClass="header-title"/>
+                    <Label text="Manage your farm's feed inventory" styleClass="header-subtitle"/>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <!-- Search Bar -->
+                <HBox styleClass="search-box" spacing="10">
+                    <Label text="🔍"/>
+                    <TextField promptText="Search feed..." style="-fx-background-color: transparent;"/>
+                </HBox>
+
+                <!-- Filter Chips -->
+                <HBox spacing="10">
+                    <Button text="All Types" styleClass="filter-chip, selected"/>
+                    <Button text="Grains" styleClass="filter-chip"/>
+                    <Button text="Hay" styleClass="filter-chip"/>
+                    <Button text="Forage" styleClass="filter-chip"/>
+                    <Button text="Protein" styleClass="filter-chip"/>
+                </HBox>
+
+                <!-- Add New Button -->
+                <Button text="+ Add New Feed" styleClass="button-primary"/>
+            </HBox>
+
+            <!-- Main Content Area -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <VBox spacing="30" style="-fx-padding: 30;">
+
+                    <!-- Stats Overview -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Total Feed" styleClass="label"/>
+                            <Label text="3,250 kg" styleClass="value"/>
+                            <Label text="↑ 12% from last month" style="-fx-text-fill: #4B8B3B; -fx-font-size: 12px;"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Active Suppliers" styleClass="label"/>
+                            <Label text="8" styleClass="value"/>
+                            <Label text="4 local, 4 regional" style="-fx-text-fill: #666; -fx-font-size: 12px;"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Expiring Soon" styleClass="label"/>
+                            <Label text="3 items" styleClass="value" style="-fx-text-fill: #FF6B6B;"/>
+                            <Label text="Next 30 days" style="-fx-text-fill: #666; -fx-font-size: 12px;"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Monthly Cost" styleClass="label"/>
+                            <Label text="$2,450" styleClass="value"/>
+                            <Label text="↓ 5% from last month" style="-fx-text-fill: #4B8B3B; -fx-font-size: 12px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Feed Grid - Like your image -->
+                    <Label text="Feed Inventory" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+
+                    <GridPane styleClass="feed-grid" hgap="20" vgap="20">
+                        <!-- Row 1 -->
+                        <HBox styleClass="feed-item" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="GRAINS" styleClass="type-badge"/>
+                                    <Label text="500.0 kg" styleClass="weight"/>
+                                </HBox>
+                                <Label text="Corn Meal" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <Label text="Farm Co." style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="$45.50" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                                    <Pane HBox.hgrow="ALWAYS"/>
+                                    <Label text="Expires: May 16, 2026" styleClass="expiry"/>
+                                </HBox>
+                                <ProgressBar progress="0.75" prefWidth="200"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox styleClass="feed-item" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="HAY" styleClass="type-badge"/>
+                                    <Label text="2000.0 kg" styleClass="weight"/>
+                                </HBox>
+                                <Label text="Fresh Hay" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <Label text="Local Farm" style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="$0.50/kg" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                                    <Pane HBox.hgrow="ALWAYS"/>
+                                    <Label text="Expires: Jun 15, 2026" styleClass="expiry"/>
+                                </HBox>
+                                <ProgressBar progress="0.4" prefWidth="200"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Add more feed items following the pattern from your image -->
+                    </GridPane>
+
+                    <!-- Recent Activity -->
+                    <Label text="Recent Activity" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+
+                    <TableView prefHeight="200">
+                        <columns>
+                            <TableColumn text="Date" prefWidth="150"/>
+                            <TableColumn text="Feed Type" prefWidth="200"/>
+                            <TableColumn text="Quantity" prefWidth="100"/>
+                            <TableColumn text="Action" prefWidth="150"/>
+                            <TableColumn text="Supplier" prefWidth="200"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>
