@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.dashboard.controllers.DashboardController"
+      spacing="25"
+      style="-fx-background-color: transparent;">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="📊 Tableau de Bord"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27; -fx-font-family: 'Segoe UI';"/>
+
+    <!-- Section Équipements -->
+    <VBox spacing="10">
+        <Label text="Équipements"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B; -fx-font-family: 'Segoe UI';"/>
+
+        <TableView fx:id="tableEquipement"
+                   prefHeight="200"
+                   style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+            <columns>
+                <!-- COLONNE ID SUPPRIMÉE -->
+                <TableColumn fx:id="colEquipNom" text="Nom" prefWidth="180"/>
+                <TableColumn fx:id="colEquipType" text="Type" prefWidth="180"/>
+                <TableColumn fx:id="colEquipPrix" text="Prix (DT)" prefWidth="120"/>
+                <TableColumn fx:id="colEquipEtat" text="État" prefWidth="120"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Section Reviews -->
+    <VBox spacing="10">
+        <Label text="Reviews"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B; -fx-font-family: 'Segoe UI';"/>
+
+        <TableView fx:id="tableReview"
+                   prefHeight="200"
+                   style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+            <columns>
+                <!-- COLONNE ID SUPPRIMÉE -->
+                <TableColumn fx:id="colReviewCommentaire" text="Commentaire" prefWidth="300"/>
+                <TableColumn fx:id="colReviewNote" text="Note/5" prefWidth="100"/>
+                <TableColumn fx:id="colReviewEquipement" text="Équipement" prefWidth="180"/>
+                <TableColumn fx:id="colReviewDate" text="Date" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

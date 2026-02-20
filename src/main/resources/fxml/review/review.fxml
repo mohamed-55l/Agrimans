@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.review.controllers.ReviewController"
+      spacing="20"
+      style="-fx-background-color: transparent;">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="⭐ Gestion des Reviews"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27; -fx-font-family: 'Segoe UI';"/>
+
+    <!-- Tableau des reviews -->
+    <TableView fx:id="tableReview"
+               prefHeight="250"
+               style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+        <columns>
+            <TableColumn fx:id="colCommentaire" text="Commentaire" prefWidth="300"/>
+            <TableColumn fx:id="colNote" text="Note/5" prefWidth="100"/>
+            <TableColumn fx:id="colEquipement" text="Équipement" prefWidth="200"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Formulaire avec validation -->
+    <TitledPane text="Nouvelle Review" expanded="true"
+                style="-fx-text-fill: #4B8B3B; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';">
+
+        <GridPane hgap="15" vgap="10" style="-fx-padding: 15;">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100"/>
+                <ColumnConstraints minWidth="300"/>
+                <ColumnConstraints minWidth="200"/>
+            </columnConstraints>
+
+            <!-- Ligne 0: Commentaire -->
+            <Label text="Commentaire:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <TextField fx:id="tfCommentaire"
+                       GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       prefWidth="300"
+                       promptText="Votre commentaire (5-500 caractères)"
+                       style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblCommentaireError"
+                   GridPane.rowIndex="0" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "
+                   wrapText="true"/>
+
+            <!-- Ligne 1: Note -->
+            <Label text="Note (0-5):" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <TextField fx:id="tfNote"
+                       GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       prefWidth="100"
+                       promptText="Ex: 4.5"
+                       style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblNoteError"
+                   GridPane.rowIndex="1" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "/>
+
+            <!-- Ligne 2: Équipement -->
+            <Label text="Équipement:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <ComboBox fx:id="cbEquipement"
+                      GridPane.rowIndex="2" GridPane.columnIndex="1"
+                      prefWidth="300"
+                      promptText="Sélectionner un équipement"
+                      style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblEquipementError"
+                   GridPane.rowIndex="2" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "/>
+
+            <!-- Ligne 3: Date (automatique) -->
+            <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <Label text="(Automatique - aujourd'hui)"
+                   GridPane.rowIndex="3" GridPane.columnIndex="1"
+                   style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;"/>
+
+        </GridPane>
+    </TitledPane>
+
+    <!-- Bouton d'action -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="➕ Ajouter Review"
+                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 30;"
+                onAction="#ajouterReview"
+                onMouseEntered="#handleButtonEnter"
+                onMouseExited="#handleButtonExit"
+                prefWidth="200"/>
+    </HBox>
+
+    <!-- Indicateurs de validation -->
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="✅ Champs obligatoires"
+               style="-fx-text-fill: #4B8B3B; -fx-font-size: 11px;"/>
+        <Label text="⚠️ Note entre 0 et 5"
+               style="-fx-text-fill: #e67e22; -fx-font-size: 11px;"/>
+        <Label text="📝 Commentaire: 5-500 caractères"
+               style="-fx-text-fill: #3498db; -fx-font-size: 11px;"/>
+    </HBox>
+
+</VBox>
