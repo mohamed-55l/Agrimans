@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.parcelle_culture.contoller.ListeCultureController">
+
+    <children>
+
+        <VBox spacing="15"
+              AnchorPane.topAnchor="10"
+              AnchorPane.bottomAnchor="10"
+              AnchorPane.leftAnchor="10"
+              AnchorPane.rightAnchor="10">
+
+            <Label text="Liste des Cultures"
+                   style="-fx-font-size:18px; -fx-font-weight:bold;" />
+
+            <HBox spacing="10">
+                <Button text="Actualiser" onAction="#refreshTable"/>
+                <Button text="Modifier" onAction="#openModifier"/>
+                <Button text="Supprimer" onAction="#supprimerCulture"/>
+            </HBox>
+
+            <TableView fx:id="tableCulture" VBox.vgrow="ALWAYS">
+
+                <columns>
+
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="120"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+                    <TableColumn fx:id="colDatePlantation" text="Date Plantation" prefWidth="130"/>
+                    <TableColumn fx:id="colDateRecolte" text="Date Récolte" prefWidth="130"/>
+                    <TableColumn fx:id="colEtat" text="État" prefWidth="120"/>
+                    <TableColumn fx:id="colParcelle" text="Parcelle ID" prefWidth="100"/>
+
+                </columns>
+
+            </TableView>
+
+
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>

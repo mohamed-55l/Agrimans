@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.parcelle_culture.contoller.AjouterParcelleController"
+            styleClass="background">
+
+    <children>
+
+        <!-- CARD -->
+        <VBox spacing="20"
+              alignment="CENTER"
+              maxWidth="500"
+              styleClass="card"
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+
+            <Label text="🌾 Ajouter une Parcelle"
+                   styleClass="title"/>
+
+            <GridPane hgap="15" vgap="18" alignment="CENTER">
+
+                <columnConstraints>
+                    <!-- Colonne des labels -->
+                    <ColumnConstraints minWidth="140" maxWidth="160"/>
+
+                    <!-- Colonne des champs -->
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Nom :"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="nomField"
+                           promptText="Nom de la parcelle"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Superficie (ha) :"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="superficieField"
+                           promptText="Ex: 12.5"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Localisation :"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="localisationField"
+                           promptText="Ville ou région"
+                           GridPane.rowIndex="2"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Type de sol :"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="typeSolField"
+                           promptText="Argileux, Sablonneux..."
+                           GridPane.rowIndex="3"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Utilisateur ID :"
+                       GridPane.rowIndex="4"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="utilisateurIdField"
+                           promptText="ID utilisateur"
+                           GridPane.rowIndex="4"
+                           GridPane.columnIndex="1"/>
+
+            </GridPane>
+
+
+            <Button text="Ajouter Parcelle"
+                    styleClass="btn-primary"
+                    onAction="#ajouterParcelle"/>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>

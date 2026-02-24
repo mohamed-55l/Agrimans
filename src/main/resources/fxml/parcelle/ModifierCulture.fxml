@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.parcelle_culture.contoller.ModifierCultureController">
+
+    <children>
+
+        <VBox spacing="15"
+              alignment="CENTER"
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+
+            <Label text="Modifier une Culture"
+                   style="-fx-font-size:18px; -fx-font-weight:bold;" />
+
+            <GridPane hgap="10" vgap="10">
+
+                <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="nomField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Type Culture :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="typeCultureField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Date Plantation :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="datePlantationPicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Date Récolte Prévue :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="dateRecoltePicker" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="État Culture :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="etatCultureCombo" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            </GridPane>
+
+            <Button text="Enregistrer Modification"
+                    onAction="#modifierCulture"/>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>
