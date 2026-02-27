@@ -9,17 +9,19 @@ public class Equipement  {
     private String type;
     private float prix;
     private String disponibilite;
+    private int userId;        // 👈 Pour la base de données
 
+    // Constructeurs
     public Equipement() {}
 
-    public Equipement(int id, String nom,
-                      String type, float prix,
-                      String disponibilite) {
+    public Equipement(int id, String nom, String type, float prix,
+                      String disponibilite, int userId) {
         this.id = id;
         this.nom = nom;
         this.type = type;
         this.prix = prix;
         this.disponibilite = disponibilite;
+        this.userId = userId;
     }
 
     public Equipement(String nom,
@@ -50,6 +52,11 @@ public class Equipement  {
     public void setDisponibilite(String disponibilite) {
         this.disponibilite = disponibilite;
     }
+
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
+
+
 
 
 

@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ReviewController {
 
@@ -282,5 +283,67 @@ public class ReviewController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // Dans ReviewController.java - AJOUTER ces méthodes
+    @FXML
+    void modifierReview() {
+        Review selected = tableReview.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Attention", "Veuillez sélectionner une review");
+            return;
+        }
+
+        // Pré-remplir le formulaire
+        tfCommentaire.setText(selected.getCommentaire());
+        tfNote.setText(String.valueOf(selected.getNote()));
+        cbEquipement.setValue(selected.getEquipement());
+
+        // Changer le bouton pour "Modifier"
+        // Vous pouvez ajouter un bouton dédié ou changer dynamiquement
+    }
+
+    @FXML
+    void supprimerReview() {
+        Review selected = tableReview.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Attention", "Veuillez sélectionner une review");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmation");
+        confirm.setHeaderText("Supprimer la review");
+        confirm.setContentText("Voulez-vous vraiment supprimer cette review ?");
+
+        if (confirm.showAndWait().get() == ButtonType.OK) {
+            try {
+                reviewService.delete(selected.getId());
+                loadReviews();
+                clearFields();
+                showAlert("Succès", "Review supprimée");
+            } catch (SQLException e) {
+                showAlert("Erreur", "Erreur lors de la suppression");
+            }
+        }
+    }
+
+    // Ajouter une méthode pour charger les statistiques
+    void loadStatistics() {
+        try {
+            List<Review> allReviews = reviewService.getAll();
+            float averageNote = (float) allReviews.stream()
+                    .mapToDouble(Review::getNote)
+                    .average()
+                    .orElse(0);
+
+            System.out.println("Note moyenne: " + averageNote);
+            System.out.println("Nombre total de reviews: " + allReviews.size());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -12,6 +12,7 @@ public class Review {
     private Date dateReview;  // SQL Date
     private int equipementId;
     private Equipement equipement;  // Pour la jointure
+    private int userId;
 
     // Constructeurs
     public Review() {}
@@ -89,5 +90,12 @@ public class Review {
                 ", dateReview=" + dateReview +
                 ", equipementId=" + equipementId +
                 '}';
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

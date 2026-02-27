@@ -14,14 +14,15 @@ public class ReviewService implements IService<Review> {
     Connection cnx = Mydb.getInstance().getCnx();
 
     public void create(Review r) throws SQLException {
-        String sql = "INSERT INTO review(commentaire, note, date_review, equipement_id) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO review(commentaire, note, date_review, equipement_id, user_id) " +
+                "VALUES(?, ?, ?, ?, ?)";
 
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, r.getCommentaire());
         ps.setFloat(2, r.getNote());  // float au lieu de int
         ps.setDate(3, r.getDateReview());
         ps.setInt(4, r.getEquipementId());
-
+        ps.setInt(5, r.getUserId());
         ps.executeUpdate();
         System.out.println("✅ Review ajoutée");
     }
@@ -138,5 +139,39 @@ public class ReviewService implements IService<Review> {
         return list;
     }
 
+
+    // Dans ReviewService.java - AJOUTER
+    public List<Review> getByEquipementId(int equipementId) throws SQLException {
+        List<Review> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM review WHERE equipement_id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, equipementId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Review r = new Review();
+            r.setId(rs.getInt("id"));
+            r.setCommentaire(rs.getString("commentaire"));
+            r.setNote(rs.getFloat("note"));
+            r.setDateReview(rs.getDate("date_review"));
+            r.setEquipementId(rs.getInt("equipement_id"));
+            list.add(r);
+        }
+
+        return list;
+    }
+
+    public double getAverageNoteByEquipement(int equipementId) throws SQLException {
+        String sql = "SELECT AVG(note) as avg_note FROM review WHERE equipement_id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, equipementId);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getDouble("avg_note");
+        }
+        return 0;
+    }
 
 }
