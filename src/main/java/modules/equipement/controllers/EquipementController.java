@@ -10,8 +10,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import modules.review.models.Review;
+import modules.review.services.ReviewService;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class EquipementController {
@@ -227,6 +230,7 @@ public class EquipementController {
             e.setType(tfType.getText().trim());
             e.setPrix(Float.parseFloat(tfPrix.getText()));
             e.setDisponibilite(cbEtat.getValue());
+            e.setUserId(1);
 
             service.create(e);
             loadData();
@@ -273,32 +277,44 @@ public class EquipementController {
     }
 
     @FXML
+    void handleTableClick(MouseEvent event) {
+        if (event.getClickCount() == 2) { // Double-clic pour éditer
+            modifierEquipement();
+        }
+    }
+
+    @FXML
     void supprimerEquipement() {
         Equipement selected = tableEquipement.getSelectionModel().getSelectedItem();
-
         if (selected == null) {
             showAlert("Attention", "Veuillez sélectionner un équipement");
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmation");
-        confirm.setHeaderText("Supprimer l'équipement");
-        confirm.setContentText("Voulez-vous vraiment supprimer " + selected.getNom() + " ?");
+        // Vérifier d'abord si l'équipement a des reviews
+        try {
+            ReviewService reviewService = new ReviewService();
+            List<Review> reviews = reviewService.getByEquipementId(selected.getId());
 
-        if (confirm.showAndWait().get() == ButtonType.OK) {
-            try {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmation de suppression");
+
+            if (!reviews.isEmpty()) {
+                confirm.setHeaderText("⚠️ Cet équipement a " + reviews.size() + " review(s) associée(s)");
+                confirm.setContentText("La suppression supprimera également toutes ses reviews. Continuer ?");
+            } else {
+                confirm.setHeaderText("Supprimer l'équipement");
+                confirm.setContentText("Voulez-vous vraiment supprimer " + selected.getNom() + " ?");
+            }
+
+            if (confirm.showAndWait().get() == ButtonType.OK) {
                 service.delete(selected.getId());
                 loadData();
                 clearFields();
                 showAlert("Succès", "Équipement supprimé");
-            } catch (SQLException e) {
-                if (e.getMessage().contains("foreign key")) {
-                    showAlert("Erreur", "Impossible de supprimer : l'équipement a des reviews associées");
-                } else {
-                    showAlert("Erreur", "Erreur lors de la suppression");
-                }
             }
+        } catch (SQLException e) {
+            showAlert("Erreur", "Impossible de vérifier les reviews associées");
         }
     }
 

@@ -14,6 +14,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class DashboardController {
 
@@ -31,6 +32,33 @@ public class DashboardController {
 
     private EquipementService equipementService = new EquipementService();
     private ReviewService reviewService = new ReviewService();
+
+    // Dans DashboardController.java - AJOUTER
+    @FXML
+    private Label lblTotalEquipements;
+    @FXML
+    private Label lblTotalReviews;
+    @FXML
+    private Label lblNoteMoyenne;
+
+    private void loadStatistics() {
+        try {
+            List<Equipement> equipements = equipementService.getAll();
+            List<Review> reviews = reviewService.getAll();
+
+            lblTotalEquipements.setText(String.valueOf(equipements.size()));
+            lblTotalReviews.setText(String.valueOf(reviews.size()));
+
+            double moyenne = reviews.stream()
+                    .mapToDouble(Review::getNote)
+                    .average()
+                    .orElse(0);
+            lblNoteMoyenne.setText(String.format("%.1f/5 ⭐", moyenne));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void initialize() {
