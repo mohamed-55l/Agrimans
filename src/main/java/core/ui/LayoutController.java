@@ -15,10 +15,19 @@ public class LayoutController {
     @FXML
     private StackPane contentArea;
 
+    // À remplacer par SessionManager quand dispo
+    private boolean isAdmin = true; // Mettre false pour tester USER
+    private String currentUserRole = "ADMIN"; // ou "USER"
+
     @FXML
     public void initialize() {
         try {
-            loadPage("/fxml/dashboard/dashboard.fxml");  // ← غير هنا
+            // Charger le bon dashboard selon le rôle
+            if (isAdmin) {
+                loadPage("/fxml/dashboard/admin_dashboard.fxml");
+            } else {
+                loadPage("/fxml/dashboard/user_dashboard.fxml");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible de charger le dashboard");
@@ -51,7 +60,11 @@ public class LayoutController {
     @FXML
     void goDashboard() {
         try {
-            loadPage("/fxml/dashboard/dashboard.fxml");  // ← غير هنا
+            if (isAdmin) {
+                loadPage("/fxml/dashboard/admin_dashboard.fxml");
+            } else {
+                loadPage("/fxml/dashboard/user_dashboard.fxml");
+            }
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger le dashboard");
         }
@@ -60,7 +73,14 @@ public class LayoutController {
     @FXML
     void goEquipement() {
         try {
-            loadPage("/fxml/equipement/equipement.fxml");  // ← غير هنا
+            // Pour USER: aller vers mes équipements
+            // Pour ADMIN: aller vers gestion complète
+            if (isAdmin) {
+                loadPage("/fxml/equipement/equipement.fxml");
+            } else {
+                // Créer un fichier mes_equipements.fxml pour USER
+                loadPage("/fxml/equipement/mes_equipements.fxml");
+            }
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger la gestion des équipements");
         }
@@ -69,7 +89,12 @@ public class LayoutController {
     @FXML
     void goReview() {
         try {
-            loadPage("/fxml/review/review.fxml");  // ← غير هنا
+            if (isAdmin) {
+                loadPage("/fxml/review/review.fxml");
+            } else {
+                // Vue simplifiée pour USER
+                loadPage("/fxml/review/mes_reviews.fxml");
+            }
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger la gestion des reviews");
         }

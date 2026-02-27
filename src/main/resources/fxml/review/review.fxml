@@ -102,12 +102,6 @@
                 onMouseExited="#handleButtonExit"
                 prefWidth="120"/>
 
-        <Button text="✏️ Modifier"
-                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
-                onAction="#modifierReview"
-                onMouseEntered="#handleButtonEnter"
-                onMouseExited="#handleButtonExit"
-                prefWidth="120"/>
 
         <Button text="🗑️ Supprimer"
                 style="-fx-background-color: #2E3D27; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"

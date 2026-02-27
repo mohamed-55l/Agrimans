@@ -44,6 +44,7 @@ public class ReviewService implements IService<Review> {
             r.setNote(rs.getFloat("note"));  // float
             r.setDateReview(rs.getDate("date_review"));
             r.setEquipementId(rs.getInt("equipement_id"));
+            r.setUserId(rs.getInt("user_id"));
 
             // Créer l'objet Equipement pour la jointure
             Equipement e = new Equipement();
@@ -172,6 +173,43 @@ public class ReviewService implements IService<Review> {
             return rs.getDouble("avg_note");
         }
         return 0;
+    }
+
+    public List<Review> getByUserId(int userId) throws SQLException {
+        List<Review> list = new ArrayList<>();
+
+        String sql = "SELECT r.*, e.id as e_id, e.nom as e_nom, e.type as e_type, e.prix as e_prix, e.disponibilite as e_dispo " +
+                "FROM review r " +
+                "JOIN equipement e ON r.equipement_id = e.id " +
+                "WHERE r.user_id = ?";  // ← Filtrer par user_id
+
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Review r = new Review();
+            r.setId(rs.getInt("id"));
+            r.setCommentaire(rs.getString("commentaire"));
+            r.setNote(rs.getFloat("note"));
+            r.setDateReview(rs.getDate("date_review"));
+            r.setEquipementId(rs.getInt("equipement_id"));
+            r.setUserId(rs.getInt("user_id"));  // ← Important
+
+            // Créer l'objet Equipement pour la jointure
+            Equipement e = new Equipement();
+            e.setId(rs.getInt("e_id"));
+            e.setNom(rs.getString("e_nom"));
+            e.setType(rs.getString("e_type"));
+            e.setPrix(rs.getFloat("e_prix"));
+            e.setDisponibilite(rs.getString("e_dispo"));
+
+            r.setEquipement(e);
+
+            list.add(r);
+        }
+
+        return list;
     }
 
 }

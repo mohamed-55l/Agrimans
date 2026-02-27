@@ -15,7 +15,8 @@ public class EquipementTest {
                 "Test Machine",
                 "Test",
                 100,
-                "Disponible"
+                "Disponible",
+                1
         );
 
         try {

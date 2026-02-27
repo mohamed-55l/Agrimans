@@ -25,6 +25,15 @@ public class Review {
         this.equipementId = equipementId;
     }
 
+    public Review(int id, String commentaire, float note, Date dateReview, int equipementId, int userId) {
+        this.id = id;
+        this.commentaire = commentaire;
+        this.note = note;
+        this.dateReview = dateReview;
+        this.equipementId = equipementId;
+        this.userId = userId;  // ← NOUVEAU
+    }
+
     public Review(String commentaire, float note, Date dateReview, int equipementId) {
         this.commentaire = commentaire;
         this.note = note;

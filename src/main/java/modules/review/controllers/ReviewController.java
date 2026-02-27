@@ -43,6 +43,8 @@ public class ReviewController {
     private static final String COMMENTAIRE_PATTERN = "^[a-zA-ZÀ-ÿ0-9\\s\\-\\.,!?]{5,500}$";
     private static final String NOTE_PATTERN = "^[0-5](\\.\\d)?$";
 
+    private Equipement equipementSelectionne;
+
     @FXML
     public void initialize() {
         try {
@@ -78,7 +80,10 @@ public class ReviewController {
 
             // Charger les équipements
             loadEquipements();
-
+            // Si un équipement a été présélectionné, le sélectionner dans la liste
+            if (equipementSelectionne != null) {
+                cbEquipement.setValue(equipementSelectionne);
+            }
             // Ajout des listeners pour validation en temps réel
             addValidationListeners();
 
@@ -233,6 +238,7 @@ public class ReviewController {
             review.setDateReview(Date.valueOf(LocalDate.now()));
             review.setEquipementId(cbEquipement.getValue().getId());
             review.setEquipement(cbEquipement.getValue());
+            review.setUserId(1);  // ← VALEUR TEMPORAIRE (comme pour équipement)
 
             reviewService.create(review);
 
@@ -346,4 +352,27 @@ public class ReviewController {
             e.printStackTrace();
         }
     }
+
+
+    public void setEquipement(Equipement equipement) {
+        this.equipementSelectionne = equipement;
+
+        // Si le ComboBox est déjà initialisé, on sélectionne l'équipement
+        if (cbEquipement != null && equipement != null) {
+            cbEquipement.setValue(equipement);
+
+            // Optionnel : Désactiver le ComboBox pour forcer la review sur cet équipement
+            // cbEquipement.setDisable(true);
+
+            // Afficher un message
+            System.out.println("✅ Équipement présélectionné: " + equipement.getNom());
+        }
+    }
+
+
+
+
+
+
+
 }
