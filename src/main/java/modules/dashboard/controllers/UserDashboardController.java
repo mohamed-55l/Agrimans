@@ -10,10 +10,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modules.dashboard.services.DashboardService;
 import modules.equipement.models.Equipement;
 import modules.equipement.services.EquipementService;
+import modules.review.controllers.UserReviewController;
 import modules.review.models.Review;
 import modules.review.services.ReviewService;
 
@@ -237,13 +239,18 @@ public class UserDashboardController {
             Stage stage = new Stage();
             stage.setTitle("Ajouter une review - " + equipement.getNom());
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // Rafraîchir les reviews après ajout
+            chargerMesReviews();
 
         } catch (IOException e) {
             e.printStackTrace();
             AlertUtils.showError("Erreur", "Impossible d'ouvrir le formulaire");
         }
     }
+
 
     /**
      * Aller à la page d'ajout d'équipement
