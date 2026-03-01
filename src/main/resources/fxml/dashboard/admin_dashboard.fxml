@@ -1,101 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="modules.dashboard.controllers.AdminDashboardController"
-      spacing="25"
-      style="-fx-background-color: transparent;">
+<ScrollPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.dashboard.controllers.AdminDashboardController"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
 
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+    <VBox spacing="25" style="-fx-background-color: transparent;">
 
-    <!-- En-tête ADMIN -->
-    <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label text="👑 Tableau de Bord Administrateur"
-               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Ferme Agrimans"
-               style="-fx-font-size: 16px; -fx-text-fill: #4B8B3B; -fx-font-weight: bold;"/>
-    </HBox>
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
 
-    <!-- STATISTIQUES GLOBALES (Cartes) -->
-    <HBox spacing="20" alignment="CENTER">
-        <!-- Carte 1: Total équipements -->
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="200" alignment="CENTER" spacing="10">
-            <Label text="⚙️" style="-fx-font-size: 40px;"/>
-            <Label text="Total Équipements" style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblTotalEquipements" text="0"
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+        <!-- En-tête -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="👑" style="-fx-font-size: 40px;"/>
+            <VBox>
+                <Label text="Dashboard Administrateur"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                <Label fx:id="lblBienvenue"
+                       style="-fx-font-size: 16px; -fx-text-fill: #4B8B3B;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Cartes statistiques -->
+        <HBox spacing="15" alignment="CENTER">
+
+            <!-- Carte 1: Équipements -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="170" alignment="CENTER" spacing="10">
+                <Label text="⚙️" style="-fx-font-size: 30px;"/>
+                <Label text="Total" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblTotalEquipements" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                <Label text="Équipements" style="-fx-font-size: 11px; -fx-text-fill: #999;"/>
+            </VBox>
+
+            <!-- Carte 2: Disponibles -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="170" alignment="CENTER" spacing="10">
+                <Label text="✅" style="-fx-font-size: 30px;"/>
+                <Label text="Disponibles" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblEquipementsDisponibles" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+            </VBox>
+
+            <!-- Carte 3: En panne -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="170" alignment="CENTER" spacing="10">
+                <Label text="⚠️" style="-fx-font-size: 30px;"/>
+                <Label text="En panne" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblEquipementsEnPanne" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+            </VBox>
+
+            <!-- Carte 4: Maintenance -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="170" alignment="CENTER" spacing="10">
+                <Label text="🔧" style="-fx-font-size: 30px;"/>
+                <Label text="Maintenance" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblEquipementsMaintenance" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+            </VBox>
+
+            <!-- Carte 5: Reviews -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="170" alignment="CENTER" spacing="10">
+                <Label text="⭐" style="-fx-font-size: 30px;"/>
+                <Label text="Reviews" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblTotalReviews" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+                <Label fx:id="lblNoteMoyenne" text="0.0 ⭐" style="-fx-font-size: 11px; -fx-text-fill: #999;"/>
+            </VBox>
+
+            <!-- Carte 6: Agriculteurs -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="170" alignment="CENTER" spacing="10">
+                <Label text="👥" style="-fx-font-size: 30px;"/>
+                <Label text="Agriculteurs" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblTotalAgriculteurs" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Graphique et Tableaux -->
+        <HBox spacing="20">
+
+            <!-- Graphique circulaire -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="📊 Répartition des équipements"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                <PieChart fx:id="pieChartEquipements" prefHeight="300"/>
+            </VBox>
+
+            <!-- Dernières reviews -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="⭐ Dernières reviews"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                <TableView fx:id="tableReviews" prefHeight="300">
+                    <columns>
+                        <TableColumn fx:id="colCommentaire" text="Commentaire" prefWidth="200"/>
+                        <TableColumn fx:id="colNote" text="Note" prefWidth="70"/>
+                        <TableColumn fx:id="colEquipement" text="Équipement" prefWidth="150"/>
+                        <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                        <TableColumn fx:id="colAuteurId" text="Auteur ID" prefWidth="80"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </HBox>
+
+        <!-- Tous les équipements -->
+        <VBox spacing="10">
+            <Label text="📋 Liste complète des équipements"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+            <TableView fx:id="tableEquipements" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="200"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="150"/>
+                    <TableColumn fx:id="colPrix" text="Prix" prefWidth="120"/>
+                    <TableColumn fx:id="colEtat" text="État" prefWidth="120"/>
+                    <TableColumn fx:id="colProprietaireId" text="Propriétaire ID" prefWidth="120"/>
+                </columns>
+            </TableView>
         </VBox>
 
-        <!-- Carte 2: En panne -->
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="200" alignment="CENTER" spacing="10">
-            <Label text="⚠️" style="-fx-font-size: 40px;"/>
-            <Label text="Équipements en panne" style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblEnPanne" text="0"
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
-        </VBox>
-
-        <!-- Carte 3: Agriculteurs -->
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="200" alignment="CENTER" spacing="10">
-            <Label text="👥" style="-fx-font-size: 40px;"/>
-            <Label text="Agriculteurs" style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblAgriculteurs" text="0"
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
-        </VBox>
-
-        <!-- Carte 4: Note moyenne -->
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="200" alignment="CENTER" spacing="10">
-            <Label text="⭐" style="-fx-font-size: 40px;"/>
-            <Label text="Note moyenne" style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblNoteMoyenne" text="0.0"
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
-        </VBox>
-    </HBox>
-
-    <!-- Section TOUS les équipements -->
-    <VBox spacing="10">
-        <Label text="📋 Tous les équipements de la ferme"
-               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-
-        <TableView fx:id="tableEquipement"
-                   prefHeight="250"
-                   style="-fx-background-color: white; -fx-background-radius: 10;">
-            <columns>
-                <TableColumn text="ID" prefWidth="60"/>
-                <TableColumn text="Nom" prefWidth="150"/>
-                <TableColumn text="Type" prefWidth="150"/>
-                <TableColumn text="Prix (DT)" prefWidth="120"/>
-                <TableColumn text="État" prefWidth="100"/>
-                <TableColumn text="Propriétaire" prefWidth="150"/>  <!-- ← COLONNE EN PLUS -->
-                <TableColumn text="Contact" prefWidth="150"/>
-            </columns>
-        </TableView>
     </VBox>
-
-    <!-- Section TOUTES les reviews -->
-    <VBox spacing="10">
-        <Label text="⭐ Toutes les reviews"
-               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-
-        <TableView fx:id="tableReview"
-                   prefHeight="200"
-                   style="-fx-background-color: white; -fx-background-radius: 10;">
-            <columns>
-                <TableColumn text="Commentaire" prefWidth="300"/>
-                <TableColumn text="Note" prefWidth="100"/>
-                <TableColumn text="Équipement" prefWidth="150"/>
-                <TableColumn text="Date" prefWidth="120"/>
-                <TableColumn text="Auteur" prefWidth="150"/>  <!-- ← COLONNE EN PLUS -->
-            </columns>
-        </TableView>
-    </VBox>
-</VBox>
+</ScrollPane>

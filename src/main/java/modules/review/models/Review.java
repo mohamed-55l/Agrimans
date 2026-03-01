@@ -1,47 +1,67 @@
-package modules.review.models;  // ← CHANGEMENT 1
+package modules.review.models;
 
-import java.sql.Date;           // ← OK (garde)
 import modules.equipement.models.Equipement;
-// import java.time.LocalDate;  // ← À SUPPRIMER (pas utilisé)
 
+import java.sql.Date;
 
+/**
+ * Modèle représentant une review (avis) sur un équipement
+ *
+ * RÔLE: Structure de données pour un avis
+ * Correspond à la table 'review' dans la base de données
+ */
 public class Review {
-    private int id;
-    private String commentaire;
-    private float note;  // C'est float dans votre code
-    private Date dateReview;  // SQL Date
-    private int equipementId;
-    private Equipement equipement;  // Pour la jointure
-    private int userId;
 
-    // Constructeurs
+    // =====================================================
+    // ATTRIBUTS
+    // =====================================================
+
+    private int id;                 // Identifiant unique
+    private String commentaire;      // Texte de l'avis
+    private float note;              // Note sur 5
+    private Date dateReview;         // Date de l'avis
+    private int equipementId;        // ID de l'équipement concerné
+    private Equipement equipement;   // Objet équipement complet (pour jointure)
+    private int userId;              // ID de l'utilisateur qui a posté l'avis
+
+    // =====================================================
+    // CONSTRUCTEURS
+    // =====================================================
+
+    /**
+     * Constructeur vide (nécessaire pour JavaFX)
+     */
     public Review() {}
 
-    public Review(int id, String commentaire, float note, Date dateReview, int equipementId) {
+    /**
+     * Constructeur complet
+     */
+    public Review(int id, String commentaire, float note, Date dateReview,
+                  int equipementId, int userId) {
         this.id = id;
         this.commentaire = commentaire;
         this.note = note;
         this.dateReview = dateReview;
         this.equipementId = equipementId;
+        this.userId = userId;
     }
 
-    public Review(int id, String commentaire, float note, Date dateReview, int equipementId, int userId) {
-        this.id = id;
+    /**
+     * Constructeur sans ID (pour création)
+     */
+    public Review(String commentaire, float note, Date dateReview,
+                  int equipementId, int userId) {
         this.commentaire = commentaire;
         this.note = note;
         this.dateReview = dateReview;
         this.equipementId = equipementId;
-        this.userId = userId;  // ← NOUVEAU
+        this.userId = userId;
     }
 
-    public Review(String commentaire, float note, Date dateReview, int equipementId) {
-        this.commentaire = commentaire;
-        this.note = note;
-        this.dateReview = dateReview;
-        this.equipementId = equipementId;
-    }
+    // =====================================================
+    // GETTERS ET SETTERS
+    // =====================================================
 
-    // Getters et Setters
     public int getId() {
         return id;
     }
@@ -90,21 +110,27 @@ public class Review {
         this.equipement = equipement;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    // =====================================================
+    // MÉTHODES UTILITAIRES
+    // =====================================================
+
+    /**
+     * Représentation textuelle
+     */
     @Override
     public String toString() {
         return "Review{" +
                 "id=" + id +
-                ", commentaire='" + commentaire + '\'' +
                 ", note=" + note +
-                ", dateReview=" + dateReview +
                 ", equipementId=" + equipementId +
                 '}';
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 }

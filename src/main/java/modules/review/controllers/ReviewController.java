@@ -1,59 +1,82 @@
-package modules.review.controllers;  // ← CHANGEMENT 1
+package modules.review.controllers;
 
-import modules.review.models.Review;              // ← CHANGEMENT 2
-import modules.equipement.models.Equipement;       // ← CHANGEMENT 3
-import modules.review.services.ReviewService;      // ← CHANGEMENT 4
-import modules.equipement.services.EquipementService;  // ← CHANGEMENT 5
-
+import core.utils.AlertUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import modules.equipement.models.Equipement;
+import modules.equipement.services.EquipementService;
+import modules.review.models.Review;
+import modules.review.services.ReviewService;
 
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Contrôleur pour la gestion des reviews
+ *
+ * RÔLE: Interface utilisateur pour le CRUD des reviews
+ */
 public class ReviewController {
 
+    // =====================================================
+    // COMPOSANTS FXML
+    // =====================================================
+
+    // Tableau
     @FXML private TableView<Review> tableReview;
     @FXML private TableColumn<Review, String> colCommentaire;
     @FXML private TableColumn<Review, Float> colNote;
     @FXML private TableColumn<Review, String> colEquipement;
     @FXML private TableColumn<Review, Date> colDate;
 
+    // Champs de formulaire
     @FXML private TextField tfCommentaire;
     @FXML private TextField tfNote;
     @FXML private ComboBox<Equipement> cbEquipement;
 
-    // Labels pour les messages d'erreur
+    // Labels d'erreur
     @FXML private Label lblCommentaireError;
     @FXML private Label lblNoteError;
     @FXML private Label lblEquipementError;
 
+    // =====================================================
+    // SERVICES
+    // =====================================================
+
     private ReviewService reviewService = new ReviewService();
     private EquipementService equipementService = new EquipementService();
 
-    private ObservableList<Review> reviewList = FXCollections.observableArrayList();
+    // =====================================================
+    // DONNÉES
+    // =====================================================
 
-    // Patterns de validation
+    private ObservableList<Review> reviewList = FXCollections.observableArrayList();
+    private Equipement equipementSelectionne;  // Pour présélection (depuis UserDashboard)
+
+    // =====================================================
+    // PATTERNS DE VALIDATION
+    // =====================================================
+
     private static final String COMMENTAIRE_PATTERN = "^[a-zA-ZÀ-ÿ0-9\\s\\-\\.,!?]{5,500}$";
     private static final String NOTE_PATTERN = "^[0-5](\\.\\d)?$";
 
-    private Equipement equipementSelectionne;
+    // =====================================================
+    // INITIALISATION
+    // =====================================================
 
     @FXML
     public void initialize() {
         try {
-            // Configuration des colonnes
-            colCommentaire.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
-            colNote.setCellValueFactory(new PropertyValueFactory<>("note"));
-            colDate.setCellValueFactory(new PropertyValueFactory<>("dateReview"));
+            // 1. Configuration des colonnes
+            configurerColonnes();
 
-            // Formatage de la note
+            // 2. Formatage spécial pour la colonne note
             colNote.setCellFactory(tc -> new TableCell<Review, Float>() {
                 @Override
                 protected void updateItem(Float note, boolean empty) {
@@ -66,43 +89,74 @@ public class ReviewController {
                 }
             });
 
-            // Pour afficher le nom de l'équipement
+            // 3. Configuration de la colonne équipement (affichage du nom)
             colEquipement.setCellValueFactory(cellData -> {
                 Review review = cellData.getValue();
                 if (review != null && review.getEquipement() != null) {
                     return new javafx.beans.property.SimpleStringProperty(
                             review.getEquipement().getNom()
                     );
-                } else {
-                    return new javafx.beans.property.SimpleStringProperty("N/A");
                 }
+                return new javafx.beans.property.SimpleStringProperty("N/A");
             });
 
-            // Charger les équipements
-            loadEquipements();
-            // Si un équipement a été présélectionné, le sélectionner dans la liste
+            // 4. Charger les équipements dans la ComboBox
+            chargerEquipements();
+
+            // 5. Si un équipement a été présélectionné (depuis UserDashboard)
             if (equipementSelectionne != null) {
                 cbEquipement.setValue(equipementSelectionne);
+                // Optionnel: désactiver la ComboBox pour forcer la review sur cet équipement
+                // cbEquipement.setDisable(true);
             }
-            // Ajout des listeners pour validation en temps réel
-            addValidationListeners();
 
-            // Charger les reviews
-            loadReviews();
+            // 6. Ajouter les listeners de validation
+            ajouterListenersValidation();
+
+            // 7. Charger les reviews
+            chargerReviews();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Erreur de chargement: " + e.getMessage());
+            AlertUtils.showError("Erreur", "Erreur de chargement: " + e.getMessage());
         }
     }
 
-    private void loadEquipements() throws SQLException {
+    /**
+     * Configure les colonnes du tableau
+     */
+    private void configurerColonnes() {
+        colCommentaire.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
+        colNote.setCellValueFactory(new PropertyValueFactory<>("note"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("dateReview"));
+        // colEquipement est configuré différemment (via CellValueFactory personnalisé)
+    }
+
+    /**
+     * Charge les équipements dans la ComboBox
+     */
+    private void chargerEquipements() throws SQLException {
+        // Récupérer tous les équipements
         ObservableList<Equipement> equipements =
                 FXCollections.observableArrayList(equipementService.getAll());
+
         cbEquipement.setItems(equipements);
 
-        // Personnalisation de l'affichage
+        // Personnalisation de l'affichage dans la liste déroulante
         cbEquipement.setCellFactory(param -> new ListCell<Equipement>() {
+            @Override
+            protected void updateItem(Equipement item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getNom() + " (" + item.getType() + ") - " + item.getDisponibilite());
+                }
+            }
+        });
+
+        // Personnalisation de l'affichage quand un item est sélectionné
+        cbEquipement.setButtonCell(new ListCell<Equipement>() {
             @Override
             protected void updateItem(Equipement item, boolean empty) {
                 super.updateItem(item, empty);
@@ -113,52 +167,56 @@ public class ReviewController {
                 }
             }
         });
-
-        cbEquipement.setButtonCell(new ListCell<Equipement>() {
-            @Override
-            protected void updateItem(Equipement item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getNom());
-                }
-            }
-        });
     }
 
-    private void addValidationListeners() {
+    /**
+     * Charge les reviews depuis la base de données
+     */
+    private void chargerReviews() throws SQLException {
+        reviewList.clear();
+        reviewList.addAll(reviewService.getAll());
+        tableReview.setItems(reviewList);
+    }
+
+    // =====================================================
+    // VALIDATION
+    // =====================================================
+
+    /**
+     * Ajoute des listeners pour la validation en temps réel
+     */
+    private void ajouterListenersValidation() {
         // Validation du commentaire
         tfCommentaire.textProperty().addListener((obs, old, newValue) -> {
             if (newValue.isEmpty()) {
-                showError(lblCommentaireError, "Le commentaire est requis");
+                afficherErreur(lblCommentaireError, "Le commentaire est requis");
             } else if (newValue.length() < 5) {
-                showError(lblCommentaireError, "Minimum 5 caractères");
+                afficherErreur(lblCommentaireError, "Minimum 5 caractères");
             } else if (newValue.length() > 500) {
-                showError(lblCommentaireError, "Maximum 500 caractères");
+                afficherErreur(lblCommentaireError, "Maximum 500 caractères");
             } else if (!newValue.matches(COMMENTAIRE_PATTERN)) {
-                showError(lblCommentaireError, "Caractères non autorisés");
+                afficherErreur(lblCommentaireError, "Caractères non autorisés");
             } else {
-                hideError(lblCommentaireError);
+                cacherErreur(lblCommentaireError);
             }
         });
 
         // Validation de la note
         tfNote.textProperty().addListener((obs, old, newValue) -> {
             if (newValue.isEmpty()) {
-                showError(lblNoteError, "La note est requise");
+                afficherErreur(lblNoteError, "La note est requise");
             } else if (!newValue.matches(NOTE_PATTERN)) {
-                showError(lblNoteError, "Note entre 0 et 5 (ex: 4.5)");
+                afficherErreur(lblNoteError, "Note entre 0 et 5 (ex: 4.5)");
             } else {
                 try {
                     float note = Float.parseFloat(newValue);
                     if (note < 0 || note > 5) {
-                        showError(lblNoteError, "La note doit être entre 0 et 5");
+                        afficherErreur(lblNoteError, "La note doit être entre 0 et 5");
                     } else {
-                        hideError(lblNoteError);
+                        cacherErreur(lblNoteError);
                     }
                 } catch (NumberFormatException e) {
-                    showError(lblNoteError, "Format invalide");
+                    afficherErreur(lblNoteError, "Format invalide");
                 }
             }
         });
@@ -166,213 +224,250 @@ public class ReviewController {
         // Validation de l'équipement
         cbEquipement.valueProperty().addListener((obs, old, newValue) -> {
             if (newValue == null) {
-                showError(lblEquipementError, "Sélectionnez un équipement");
+                afficherErreur(lblEquipementError, "Sélectionnez un équipement");
             } else {
-                hideError(lblEquipementError);
+                cacherErreur(lblEquipementError);
             }
         });
     }
 
-    private boolean validateFields() {
+    /**
+     * Valide tous les champs avant soumission
+     */
+    private boolean validerChamps() {
         boolean isValid = true;
 
         // Validation Commentaire
         if (tfCommentaire.getText().isEmpty()) {
-            showError(lblCommentaireError, "Le commentaire est requis");
+            afficherErreur(lblCommentaireError, "Le commentaire est requis");
             isValid = false;
         } else if (tfCommentaire.getText().length() < 5) {
-            showError(lblCommentaireError, "Minimum 5 caractères");
+            afficherErreur(lblCommentaireError, "Minimum 5 caractères");
             isValid = false;
         } else if (tfCommentaire.getText().length() > 500) {
-            showError(lblCommentaireError, "Maximum 500 caractères");
+            afficherErreur(lblCommentaireError, "Maximum 500 caractères");
             isValid = false;
         }
 
         // Validation Note
         if (tfNote.getText().isEmpty()) {
-            showError(lblNoteError, "La note est requise");
+            afficherErreur(lblNoteError, "La note est requise");
             isValid = false;
         } else {
             try {
                 float note = Float.parseFloat(tfNote.getText());
                 if (note < 0 || note > 5) {
-                    showError(lblNoteError, "La note doit être entre 0 et 5");
+                    afficherErreur(lblNoteError, "La note doit être entre 0 et 5");
                     isValid = false;
                 }
             } catch (NumberFormatException e) {
-                showError(lblNoteError, "Format de note invalide");
+                afficherErreur(lblNoteError, "Format de note invalide");
                 isValid = false;
             }
         }
 
         // Validation Équipement
         if (cbEquipement.getValue() == null) {
-            showError(lblEquipementError, "Sélectionnez un équipement");
+            afficherErreur(lblEquipementError, "Sélectionnez un équipement");
             isValid = false;
         }
 
         return isValid;
     }
 
-    private void showError(Label label, String message) {
+    /**
+     * Affiche une erreur
+     */
+    private void afficherErreur(Label label, String message) {
         label.setText(message);
         label.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 11px;");
         label.setVisible(true);
     }
 
-    private void hideError(Label label) {
+    /**
+     * Cache une erreur
+     */
+    private void cacherErreur(Label label) {
         label.setVisible(false);
     }
 
-    @FXML
-    void ajouterReview() {
-        if (!validateFields()) {
-            showAlert("Validation", "Veuillez corriger les erreurs");
-            return;
-        }
-
-        try {
-            Review review = new Review();
-            review.setCommentaire(tfCommentaire.getText().trim());
-            review.setNote(Float.parseFloat(tfNote.getText()));
-            review.setDateReview(Date.valueOf(LocalDate.now()));
-            review.setEquipementId(cbEquipement.getValue().getId());
-            review.setEquipement(cbEquipement.getValue());
-            review.setUserId(1);  // ← VALEUR TEMPORAIRE (comme pour équipement)
-
-            reviewService.create(review);
-
-            loadReviews();
-            clearFields();
-
-            showAlert("Succès", "Review ajoutée avec succès");
-
-        } catch (SQLException e) {
-            if (e.getMessage().contains("Duplicate")) {
-                showAlert("Erreur", "Cette review existe déjà");
-            } else {
-                showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
-            }
-        }
-    }
-
-    private void loadReviews() throws SQLException {
-        reviewList.clear();
-        reviewList.addAll(reviewService.getAll());
-        tableReview.setItems(reviewList);
-    }
-
-    private void clearFields() {
+    /**
+     * Vide les champs du formulaire
+     */
+    private void viderFormulaire() {
         tfCommentaire.clear();
         tfNote.clear();
         cbEquipement.setValue(null);
-        hideError(lblCommentaireError);
-        hideError(lblNoteError);
-        hideError(lblEquipementError);
+        cacherErreur(lblCommentaireError);
+        cacherErreur(lblNoteError);
+        cacherErreur(lblEquipementError);
+
+        // Désélectionner dans le tableau
+        tableReview.getSelectionModel().clearSelection();
     }
 
+    // =====================================================
+    // ACTIONS SUR LES BOUTONS
+    // =====================================================
+
+    /**
+     * Ajouter une review
+     */
     @FXML
-    void handleButtonEnter(MouseEvent event) {
-        Button button = (Button) event.getSource();
-        button.setStyle("-fx-background-color: #7DBF6C; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 30; -fx-cursor: hand;");
+    void ajouterReview() {
+        // 1. Valider les champs
+        if (!validerChamps()) {
+            AlertUtils.showWarning("Validation", "Veuillez corriger les erreurs");
+            return;
+        }
+
+        try {
+            // 2. Créer l'objet Review
+            Review review = new Review();
+            review.setCommentaire(tfCommentaire.getText().trim());
+            review.setNote(Float.parseFloat(tfNote.getText()));
+            review.setDateReview(Date.valueOf(LocalDate.now())); // Date du jour
+            review.setEquipementId(cbEquipement.getValue().getId());
+
+            // ⚠️ VALEUR TEMPORAIRE - À remplacer plus tard par l'ID du vrai utilisateur connecté
+            review.setUserId(1);  // Pour l'instant, on met 1 (utilisateur par défaut)
+
+            // 3. Sauvegarder
+            reviewService.create(review);
+
+            // 4. Recharger la liste
+            chargerReviews();
+
+            // 5. Vider le formulaire
+            viderFormulaire();
+
+            // 6. Message de succès
+            AlertUtils.showInfo("Succès", "Review ajoutée avec succès");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            AlertUtils.showError("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
+        }
     }
 
-    @FXML
-    void handleButtonExit(MouseEvent event) {
-        Button button = (Button) event.getSource();
-        button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 30;");
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    // Dans ReviewController.java - AJOUTER ces méthodes
+    /**
+     * Modifier une review (sélectionnée)
+     */
     @FXML
     void modifierReview() {
+        // 1. Vérifier la sélection
         Review selected = tableReview.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            showAlert("Attention", "Veuillez sélectionner une review");
+            AlertUtils.showWarning("Attention", "Veuillez sélectionner une review");
             return;
         }
 
-        // Pré-remplir le formulaire
+        // 2. Remplir le formulaire avec les données sélectionnées
         tfCommentaire.setText(selected.getCommentaire());
         tfNote.setText(String.valueOf(selected.getNote()));
-        cbEquipement.setValue(selected.getEquipement());
 
-        // Changer le bouton pour "Modifier"
-        // Vous pouvez ajouter un bouton dédié ou changer dynamiquement
+        // Trouver l'équipement correspondant dans la ComboBox
+        for (Equipement e : cbEquipement.getItems()) {
+            if (e.getId() == selected.getEquipementId()) {
+                cbEquipement.setValue(e);
+                break;
+            }
+        }
+
+        // 3. Changer le texte du bouton (optionnel - vous pouvez ajouter un bouton "Mettre à jour")
+        // Pour l'instant, on va simplement montrer un message
+        AlertUtils.showInfo("Info", "Vous pouvez maintenant modifier la review et cliquer sur 'Ajouter' pour mettre à jour.");
+
+        // Note: Pour une vraie modification, il faudrait un bouton "Mettre à jour" séparé
+        // et une méthode `updateReview()` qui appelle reviewService.update()
     }
 
+    /**
+     * Supprimer une review
+     */
     @FXML
     void supprimerReview() {
+        // 1. Vérifier la sélection
         Review selected = tableReview.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            showAlert("Attention", "Veuillez sélectionner une review");
+            AlertUtils.showWarning("Attention", "Veuillez sélectionner une review");
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmation");
-        confirm.setHeaderText("Supprimer la review");
-        confirm.setContentText("Voulez-vous vraiment supprimer cette review ?");
+        // 2. Demander confirmation
+        boolean confirm = AlertUtils.showConfirmation(
+                "Confirmation",
+                "Voulez-vous vraiment supprimer cette review ?"
+        );
 
-        if (confirm.showAndWait().get() == ButtonType.OK) {
+        if (confirm) {
             try {
+                // 3. Supprimer
                 reviewService.delete(selected.getId());
-                loadReviews();
-                clearFields();
-                showAlert("Succès", "Review supprimée");
+
+                // 4. Recharger la liste
+                chargerReviews();
+
+                // 5. Vider le formulaire
+                viderFormulaire();
+
+                // 6. Message de succès
+                AlertUtils.showInfo("Succès", "Review supprimée");
+
             } catch (SQLException e) {
-                showAlert("Erreur", "Erreur lors de la suppression");
+                e.printStackTrace();
+                AlertUtils.showError("Erreur", "Erreur lors de la suppression");
             }
         }
     }
 
-    // Ajouter une méthode pour charger les statistiques
-    void loadStatistics() {
-        try {
-            List<Review> allReviews = reviewService.getAll();
-            float averageNote = (float) allReviews.stream()
-                    .mapToDouble(Review::getNote)
-                    .average()
-                    .orElse(0);
+    // =====================================================
+    // MÉTHODES DE NAVIGATION/INTÉGRATION
+    // =====================================================
 
-            System.out.println("Note moyenne: " + averageNote);
-            System.out.println("Nombre total de reviews: " + allReviews.size());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
+    /**
+     * Permet de présélectionner un équipement (appelé depuis UserDashboard)
+     * @param equipement L'équipement à présélectionner
+     */
     public void setEquipement(Equipement equipement) {
         this.equipementSelectionne = equipement;
 
         // Si le ComboBox est déjà initialisé, on sélectionne l'équipement
         if (cbEquipement != null && equipement != null) {
             cbEquipement.setValue(equipement);
-
-            // Optionnel : Désactiver le ComboBox pour forcer la review sur cet équipement
-            // cbEquipement.setDisable(true);
-
-            // Afficher un message
             System.out.println("✅ Équipement présélectionné: " + equipement.getNom());
         }
     }
 
+    /**
+     * Effet de survol des boutons
+     */
+    @FXML
+    void handleButtonEnter(MouseEvent event) {
+        Button button = (Button) event.getSource();
+        button.setStyle("-fx-background-color: #7DBF6C; -fx-text-fill: white; " +
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; " +
+                "-fx-padding: 10 20; -fx-cursor: hand;");
+    }
 
+    /**
+     * Effet de sortie des boutons
+     */
+    @FXML
+    void handleButtonExit(MouseEvent event) {
+        Button button = (Button) event.getSource();
+        String buttonText = button.getText();
 
-
-
-
-
+        if (buttonText.contains("Supprimer")) {
+            button.setStyle("-fx-background-color: #2E3D27; -fx-text-fill: white; " +
+                    "-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; " +
+                    "-fx-padding: 10 20;");
+        } else {
+            button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: white; " +
+                    "-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; " +
+                    "-fx-padding: 10 20;");
+        }
+    }
 }

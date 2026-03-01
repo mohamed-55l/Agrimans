@@ -1,28 +1,42 @@
-package modules.equipement.controllers;  // ← NOUVEAU package
+package modules.equipement.controllers;
 
-import modules.equipement.models.Equipement;           // ← model déplacé
-import modules.equipement.services.EquipementService;  // ← service déplacé
-//import core.utils.AlertUtils;                           // ← si vous l'avez créé (optionnel)
-
-import javafx.collections.*;
+import core.utils.AlertUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import modules.equipement.models.Equipement;
+import modules.equipement.services.EquipementService;
 import modules.review.models.Review;
 import modules.review.services.ReviewService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * Contrôleur pour la gestion des équipements
+ *
+ * RÔLE: Interface utilisateur pour le CRUD des équipements
+ * Pattern MVC: Contrôleur
+ */
 public class EquipementController {
 
+    // =====================================================
+    // COMPOSANTS FXML (liés par le fichier .fxml)
+    // =====================================================
+
+    // Champs de formulaire
     @FXML private TextField tfNom;
     @FXML private TextField tfType;
     @FXML private TextField tfPrix;
     @FXML private ComboBox<String> cbEtat;
+
+    // Tableau
     @FXML private TableView<Equipement> tableEquipement;
     @FXML private TableColumn<Equipement, Integer> colId;
     @FXML private TableColumn<Equipement, String> colNom;
@@ -30,30 +44,43 @@ public class EquipementController {
     @FXML private TableColumn<Equipement, Float> colPrix;
     @FXML private TableColumn<Equipement, String> colEtat;
 
-    // Labels pour les messages d'erreur
+    // Labels d'erreur (validation)
     @FXML private Label lblNomError;
     @FXML private Label lblTypeError;
     @FXML private Label lblPrixError;
     @FXML private Label lblEtatError;
 
+    // =====================================================
+    // SERVICES
+    // =====================================================
+
     private EquipementService service = new EquipementService();
+    private ReviewService reviewService = new ReviewService(); // Pour vérifier les reviews avant suppression
+
+    // =====================================================
+    // DONNÉES
+    // =====================================================
+
     private ObservableList<Equipement> list = FXCollections.observableArrayList();
 
-    // Patterns de validation
+    // =====================================================
+    // PATTERNS DE VALIDATION (Regex)
+    // =====================================================
+
     private static final Pattern NOM_PATTERN = Pattern.compile("^[a-zA-ZÀ-ÿ0-9\\s\\-]{2,50}$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^[a-zA-ZÀ-ÿ0-9\\s\\-]{2,30}$");
     private static final Pattern PRIX_PATTERN = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
 
+    // =====================================================
+    // INITIALISATION
+    // =====================================================
+
     @FXML
     public void initialize() {
-        // Configuration des colonnes
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        colEtat.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
+        // 1. Configuration des colonnes du tableau
+        configurerColonnes();
 
-        // Formatage du prix
+        // 2. Formatage spécial pour la colonne prix
         colPrix.setCellFactory(tc -> new TableCell<Equipement, Float>() {
             @Override
             protected void updateItem(Float price, boolean empty) {
@@ -61,71 +88,95 @@ public class EquipementController {
                 if (empty || price == null) {
                     setText(null);
                 } else {
-                    setText(String.format("%.2f DT", price));
+                    setText(String.format("%.2f DT", price)); // Affiche avec devise
                 }
             }
         });
 
-        // Initialisation du ComboBox
+        // 3. Initialisation de la ComboBox des états
         cbEtat.getItems().addAll("Disponible", "Non disponible", "En maintenance");
-        cbEtat.setValue("Disponible");
+        cbEtat.setValue("Disponible"); // Valeur par défaut
 
-        // Ajout des listeners pour la validation en temps réel
-        addValidationListeners();
+        // 4. Ajout des listeners pour validation en temps réel
+        ajouterListenersValidation();
 
-        loadData();
+        // 5. Chargement des données
+        chargerDonnees();
 
-        // Sélection dans le tableau
+        // 6. Listener pour la sélection dans le tableau
         tableEquipement.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, old, selected) -> {
                     if (selected != null) {
+                        // Remplir le formulaire avec l'équipement sélectionné
                         tfNom.setText(selected.getNom());
                         tfType.setText(selected.getType());
                         tfPrix.setText(String.valueOf(selected.getPrix()));
                         cbEtat.setValue(selected.getDisponibilite());
-                        clearErrors();
+                        effacerErreurs();
                     }
                 });
     }
 
-    private void addValidationListeners() {
+    /**
+     * Configure les colonnes du tableau
+     */
+    private void configurerColonnes() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        colEtat.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
+    }
+
+    // =====================================================
+    // VALIDATION EN TEMPS RÉEL
+    // =====================================================
+
+    /**
+     * Ajoute des listeners pour valider les champs en temps réel
+     */
+    private void ajouterListenersValidation() {
         // Validation du nom
         tfNom.textProperty().addListener((obs, old, newValue) -> {
             if (newValue.isEmpty()) {
-                showError(lblNomError, "Le nom est requis");
+                afficherErreur(lblNomError, "Le nom est requis");
             } else if (!NOM_PATTERN.matcher(newValue).matches()) {
-                showError(lblNomError, "2-50 caractères, lettres, chiffres, espaces et tirets");
+                afficherErreur(lblNomError, "2-50 caractères: lettres, chiffres, espaces, tirets");
             } else {
-                hideError(lblNomError);
+                cacherErreur(lblNomError);
             }
         });
 
         // Validation du type
         tfType.textProperty().addListener((obs, old, newValue) -> {
             if (newValue.isEmpty()) {
-                showError(lblTypeError, "Le type est requis");
+                afficherErreur(lblTypeError, "Le type est requis");
             } else if (!TYPE_PATTERN.matcher(newValue).matches()) {
-                showError(lblTypeError, "2-30 caractères, lettres, chiffres, espaces et tirets");
+                afficherErreur(lblTypeError, "2-30 caractères: lettres, chiffres, espaces, tirets");
             } else {
-                hideError(lblTypeError);
+                cacherErreur(lblTypeError);
             }
         });
 
         // Validation du prix
         tfPrix.textProperty().addListener((obs, old, newValue) -> {
             if (newValue.isEmpty()) {
-                showError(lblPrixError, "Le prix est requis");
+                afficherErreur(lblPrixError, "Le prix est requis");
             } else if (!PRIX_PATTERN.matcher(newValue).matches()) {
-                showError(lblPrixError, "Format invalide (ex: 100 ou 99.99)");
+                afficherErreur(lblPrixError, "Format invalide (ex: 100 ou 99.99)");
             } else {
-                float prix = Float.parseFloat(newValue);
-                if (prix <= 0) {
-                    showError(lblPrixError, "Le prix doit être positif");
-                } else if (prix > 1000000) {
-                    showError(lblPrixError, "Prix trop élevé (max 1,000,000)");
-                } else {
-                    hideError(lblPrixError);
+                try {
+                    float prix = Float.parseFloat(newValue);
+                    if (prix <= 0) {
+                        afficherErreur(lblPrixError, "Le prix doit être positif");
+                    } else if (prix > 1000000) {
+                        afficherErreur(lblPrixError, "Prix trop élevé (max 1,000,000)");
+                    } else {
+                        cacherErreur(lblPrixError);
+                    }
+                } catch (NumberFormatException e) {
+                    afficherErreur(lblPrixError, "Format invalide");
                 }
             }
         });
@@ -133,221 +184,321 @@ public class EquipementController {
         // Validation de l'état
         cbEtat.valueProperty().addListener((obs, old, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
-                showError(lblEtatError, "Sélectionnez un état");
+                afficherErreur(lblEtatError, "Sélectionnez un état");
             } else {
-                hideError(lblEtatError);
+                cacherErreur(lblEtatError);
             }
         });
     }
 
-    private boolean validateFields() {
+    /**
+     * Valide tous les champs avant soumission
+     * @return true si tous les champs sont valides
+     */
+    private boolean validerChamps() {
         boolean isValid = true;
 
         // Validation Nom
         if (tfNom.getText().isEmpty()) {
-            showError(lblNomError, "Le nom est requis");
+            afficherErreur(lblNomError, "Le nom est requis");
             isValid = false;
         } else if (!NOM_PATTERN.matcher(tfNom.getText()).matches()) {
-            showError(lblNomError, "Format de nom invalide");
+            afficherErreur(lblNomError, "Format de nom invalide");
             isValid = false;
         }
 
         // Validation Type
         if (tfType.getText().isEmpty()) {
-            showError(lblTypeError, "Le type est requis");
+            afficherErreur(lblTypeError, "Le type est requis");
             isValid = false;
         } else if (!TYPE_PATTERN.matcher(tfType.getText()).matches()) {
-            showError(lblTypeError, "Format de type invalide");
+            afficherErreur(lblTypeError, "Format de type invalide");
             isValid = false;
         }
 
         // Validation Prix
         if (tfPrix.getText().isEmpty()) {
-            showError(lblPrixError, "Le prix est requis");
+            afficherErreur(lblPrixError, "Le prix est requis");
             isValid = false;
         } else {
             try {
                 float prix = Float.parseFloat(tfPrix.getText());
                 if (prix <= 0) {
-                    showError(lblPrixError, "Le prix doit être positif");
+                    afficherErreur(lblPrixError, "Le prix doit être positif");
                     isValid = false;
                 } else if (prix > 1000000) {
-                    showError(lblPrixError, "Prix trop élevé");
+                    afficherErreur(lblPrixError, "Prix trop élevé");
                     isValid = false;
                 }
             } catch (NumberFormatException e) {
-                showError(lblPrixError, "Format de prix invalide");
+                afficherErreur(lblPrixError, "Format de prix invalide");
                 isValid = false;
             }
         }
 
         // Validation État
         if (cbEtat.getValue() == null || cbEtat.getValue().isEmpty()) {
-            showError(lblEtatError, "Sélectionnez un état");
+            afficherErreur(lblEtatError, "Sélectionnez un état");
             isValid = false;
         }
 
         return isValid;
     }
 
-    private void showError(Label label, String message) {
+    /**
+     * Affiche un message d'erreur sous un champ
+     */
+    private void afficherErreur(Label label, String message) {
         label.setText(message);
         label.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 11px;");
         label.setVisible(true);
     }
 
-    private void hideError(Label label) {
+    /**
+     * Cache un message d'erreur
+     */
+    private void cacherErreur(Label label) {
         label.setVisible(false);
     }
 
-    private void clearErrors() {
-        hideError(lblNomError);
-        hideError(lblTypeError);
-        hideError(lblPrixError);
-        hideError(lblEtatError);
+    /**
+     * Efface tous les messages d'erreur
+     */
+    private void effacerErreurs() {
+        cacherErreur(lblNomError);
+        cacherErreur(lblTypeError);
+        cacherErreur(lblPrixError);
+        cacherErreur(lblEtatError);
     }
 
-    void loadData() {
+    // =====================================================
+    // CHARGEMENT DES DONNÉES
+    // =====================================================
+
+    /**
+     * Charge les équipements depuis la base de données
+     */
+    private void chargerDonnees() {
         try {
-            list.setAll(service.getAll());
+            // Récupérer tous les équipements
+            List<Equipement> equipements = service.getAll();
+
+            // Mettre à jour la liste observable
+            list.setAll(equipements);
+
+            // Lier au tableau
             tableEquipement.setItems(list);
+
+            System.out.println("📊 " + list.size() + " équipements chargés");
+
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger les données");
+            AlertUtils.showError("Erreur", "Impossible de charger les équipements: " + e.getMessage());
         }
     }
 
+    // =====================================================
+    // ACTIONS SUR LES BOUTONS
+    // =====================================================
+
+    /**
+     * Ajouter un équipement
+     */
     @FXML
     void ajouterEquipement() {
-        if (!validateFields()) {
-            showAlert("Validation", "Veuillez corriger les erreurs");
+        // 1. Valider les champs
+        if (!validerChamps()) {
+            AlertUtils.showWarning("Validation", "Veuillez corriger les erreurs");
             return;
         }
 
+        // 2. Créer l'objet Equipement
         try {
-            Equipement e = new Equipement();
-            e.setNom(tfNom.getText().trim());
-            e.setType(tfType.getText().trim());
-            e.setPrix(Float.parseFloat(tfPrix.getText()));
-            e.setDisponibilite(cbEtat.getValue());
-            e.setUserId(1);
+            Equipement equipement = new Equipement();
+            equipement.setNom(tfNom.getText().trim());
+            equipement.setType(tfType.getText().trim());
+            equipement.setPrix(Float.parseFloat(tfPrix.getText()));
+            equipement.setDisponibilite(cbEtat.getValue());
 
-            service.create(e);
-            loadData();
-            clearFields();
-            showAlert("Succès", "Équipement ajouté avec succès");
+            // ⚠️ VALEUR TEMPORAIRE - À remplacer plus tard par l'ID du vrai utilisateur connecté
+            equipement.setUserId(1);  // Pour l'instant, on met 1 (utilisateur par défaut)
+
+            // 3. Ajouter en base de données
+            service.create(equipement);
+
+            // 4. Recharger les données
+            chargerDonnees();
+
+            // 5. Vider le formulaire
+            viderFormulaire();
+
+            // 6. Message de succès
+            AlertUtils.showInfo("Succès", "Équipement ajouté avec succès");
 
         } catch (SQLException e) {
+            e.printStackTrace();
             if (e.getMessage().contains("Duplicate")) {
-                showAlert("Erreur", "Cet équipement existe déjà");
+                AlertUtils.showError("Erreur", "Cet équipement existe déjà");
             } else {
-                showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
+                AlertUtils.showError("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
             }
+        } catch (NumberFormatException e) {
+            AlertUtils.showError("Erreur", "Format de nombre invalide");
         }
     }
 
+    /**
+     * Modifier un équipement
+     */
     @FXML
     void modifierEquipement() {
+        // 1. Vérifier qu'un équipement est sélectionné
         Equipement selected = tableEquipement.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            showAlert("Attention", "Veuillez sélectionner un équipement");
+            AlertUtils.showWarning("Attention", "Veuillez sélectionner un équipement");
             return;
         }
 
-        if (!validateFields()) {
-            showAlert("Validation", "Veuillez corriger les erreurs");
+        // 2. Valider les champs
+        if (!validerChamps()) {
+            AlertUtils.showWarning("Validation", "Veuillez corriger les erreurs");
             return;
         }
 
+        // 3. Mettre à jour l'objet
         try {
             selected.setNom(tfNom.getText().trim());
             selected.setType(tfType.getText().trim());
             selected.setPrix(Float.parseFloat(tfPrix.getText()));
             selected.setDisponibilite(cbEtat.getValue());
+            // Note: On ne modifie PAS le userId (le propriétaire ne change pas)
 
+            // 4. Mettre à jour en base de données
             service.update(selected);
-            loadData();
-            clearFields();
-            showAlert("Succès", "Équipement modifié avec succès");
+
+            // 5. Recharger les données
+            chargerDonnees();
+
+            // 6. Vider le formulaire
+            viderFormulaire();
+
+            // 7. Message de succès
+            AlertUtils.showInfo("Succès", "Équipement modifié avec succès");
 
         } catch (SQLException e) {
-            showAlert("Erreur", "Erreur lors de la modification");
+            e.printStackTrace();
+            AlertUtils.showError("Erreur", "Erreur lors de la modification: " + e.getMessage());
         }
     }
 
-    @FXML
-    void handleTableClick(MouseEvent event) {
-        if (event.getClickCount() == 2) { // Double-clic pour éditer
-            modifierEquipement();
-        }
-    }
-
+    /**
+     * Supprimer un équipement
+     */
     @FXML
     void supprimerEquipement() {
+        // 1. Vérifier qu'un équipement est sélectionné
         Equipement selected = tableEquipement.getSelectionModel().getSelectedItem();
+
         if (selected == null) {
-            showAlert("Attention", "Veuillez sélectionner un équipement");
+            AlertUtils.showWarning("Attention", "Veuillez sélectionner un équipement");
             return;
         }
 
-        // Vérifier d'abord si l'équipement a des reviews
+        // 2. Vérifier si l'équipement a des reviews associées
         try {
-            ReviewService reviewService = new ReviewService();
             List<Review> reviews = reviewService.getByEquipementId(selected.getId());
 
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Confirmation de suppression");
-
+            // 3. Demander confirmation
+            boolean confirm;
             if (!reviews.isEmpty()) {
-                confirm.setHeaderText("⚠️ Cet équipement a " + reviews.size() + " review(s) associée(s)");
-                confirm.setContentText("La suppression supprimera également toutes ses reviews. Continuer ?");
+                // Cas avec reviews associées
+                confirm = AlertUtils.showConfirmation(
+                        "Confirmation",
+                        "⚠️ Cet équipement a " + reviews.size() + " review(s) associée(s).\n" +
+                                "La suppression supprimera également toutes ses reviews.\n\n" +
+                                "Voulez-vous vraiment continuer ?"
+                );
             } else {
-                confirm.setHeaderText("Supprimer l'équipement");
-                confirm.setContentText("Voulez-vous vraiment supprimer " + selected.getNom() + " ?");
+                // Cas sans reviews
+                confirm = AlertUtils.showConfirmation(
+                        "Confirmation",
+                        "Voulez-vous vraiment supprimer l'équipement \"" + selected.getNom() + "\" ?"
+                );
             }
 
-            if (confirm.showAndWait().get() == ButtonType.OK) {
+            if (confirm) {
+                // 4. Supprimer
                 service.delete(selected.getId());
-                loadData();
-                clearFields();
-                showAlert("Succès", "Équipement supprimé");
+
+                // 5. Recharger les données
+                chargerDonnees();
+
+                // 6. Vider le formulaire
+                viderFormulaire();
+
+                // 7. Message de succès
+                AlertUtils.showInfo("Succès", "Équipement supprimé");
             }
+
         } catch (SQLException e) {
-            showAlert("Erreur", "Impossible de vérifier les reviews associées");
+            e.printStackTrace();
+            AlertUtils.showError("Erreur", "Impossible de vérifier les reviews associées");
         }
     }
 
+    /**
+     * Vider le formulaire
+     */
     @FXML
-    void handleButtonEnter(MouseEvent event) {
-        Button button = (Button) event.getSource();
-        button.setStyle("-fx-background-color: #7DBF6C; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand;");
-    }
-
-    @FXML
-    void handleButtonExit(MouseEvent event) {
-        Button button = (Button) event.getSource();
-        String buttonText = button.getText();
-        if (buttonText.contains("Supprimer")) {
-            button.setStyle("-fx-background-color: #2E3D27; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;");
-        } else {
-            button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;");
-        }
-    }
-
-    void clearFields() {
+    void viderFormulaire() {
         tfNom.clear();
         tfType.clear();
         tfPrix.clear();
         cbEtat.setValue("Disponible");
-        clearErrors();
+        effacerErreurs();
+
+        // Désélectionner dans le tableau
+        tableEquipement.getSelectionModel().clearSelection();
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    /**
+     * Effet de survol des boutons
+     */
+    @FXML
+    void handleButtonEnter(MouseEvent event) {
+        Button button = (Button) event.getSource();
+        button.setStyle("-fx-background-color: #7DBF6C; -fx-text-fill: white; " +
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; " +
+                "-fx-padding: 10 20; -fx-cursor: hand;");
+    }
+
+    /**
+     * Effet de sortie des boutons
+     */
+    @FXML
+    void handleButtonExit(MouseEvent event) {
+        Button button = (Button) event.getSource();
+        String buttonText = button.getText();
+
+        if (buttonText.contains("Supprimer")) {
+            button.setStyle("-fx-background-color: #2E3D27; -fx-text-fill: white; " +
+                    "-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; " +
+                    "-fx-padding: 10 20;");
+        } else {
+            button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: white; " +
+                    "-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; " +
+                    "-fx-padding: 10 20;");
+        }
+    }
+
+    /**
+     * Double-clic sur le tableau pour modifier
+     */
+    @FXML
+    void handleTableClick(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            modifierEquipement();
+        }
     }
 }

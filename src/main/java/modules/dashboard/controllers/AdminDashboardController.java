@@ -1,170 +1,220 @@
 package modules.dashboard.controllers;
 
+import core.session.SessionManager;
+import core.utils.AlertUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import modules.dashboard.services.DashboardService;
 import modules.equipement.models.Equipement;
 import modules.equipement.services.EquipementService;
 import modules.review.models.Review;
 import modules.review.services.ReviewService;
-// Importer le service User (quand il sera prêt)
-// import modules.user.services.UserService;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
+/**
+ * Contrôleur pour le dashboard ADMIN
+ *
+ * RÔLE: Afficher toutes les statistiques globales de la ferme
+ * Accès: Réservé aux administrateurs
+ */
 public class AdminDashboardController {
 
+    // =====================================================
+    // STATISTIQUES (Cartes)
+    // =====================================================
+
     @FXML private Label lblTotalEquipements;
-    @FXML private Label lblEnPanne;
-    @FXML private Label lblAgriculteurs;
+    @FXML private Label lblEquipementsDisponibles;
+    @FXML private Label lblEquipementsEnPanne;
+    @FXML private Label lblEquipementsMaintenance;
+    @FXML private Label lblTotalReviews;
     @FXML private Label lblNoteMoyenne;
+    @FXML private Label lblTotalAgriculteurs;
+    @FXML private Label lblBienvenue;
 
-    @FXML private TableView<Equipement> tableEquipement;
-    @FXML private TableView<Review> tableReview;
+    // =====================================================
+    // TABLEAUX
+    // =====================================================
 
+    @FXML private TableView<Equipement> tableEquipements;
+    @FXML private TableColumn<Equipement, Integer> colId;
+    @FXML private TableColumn<Equipement, String> colNom;
+    @FXML private TableColumn<Equipement, String> colType;
+    @FXML private TableColumn<Equipement, Float> colPrix;
+    @FXML private TableColumn<Equipement, String> colEtat;
+    @FXML private TableColumn<Equipement, Integer> colProprietaireId;
+
+    @FXML private TableView<Review> tableReviews;
+    @FXML private TableColumn<Review, String> colCommentaire;
+    @FXML private TableColumn<Review, Float> colNote;
+    @FXML private TableColumn<Review, String> colEquipement;
+    @FXML private TableColumn<Review, String> colDate;
+    @FXML private TableColumn<Review, Integer> colAuteurId;
+
+    @FXML private PieChart pieChartEquipements;
+
+    // =====================================================
+    // SERVICES
+    // =====================================================
+
+    private DashboardService dashboardService = new DashboardService();
     private EquipementService equipementService = new EquipementService();
     private ReviewService reviewService = new ReviewService();
-    // private UserService userService = new UserService(); // Quand dispo
+
+    // =====================================================
+    // INITIALISATION
+    // =====================================================
 
     @FXML
     public void initialize() {
-        setupEquipementTable();
-        setupReviewTable();
-        loadStatistics();
-        loadEquipements();
-        loadReviews();
+        // Vérifier les droits d'accès
+        if (!SessionManager.isAdmin()) {
+            AlertUtils.showError("Accès refusé", "Cette page est réservée aux administrateurs");
+            return;
+        }
+
+        // Afficher le message de bienvenue
+        lblBienvenue.setText("👋 Bonjour " + SessionManager.getCurrentUserName());
+
+        // Configurer les tableaux
+        configurerTableEquipements();
+        configurerTableReviews();
+
+        // Charger les données
+        chargerStatistiques();
+        chargerEquipements();
+        chargerReviews();
+        chargerGraphique();
     }
 
-    private void setupEquipementTable() {
-        // Configurer les colonnes
-        TableColumn<Equipement, Integer> colId = new TableColumn<>("ID");
+    /**
+     * Configuration du tableau des équipements
+     */
+    private void configurerTableEquipements() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        TableColumn<Equipement, String> colNom = new TableColumn<>("Nom");
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-
-        TableColumn<Equipement, String> colType = new TableColumn<>("Type");
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-
-        TableColumn<Equipement, Float> colPrix = new TableColumn<>("Prix");
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        colPrix.setCellFactory(tc -> new TableCell<Equipement, Float>() {
+        colEtat.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
+        colProprietaireId.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+        // Formatage du prix
+        colPrix.setCellFactory(tc -> new javafx.scene.control.TableCell<Equipement, Float>() {
             @Override
             protected void updateItem(Float prix, boolean empty) {
                 super.updateItem(prix, empty);
-                if (empty || prix == null) setText(null);
-                else setText(String.format("%.2f DT", prix));
+                if (empty || prix == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f DT", prix));
+                }
             }
         });
-
-        TableColumn<Equipement, String> colEtat = new TableColumn<>("État");
-        colEtat.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
-
-        TableColumn<Equipement, String> colProprio = new TableColumn<>("Propriétaire");
-        colProprio.setCellValueFactory(cellData -> {
-            Equipement e = cellData.getValue();
-            String proprio = "User #" + e.getUserId(); // Temporaire
-            return new javafx.beans.property.SimpleStringProperty(proprio);
-        });
-
-        TableColumn<Equipement, String> colContact = new TableColumn<>("Contact");
-        colContact.setCellValueFactory(cellData -> {
-            // À remplacer quand User sera dispo
-            return new javafx.beans.property.SimpleStringProperty("Non dispo");
-        });
-
-        tableEquipement.getColumns().addAll(colId, colNom, colType, colPrix, colEtat, colProprio, colContact);
     }
 
-    private void setupReviewTable() {
-        TableColumn<Review, String> colCommentaire = new TableColumn<>("Commentaire");
+    /**
+     * Configuration du tableau des reviews
+     */
+    private void configurerTableReviews() {
         colCommentaire.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
-
-        TableColumn<Review, Float> colNote = new TableColumn<>("Note");
         colNote.setCellValueFactory(new PropertyValueFactory<>("note"));
-        colNote.setCellFactory(tc -> new TableCell<Review, Float>() {
+        colDate.setCellValueFactory(new PropertyValueFactory<>("dateReview"));
+        colAuteurId.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+        // Formatage de la note
+        colNote.setCellFactory(tc -> new javafx.scene.control.TableCell<Review, Float>() {
             @Override
             protected void updateItem(Float note, boolean empty) {
                 super.updateItem(note, empty);
-                if (empty || note == null) setText(null);
-                else setText(String.format("%.1f ⭐", note));
+                if (empty || note == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.1f ⭐", note));
+                }
             }
         });
 
-        TableColumn<Review, String> colEquip = new TableColumn<>("Équipement");
-        colEquip.setCellValueFactory(cellData -> {
-            Review r = cellData.getValue();
-            if (r.getEquipement() != null) {
-                return new javafx.beans.property.SimpleStringProperty(r.getEquipement().getNom());
+        // Affichage du nom de l'équipement
+        colEquipement.setCellValueFactory(cellData -> {
+            Review review = cellData.getValue();
+            if (review != null && review.getEquipement() != null) {
+                return new javafx.beans.property.SimpleStringProperty(review.getEquipement().getNom());
             }
             return new javafx.beans.property.SimpleStringProperty("N/A");
         });
-
-        TableColumn<Review, String> colDate = new TableColumn<>("Date");
-        colDate.setCellValueFactory(cellData -> {
-            Review r = cellData.getValue();
-            if (r.getDateReview() != null) {
-                return new javafx.beans.property.SimpleStringProperty(r.getDateReview().toString());
-            }
-            return new javafx.beans.property.SimpleStringProperty("");
-        });
-
-        TableColumn<Review, String> colAuteur = new TableColumn<>("Auteur");
-        colAuteur.setCellValueFactory(cellData -> {
-            Review r = cellData.getValue();
-            return new javafx.beans.property.SimpleStringProperty("User #" + r.getUserId());
-        });
-
-        tableReview.getColumns().addAll(colCommentaire, colNote, colEquip, colDate, colAuteur);
     }
 
-    private void loadStatistics() {
+    /**
+     * Charger les statistiques dans les cartes
+     */
+    private void chargerStatistiques() {
+        Map<String, Object> stats = dashboardService.getAdminStats();
+
+        lblTotalEquipements.setText(String.valueOf(stats.get("totalEquipements")));
+        lblEquipementsDisponibles.setText(String.valueOf(stats.get("equipementsDisponibles")));
+        lblEquipementsEnPanne.setText(String.valueOf(stats.get("equipementsEnPanne")));
+        lblEquipementsMaintenance.setText(String.valueOf(stats.get("equipementsEnMaintenance")));
+        lblTotalReviews.setText(String.valueOf(stats.get("totalReviews")));
+        lblNoteMoyenne.setText(stats.get("noteMoyenne") + " ⭐");
+        lblTotalAgriculteurs.setText(String.valueOf(stats.get("totalAgriculteurs")));
+    }
+
+    /**
+     * Charger tous les équipements
+     */
+    private void chargerEquipements() {
         try {
-            List<Equipement> equipements = equipementService.getAll();
-            List<Review> reviews = reviewService.getAll();
-
-            // Total équipements
-            lblTotalEquipements.setText(String.valueOf(equipements.size()));
-
-            // Équipements en panne
-            long enPanne = equipements.stream()
-                    .filter(e -> "Non disponible".equals(e.getDisponibilite()) || "En maintenance".equals(e.getDisponibilite()))
-                    .count();
-            lblEnPanne.setText(String.valueOf(enPanne));
-
-            // Note moyenne
-            double moyenne = reviews.stream()
-                    .mapToDouble(Review::getNote)
-                    .average()
-                    .orElse(0);
-            lblNoteMoyenne.setText(String.format("%.1f", moyenne));
-
-            // Agriculteurs (quand User sera dispo)
-            // lblAgriculteurs.setText(String.valueOf(userService.countUsers()));
-            lblAgriculteurs.setText("3"); // Temporaire
-
+            ObservableList<Equipement> data = FXCollections.observableArrayList(
+                    equipementService.getAll()
+            );
+            tableEquipements.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();
+            AlertUtils.showError("Erreur", "Impossible de charger les équipements");
         }
     }
 
-    private void loadEquipements() {
+    /**
+     * Charger toutes les reviews
+     */
+    private void chargerReviews() {
         try {
-            ObservableList<Equipement> data = FXCollections.observableArrayList(equipementService.getAll());
-            tableEquipement.setItems(data);
+            ObservableList<Review> data = FXCollections.observableArrayList(
+                    reviewService.getAll()
+            );
+            tableReviews.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();
+            AlertUtils.showError("Erreur", "Impossible de charger les reviews");
         }
     }
 
-    private void loadReviews() {
+    /**
+     * Charger le graphique circulaire
+     */
+    private void chargerGraphique() {
         try {
-            ObservableList<Review> data = FXCollections.observableArrayList(reviewService.getAll());
-            tableReview.setItems(data);
+            int disponibles = equipementService.countDisponibles();
+            int enPanne = equipementService.countEnPanne();
+            int maintenance = equipementService.countEnMaintenance();
+
+            ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList(
+                    new PieChart.Data("Disponibles (" + disponibles + ")", disponibles),
+                    new PieChart.Data("En panne (" + enPanne + ")", enPanne),
+                    new PieChart.Data("Maintenance (" + maintenance + ")", maintenance)
+            );
+
+            pieChartEquipements.setData(pieData);
+            pieChartEquipements.setTitle("État des équipements");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

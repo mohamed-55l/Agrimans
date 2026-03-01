@@ -67,7 +67,8 @@
                    GridPane.rowIndex="1" GridPane.columnIndex="2"
                    style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
                    visible="false"
-                   text=" "/>
+                   text=" "
+                   wrapText="true"/>
 
             <!-- Ligne 2: Équipement -->
             <Label text="Équipement:" GridPane.rowIndex="2" GridPane.columnIndex="0"
@@ -81,7 +82,8 @@
                    GridPane.rowIndex="2" GridPane.columnIndex="2"
                    style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
                    visible="false"
-                   text=" "/>
+                   text=" "
+                   wrapText="true"/>
 
             <!-- Ligne 3: Date (automatique) -->
             <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"
@@ -93,7 +95,7 @@
         </GridPane>
     </TitledPane>
 
-    <!-- Bouton d'action -->
+    <!-- Boutons d'action -->
     <HBox spacing="15" alignment="CENTER">
         <Button text="➕ Ajouter"
                 style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
@@ -102,6 +104,12 @@
                 onMouseExited="#handleButtonExit"
                 prefWidth="120"/>
 
+        <Button text="✏️ Modifier"
+                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
+                onAction="#modifierReview"
+                onMouseEntered="#handleButtonEnter"
+                onMouseExited="#handleButtonExit"
+                prefWidth="120"/>
 
         <Button text="🗑️ Supprimer"
                 style="-fx-background-color: #2E3D27; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.review.controllers.UserReviewController"
+            prefWidth="500" prefHeight="450"
+            style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 20, 0, 0, 0);">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <top>
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="⭐ Ajouter une review"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <Label fx:id="lblTitre" text="Sélectionnez un équipement"
+                   style="-fx-font-size: 16px; -fx-text-fill: #4B8B3B;"/>
+            <Label fx:id="lblEquipementInfo"
+                   style="-fx-font-size: 14px; -fx-text-fill: #666; -fx-padding: 10; -fx-background-color: #f5f5f5; -fx-background-radius: 5;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="15" alignment="CENTER" BorderPane.alignment="CENTER">
+
+            <!-- Note -->
+            <VBox spacing="5">
+                <Label text="Note (0-5) :" style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="tfNote" promptText="Ex: 4.5" prefWidth="100"
+                               style="-fx-background-radius: 5; -fx-padding: 8;"/>
+                    <Label text="/ 5" style="-fx-font-size: 16px; -fx-text-fill: #666;"/>
+                </HBox>
+                <Label fx:id="lblErrorNote" style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                       visible="false" text=" "/>
+            </VBox>
+
+            <!-- Commentaire -->
+            <VBox spacing="5">
+                <Label text="Votre commentaire :" style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                <TextArea fx:id="taCommentaire" promptText="Partagez votre expérience avec cet équipement..."
+                          prefRowCount="4" wrapText="true"
+                          style="-fx-background-radius: 5;"/>
+                <Label fx:id="lblErrorCommentaire" style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                       visible="false" text=" "/>
+                <Label text="(5-500 caractères)" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
+            </VBox>
+
+            <!-- Date (automatique) -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Date :" style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                <Label text="(automatique - aujourd'hui)" style="-fx-text-fill: #666; -fx-font-style: italic;"/>
+            </HBox>
+
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20"/>
+            </padding>
+
+            <Button text="✅ Valider" onAction="#validerReview"
+                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 25;"
+                    prefWidth="120"/>
+
+            <Button text="❌ Annuler" onAction="#annuler"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 25;"
+                    prefWidth="120"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

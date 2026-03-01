@@ -1,103 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="modules.dashboard.controllers.UserDashboardController"
-      spacing="25"
-      style="-fx-background-color: transparent;">
+<ScrollPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.dashboard.controllers.UserDashboardController"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
 
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+    <VBox spacing="25" style="-fx-background-color: transparent;">
 
-    <!-- En-tête USER avec nom -->
-    <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label text="🌾" style="-fx-font-size: 40px;"/>
-        <VBox>
-            <Label text="Bonjour," style="-fx-font-size: 16px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblUserName" text="Jean Agriculteur"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- En-tête personnalisé -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="🌾" style="-fx-font-size: 40px;"/>
+            <VBox>
+                <Label fx:id="lblBienvenue"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                <Label text="Voici votre espace personnel"
+                       style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Mes statistiques personnelles -->
+        <HBox spacing="15" alignment="CENTER">
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="200" alignment="CENTER" spacing="10">
+                <Label text="⚙️" style="-fx-font-size: 35px;"/>
+                <Label text="Mes équipements" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblMesEquipements" text="0"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="200" alignment="CENTER" spacing="10">
+                <Label text="⭐" style="-fx-font-size: 35px;"/>
+                <Label text="Mes reviews" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblMesReviews" text="0"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="200" alignment="CENTER" spacing="10">
+                <Label text="⚠️" style="-fx-font-size: 35px;"/>
+                <Label text="En panne" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblMesPannes" text="0"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+                  prefWidth="200" alignment="CENTER" spacing="10">
+                <Label text="💰" style="-fx-font-size: 35px;"/>
+                <Label text="Valeur totale" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblValeurTotale" text="0 DT"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Mes équipements -->
+        <VBox spacing="10">
+            <Label text="📋 Mes équipements"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+
+            <TableView fx:id="tableMesEquipements" prefHeight="250">
+                <columns>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="200"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="150"/>
+                    <TableColumn fx:id="colPrix" text="Prix" prefWidth="120"/>
+                    <TableColumn fx:id="colEtat" text="État" prefWidth="120"/>
+                    <TableColumn fx:id="colAction" text="Action" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <Button text="➕ Ajouter un équipement"
+                    onAction="#allerVersAjoutEquipement"
+                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10;"
+                    maxWidth="200"/>
         </VBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Ma ferme" style="-fx-font-size: 16px; -fx-text-fill: #4B8B3B;"/>
-    </HBox>
 
-    <!-- MES STATISTIQUES PERSONNELLES -->
-    <HBox spacing="20" alignment="CENTER">
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="180" alignment="CENTER" spacing="10">
-            <Label text="⚙️" style="-fx-font-size: 35px;"/>
-            <Label text="Mes équipements" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblMesEquipements" text="0"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+        <!-- Mes reviews -->
+        <VBox spacing="10">
+            <Label text="⭐ Mes dernières reviews"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+
+            <TableView fx:id="tableMesReviews" prefHeight="200">
+                <columns>
+                    <TableColumn fx:id="colReviewEquipement" text="Équipement" prefWidth="150"/>
+                    <TableColumn fx:id="colReviewCommentaire" text="Commentaire" prefWidth="350"/>
+                    <TableColumn fx:id="colReviewNote" text="Note" prefWidth="100"/>
+                    <TableColumn fx:id="colReviewDate" text="Date" prefWidth="120"/>
+                </columns>
+            </TableView>
         </VBox>
 
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="180" alignment="CENTER" spacing="10">
-            <Label text="⭐" style="-fx-font-size: 35px;"/>
-            <Label text="Mes reviews" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblMesReviews" text="0"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
-        </VBox>
-
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="180" alignment="CENTER" spacing="10">
-            <Label text="⚠️" style="-fx-font-size: 35px;"/>
-            <Label text="En panne" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblMesPannes" text="0"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
-        </VBox>
-
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              prefWidth="180" alignment="CENTER" spacing="10">
-            <Label text="💰" style="-fx-font-size: 35px;"/>
-            <Label text="Valeur totale" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
-            <Label fx:id="lblValeurTotale" text="0 DT"
-                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
-        </VBox>
-    </HBox>
-
-    <!-- MES ÉQUIPEMENTS -->
-    <VBox spacing="10">
-        <Label text="📋 Mes équipements"
-               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-
-        <TableView fx:id="tableMesEquipements"
-                   prefHeight="200"
-                   style="-fx-background-color: white; -fx-background-radius: 10;">
-            <columns>
-                <TableColumn text="Nom" prefWidth="200"/>
-                <TableColumn text="Type" prefWidth="150"/>
-                <TableColumn text="Prix" prefWidth="120"/>
-                <TableColumn text="État" prefWidth="100"/>
-                <TableColumn text="Action" prefWidth="200"/>  <!-- Boutons Voir/Ajouter review -->
-            </columns>
-        </TableView>
-
-        <!-- Bouton rapide pour ajouter -->
-        <Button text="➕ Ajouter un équipement"
-                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10;"
-                maxWidth="200"
-                onAction="#goToAjoutEquipement"/>
     </VBox>
-
-    <!-- MES REVIEWS RÉCENTES -->
-    <VBox spacing="10">
-        <Label text="⭐ Mes dernières reviews"
-               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-
-        <TableView fx:id="tableMesReviews"
-                   prefHeight="150"
-                   style="-fx-background-color: white; -fx-background-radius: 10;">
-            <columns>
-                <TableColumn text="Équipement" prefWidth="150"/>
-                <TableColumn text="Commentaire" prefWidth="300"/>
-                <TableColumn text="Note" prefWidth="100"/>
-                <TableColumn text="Date" prefWidth="120"/>
-            </columns>
-        </TableView>
-    </VBox>
-</VBox>
+</ScrollPane>

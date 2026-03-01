@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.equipement.controllers.UserEquipementController"
+      spacing="20"
+      style="-fx-background-color: transparent;">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="🌾 Mes Équipements"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+
+    <!-- Message d'information -->
+    <Label text="Consultez la liste des équipements qui vous sont assignés"
+           style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+
+    <!-- Tableau des équipements -->
+    <TableView fx:id="tableEquipements" prefHeight="400"
+               style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+        <columns>
+            <TableColumn text="Nom" prefWidth="200"/>
+            <TableColumn text="Type" prefWidth="150"/>
+            <TableColumn text="Prix" prefWidth="120"/>
+            <TableColumn text="État" prefWidth="120"/>
+            <TableColumn text="Action" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Légende des états -->
+    <HBox spacing="20" alignment="CENTER">
+        <HBox spacing="5" alignment="CENTER">
+            <Label text="●" style="-fx-text-fill: #27ae60; -fx-font-size: 16px;"/>
+            <Label text="Disponible" style="-fx-font-size: 12px;"/>
+        </HBox>
+        <HBox spacing="5" alignment="CENTER">
+            <Label text="●" style="-fx-text-fill: #e74c3c; -fx-font-size: 16px;"/>
+            <Label text="Non disponible" style="-fx-font-size: 12px;"/>
+        </HBox>
+        <HBox spacing="5" alignment="CENTER">
+            <Label text="●" style="-fx-text-fill: #f39c12; -fx-font-size: 16px;"/>
+            <Label text="En maintenance" style="-fx-font-size: 12px;"/>
+        </HBox>
+    </HBox>
+
+    <!-- Note informative -->
+    <Label text="ℹ️ Vous pouvez uniquement consulter vos équipements. Pour toute modification, contactez l'administrateur."
+           style="-fx-text-fill: #666; -fx-font-size: 11px; -fx-padding: 10; -fx-background-color: #f5f5f5; -fx-background-radius: 5;"/>
+
+</VBox>

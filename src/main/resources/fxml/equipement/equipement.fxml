@@ -20,7 +20,8 @@
     <!-- Tableau -->
     <TableView fx:id="tableEquipement"
                prefHeight="250"
-               style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+               style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+               onMouseClicked="#handleTableClick">
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
             <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
@@ -53,7 +54,8 @@
                    GridPane.rowIndex="0" GridPane.columnIndex="2"
                    style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
                    visible="false"
-                   text=" "/>
+                   text=" "
+                   wrapText="true"/>
 
             <!-- Ligne 1: Type -->
             <Label text="Type:" GridPane.rowIndex="1" GridPane.columnIndex="0"
@@ -67,7 +69,8 @@
                    GridPane.rowIndex="1" GridPane.columnIndex="2"
                    style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
                    visible="false"
-                   text=" "/>
+                   text=" "
+                   wrapText="true"/>
 
             <!-- Ligne 2: Prix -->
             <Label text="Prix (DT):" GridPane.rowIndex="2" GridPane.columnIndex="0"
@@ -81,7 +84,8 @@
                    GridPane.rowIndex="2" GridPane.columnIndex="2"
                    style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
                    visible="false"
-                   text=" "/>
+                   text=" "
+                   wrapText="true"/>
 
             <!-- Ligne 3: État -->
             <Label text="État:" GridPane.rowIndex="3" GridPane.columnIndex="0"
@@ -95,7 +99,8 @@
                    GridPane.rowIndex="3" GridPane.columnIndex="2"
                    style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
                    visible="false"
-                   text=" "/>
+                   text=" "
+                   wrapText="true"/>
 
         </GridPane>
     </TitledPane>
@@ -122,6 +127,11 @@
                 onMouseEntered="#handleButtonEnter"
                 onMouseExited="#handleButtonExit"
                 prefWidth="120"/>
+
+        <Button text="🧹 Vider"
+                style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
+                onAction="#viderFormulaire"
+                prefWidth="120"/>
     </HBox>
 
     <!-- Indicateurs de validation -->
@@ -130,6 +140,8 @@
                style="-fx-text-fill: #4B8B3B; -fx-font-size: 11px;"/>
         <Label text="⚠️ Validation en temps réel"
                style="-fx-text-fill: #e67e22; -fx-font-size: 11px;"/>
+        <Label text="📝 Double-clic sur tableau pour modifier"
+               style="-fx-text-fill: #3498db; -fx-font-size: 11px;"/>
     </HBox>
 
 </VBox>
