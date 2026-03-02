@@ -331,6 +331,10 @@ public class AdminDashboardController implements Initializable {
         }
     }
 
+
+
+
+
     private void ouvrirPageModification(Equipement equipement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/equipement/modif_equipement.fxml"));
@@ -347,6 +351,7 @@ public class AdminDashboardController implements Initializable {
             AlertUtils.showError("Erreur", "Impossible d'ouvrir la page de modification");
         }
     }
+
 
     private void supprimerEquipement(Equipement equipement) {
         if (AlertUtils.showConfirmation("Confirmation",
