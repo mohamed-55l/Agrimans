@@ -308,4 +308,50 @@ public class EquipementService {
 
         return equipement;
     }
+
+
+
+
+    /**
+     * Récupère uniquement les équipements disponibles
+     */
+    public List<Equipement> getEquipementsDisponibles() throws SQLException {
+        List<Equipement> list = new ArrayList<>();
+        String sql = "SELECT * FROM equipement WHERE disponibilite = 'Disponible' ORDER BY nom";
+
+        try (Statement st = cnx.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Equipement equipement = extractEquipementFromResultSet(rs);
+                list.add(equipement);
+            }
+        }
+
+        return list;
+    }
+
+
+    /**
+     * Récupère les équipements par état
+     */
+    public List<Equipement> getByEtat(String etat) throws SQLException {
+        List<Equipement> list = new ArrayList<>();
+        String sql = "SELECT * FROM equipement WHERE disponibilite = ? ORDER BY nom";
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setString(1, etat);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Equipement equipement = extractEquipementFromResultSet(rs);
+                list.add(equipement);
+            }
+        }
+
+        return list;
+    }
+
+
+
 }

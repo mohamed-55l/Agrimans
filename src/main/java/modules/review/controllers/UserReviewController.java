@@ -34,6 +34,8 @@ public class UserReviewController implements Initializable {
     @FXML private TextField tfNote;
     @FXML private Label lblErrorCommentaire;
     @FXML private Label lblErrorNote;
+    @FXML private ComboBox<Equipement> cbEquipement;
+
     @FXML private Button btnValider;
     @FXML private Button btnAnnuler;
 
@@ -54,6 +56,8 @@ public class UserReviewController implements Initializable {
     // =====================================================
     // INITIALISATION
     // =====================================================
+    private Review reviewEnCoursDeModification;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,39 +129,32 @@ public class UserReviewController implements Initializable {
      */
     @FXML
     private void validerReview() {
-        // Vérifier qu'un équipement est sélectionné
-        if (equipementSelectionne == null) {
-            AlertUtils.showError("Erreur", "Aucun équipement sélectionné");
-            return;
-        }
-
-        // Valider les champs
-        if (!validerChamps()) {
-            return;
-        }
+        if (!validerChamps()) return;
 
         try {
-            // Créer la review
-            Review review = new Review();
-            review.setCommentaire(taCommentaire.getText().trim());
-            review.setNote(Float.parseFloat(tfNote.getText()));
-            review.setDateReview(Date.valueOf(LocalDate.now()));
-            review.setEquipementId(equipementSelectionne.getId());
-            review.setUserId(SessionManager.getCurrentUserId());
+            if (reviewEnCoursDeModification != null) {
+                // C'est une modification
+                reviewEnCoursDeModification.setCommentaire(taCommentaire.getText().trim());
+                reviewEnCoursDeModification.setNote(Float.parseFloat(tfNote.getText()));
+                reviewService.update(reviewEnCoursDeModification);
+                AlertUtils.showInfo("Succès", "Review modifiée avec succès !");
+            } else {
+                // C'est une création
+                Review review = new Review();
+                review.setCommentaire(taCommentaire.getText().trim());
+                review.setNote(Float.parseFloat(tfNote.getText()));
+                review.setDateReview(Date.valueOf(LocalDate.now()));
+                review.setEquipementId(equipementSelectionne.getId());
+                review.setUserId(SessionManager.getCurrentUserId());
+                reviewService.create(review);
+                AlertUtils.showInfo("Succès", "Review ajoutée avec succès !");
+            }
 
-            // Sauvegarder
-            reviewService.create(review);
-
-            AlertUtils.showInfo("Succès", "Review ajoutée avec succès !");
-
-            // Fermer la fenêtre
             fermerFenetre();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            AlertUtils.showError("Erreur", "Impossible d'ajouter la review: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            AlertUtils.showError("Erreur", "Format de note invalide");
+            AlertUtils.showError("Erreur", "Erreur: " + e.getMessage());
         }
     }
 
@@ -228,5 +225,32 @@ public class UserReviewController implements Initializable {
 
     private void cacherErreur(Label label) {
         label.setVisible(false);
+    }
+
+    // Ajoutez cette méthode pour modifier une review existante
+    public void setReview(Review review) {
+        this.reviewEnCoursDeModification = review;
+        this.equipementSelectionne = review.getEquipement();
+
+        // Utiliser Platform.runLater pour attendre que les composants soient initialisés
+        javafx.application.Platform.runLater(() -> {
+            if (review != null && review.getEquipement() != null) {
+                // Remplir le formulaire
+                tfNote.setText(String.valueOf(review.getNote()));
+                taCommentaire.setText(review.getCommentaire());
+
+                lblTitre.setText("Modifier la review pour : " + review.getEquipement().getNom());
+                lblEquipementInfo.setText("Équipement: " + review.getEquipement().getNom() +
+                        " (" + review.getEquipement().getType() + ")");
+
+                // Vérifier que cbEquipement n'est pas null avant de l'utiliser
+                if (cbEquipement != null) {
+                    cbEquipement.setValue(review.getEquipement());
+                    cbEquipement.setDisable(true);
+                }
+
+                btnValider.setText("✅ Modifier");
+            }
+        });
     }
 }

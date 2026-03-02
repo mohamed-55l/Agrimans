@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.demande.controllers.AdminDemandeController"
+      spacing="20" style="-fx-background-color: transparent; -fx-padding: 20;"
+      prefWidth="1000" prefHeight="700">
+
+    <!-- Titre -->
+    <Label text="📋 Gestion des demandes d'équipement"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+
+    <Separator/>
+
+    <!-- Filtre -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Filtrer par statut :" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="cbFiltreStatut" prefWidth="150"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- Tableau des demandes -->
+    <TableView fx:id="tableDemandes" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colEquipement" text="Équipement" prefWidth="150"/>
+            <TableColumn fx:id="colAgriculteur" text="Agriculteur" prefWidth="150"/>
+            <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+            <TableColumn fx:id="colReponse" text="Réponse" prefWidth="150"/>
+            <TableColumn fx:id="colAction" text="Actions" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Zone de réponse -->
+    <TitledPane text="Traiter la demande sélectionnée" expanded="true">
+        <VBox spacing="15" style="-fx-padding: 15;">
+
+            <Label fx:id="lblDemandeSelectionnee" text="Aucune demande sélectionnée"
+                   style="-fx-font-weight: bold; -fx-text-fill: #666;"/>
+
+            <Label text="Votre réponse :" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="taReponse" prefRowCount="3"
+                      promptText="Saisissez votre réponse pour l'agriculteur..."/>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="✅ Accepter" onAction="#traiterAccepte"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
+                        prefWidth="150"/>
+                <Button text="❌ Refuser" onAction="#traiterRefus"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
+                        prefWidth="150"/>
+            </HBox>
+
+        </VBox>
+    </TitledPane>
+
+</VBox>

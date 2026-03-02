@@ -9,45 +9,40 @@
             prefWidth="1200" prefHeight="700"
             style="-fx-background-color: #F0E8D8;">
 
-    <!-- MENU GAUCHE -->
+    <!-- MENU GAUCHE SIMPLIFIÉ -->
     <left>
-        <VBox spacing="20" prefWidth="250"
+        <VBox spacing="20" prefWidth="200"
               style="-fx-background-color: #2E3D27; -fx-padding: 20;">
 
             <padding>
                 <Insets top="30" right="15" bottom="30" left="15"/>
             </padding>
 
-            <!-- Profil Agriculteur -->
+            <!-- Profil -->
             <VBox alignment="CENTER" spacing="10">
-                <Label text="🌾" style="-fx-font-size: 50px;"/>
-                <Label text="Agriculteur" style="-fx-text-fill: #7DBF6C; -fx-font-size: 14px;"/>
-                <Label fx:id="lblUserInfo" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label text="🌾" style="-fx-font-size: 40px;"/>
+                <Label fx:id="lblUserInfo" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
             </VBox>
 
             <Separator style="-fx-background-color: #4B8B3B;"/>
 
-            <!-- Menu de navigation -->
+            <!-- Menu simplifié (2 options seulement) -->
             <VBox spacing="10">
-                <Button text="📊 Mon Dashboard" onAction="#goDashboard"
+                <Button text="📊 Dashboard" onAction="#goDashboard"
                         style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                        prefWidth="220" maxWidth="220"/>
+                        prefWidth="170" maxWidth="170"/>
 
-                <Button text="⚙️ Mes Équipements" onAction="#goMesEquipements"
+                <Button text="📋 Mes Demandes" onAction="#goDemandes"
                         style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                        prefWidth="220" maxWidth="220"/>
-
-                <Button text="⭐ Ajouter une Review" onAction="#goAjouterReview"
-                        style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                        prefWidth="220" maxWidth="220"/>
+                        prefWidth="170" maxWidth="170"/>
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>
 
-            <!-- Bouton déconnexion -->
+            <!-- Déconnexion -->
             <Button text="🚪 Déconnexion" onAction="#logout"
                     style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                    prefWidth="220" maxWidth="220"/>
+                    prefWidth="170" maxWidth="170"/>
 
         </VBox>
     </left>

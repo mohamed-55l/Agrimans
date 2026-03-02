@@ -7,15 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
-/**
- * Contrôleur pour le layout ADMIN
- *
- * RÔLE: Menu de navigation pour l'administrateur
- */
 public class AdminLayoutController {
 
     @FXML private StackPane contentArea;
@@ -23,10 +19,8 @@ public class AdminLayoutController {
 
     @FXML
     public void initialize() {
-        // Afficher les infos de l'utilisateur
         lblUserInfo.setText(SessionManager.getCurrentUserName() + " (Admin)");
 
-        // Charger le dashboard par défaut
         try {
             chargerPage("/fxml/dashboard/admin_dashboard.fxml");
         } catch (IOException e) {
@@ -62,6 +56,24 @@ public class AdminLayoutController {
     }
 
     @FXML
+    private void goDemandes() {
+        try {
+            chargerPage("/fxml/demande/admin_demandes.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la gestion des demandes");
+        }
+    }
+
+    @FXML
+    private void goUtilisateurs() {
+        try {
+            chargerPage("/fxml/user/user_management.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la gestion des utilisateurs");
+        }
+    }
+
+    @FXML
     private void logout() {
         if (AlertUtils.showConfirmation("Déconnexion", "Voulez-vous vraiment vous déconnecter ?")) {
             SessionManager.logout();
@@ -73,6 +85,18 @@ public class AdminLayoutController {
                 e.printStackTrace();
             }
         }
+    }
+
+    @FXML
+    void handleButtonEnter(MouseEvent event) {
+        Button button = (Button) event.getSource();
+        button.setStyle("-fx-background-color: #7DBF6C; -fx-text-fill: #2E3D27; -fx-font-size: 14; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-background-radius: 5;");
+    }
+
+    @FXML
+    void handleButtonExit(MouseEvent event) {
+        Button button = (Button) event.getSource();
+        button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: #F0E8D8; -fx-font-size: 14; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-background-radius: 5;");
     }
 
     private void chargerPage(String fxml) throws IOException {

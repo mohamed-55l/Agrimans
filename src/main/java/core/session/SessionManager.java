@@ -2,12 +2,6 @@ package core.session;
 
 import modules.user.models.User;
 
-/**
- * Gestionnaire de session utilisateur
- *
- * RÔLE: Garder en mémoire l'utilisateur connecté et son rôle
- * Pattern: Singleton
- */
 public class SessionManager {
 
     private static SessionManager instance;
@@ -27,22 +21,28 @@ public class SessionManager {
      */
     public static void login(User user) {
         getInstance().currentUser = user;
-        System.out.println("✅ Connexion: " + user.getEmail() + " (" + user.getRole() + ")");
+        System.out.println("✅ CONNEXION RÉUSSIE: " + user.getEmail() + " (" + user.getRole() + ")");
+        System.out.println("   ID: " + user.getId());
+        System.out.println("   Nom: " + user.getPrenom() + " " + user.getNom());
     }
 
     /**
      * Déconnecter
      */
     public static void logout() {
+        System.out.println("👋 Déconnexion de: " + getCurrentUserName());
         getInstance().currentUser = null;
-        System.out.println("✅ Déconnexion");
     }
 
     /**
      * Récupérer l'utilisateur connecté
      */
     public static User getCurrentUser() {
-        return getInstance().currentUser;
+        User user = getInstance().currentUser;
+        if (user == null) {
+            System.out.println("⚠️ Aucun utilisateur connecté");
+        }
+        return user;
     }
 
     /**
@@ -50,7 +50,9 @@ public class SessionManager {
      */
     public static boolean isAdmin() {
         User user = getCurrentUser();
-        return user != null && "ADMIN".equals(user.getRole());
+        boolean result = user != null && "ADMIN".equals(user.getRole());
+        System.out.println("🔍 Vérification rôle ADMIN: " + result);
+        return result;
     }
 
     /**
@@ -58,7 +60,9 @@ public class SessionManager {
      */
     public static boolean isAgriculteur() {
         User user = getCurrentUser();
-        return user != null && "AGRICULTEUR".equals(user.getRole());
+        boolean result = user != null && "AGRICULTEUR".equals(user.getRole());
+        System.out.println("🔍 Vérification rôle AGRICULTEUR: " + result);
+        return result;
     }
 
     /**
@@ -74,6 +78,6 @@ public class SessionManager {
      */
     public static String getCurrentUserName() {
         User user = getCurrentUser();
-        return user != null ? user.getPrenom() + " " + user.getNom() : "Inconnu";
+        return user != null ? user.getPrenom() + " " + user.getNom() : "Non connecté";
     }
 }

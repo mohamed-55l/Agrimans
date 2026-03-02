@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import modules.user.models.User;
+import modules.user.services.UserService;
+
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -35,7 +38,7 @@ public class EquipementController {
     @FXML private TextField tfType;
     @FXML private TextField tfPrix;
     @FXML private ComboBox<String> cbEtat;
-
+    @FXML private ComboBox<User> cbProprietaire;
     // Tableau
     @FXML private TableView<Equipement> tableEquipement;
     @FXML private TableColumn<Equipement, Integer> colId;
@@ -44,11 +47,13 @@ public class EquipementController {
     @FXML private TableColumn<Equipement, Float> colPrix;
     @FXML private TableColumn<Equipement, String> colEtat;
 
+
     // Labels d'erreur (validation)
     @FXML private Label lblNomError;
     @FXML private Label lblTypeError;
     @FXML private Label lblPrixError;
     @FXML private Label lblEtatError;
+    @FXML private Label lblProprietaireError;
 
     // =====================================================
     // SERVICES
@@ -56,7 +61,7 @@ public class EquipementController {
 
     private EquipementService service = new EquipementService();
     private ReviewService reviewService = new ReviewService(); // Pour vérifier les reviews avant suppression
-
+    private UserService userService = new UserService();
     // =====================================================
     // DONNÉES
     // =====================================================
@@ -102,7 +107,7 @@ public class EquipementController {
 
         // 5. Chargement des données
         chargerDonnees();
-
+        chargerProprietaires();
         // 6. Listener pour la sélection dans le tableau
         tableEquipement.getSelectionModel()
                 .selectedItemProperty()
@@ -189,6 +194,31 @@ public class EquipementController {
                 cacherErreur(lblEtatError);
             }
         });
+    }
+
+    private void chargerProprietaires() {
+        try {
+            ObservableList<User> agriculteurs = FXCollections.observableArrayList(
+                    userService.getAgriculteurs()
+            );
+            cbProprietaire.setItems(agriculteurs);
+
+            // Personnaliser l'affichage
+            cbProprietaire.setCellFactory(param -> new ListCell<User>() {
+                @Override
+                protected void updateItem(User user, boolean empty) {
+                    super.updateItem(user, empty);
+                    if (empty || user == null) {
+                        setText(null);
+                    } else {
+                        setText(user.getPrenom() + " " + user.getNom());
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -307,6 +337,7 @@ public class EquipementController {
     @FXML
     void ajouterEquipement() {
         // 1. Valider les champs
+
         if (!validerChamps()) {
             AlertUtils.showWarning("Validation", "Veuillez corriger les erreurs");
             return;
@@ -319,6 +350,7 @@ public class EquipementController {
             equipement.setType(tfType.getText().trim());
             equipement.setPrix(Float.parseFloat(tfPrix.getText()));
             equipement.setDisponibilite(cbEtat.getValue());
+            equipement.setUserId(cbProprietaire.getValue().getId());
 
             // ⚠️ VALEUR TEMPORAIRE - À remplacer plus tard par l'ID du vrai utilisateur connecté
             equipement.setUserId(1);  // Pour l'instant, on met 1 (utilisateur par défaut)
@@ -345,6 +377,7 @@ public class EquipementController {
         } catch (NumberFormatException e) {
             AlertUtils.showError("Erreur", "Format de nombre invalide");
         }
+
     }
 
     /**
@@ -457,6 +490,7 @@ public class EquipementController {
         tfPrix.clear();
         cbEtat.setValue("Disponible");
         effacerErreurs();
+        cbProprietaire.setValue(null);
 
         // Désélectionner dans le tableau
         tableEquipement.getSelectionModel().clearSelection();
@@ -493,6 +527,27 @@ public class EquipementController {
     }
 
     /**
+     * Vide tous les champs du formulaire
+     */
+    private void clearErrors() {
+        if (lblNomError != null) lblNomError.setVisible(false);
+        if (lblTypeError != null) lblTypeError.setVisible(false);
+        if (lblPrixError != null) lblPrixError.setVisible(false);
+        if (lblEtatError != null) lblEtatError.setVisible(false);
+        if (lblProprietaireError != null) lblProprietaireError.setVisible(false);
+    }
+
+    void clearFields() {
+        tfNom.clear();
+        tfType.clear();
+        tfPrix.clear();
+        cbEtat.setValue("Disponible");
+        clearErrors();
+
+        // Si vous avez un ComboBox pour le propriétaire
+        // cbProprietaire.setValue(null);
+    }
+    /**
      * Double-clic sur le tableau pour modifier
      */
     @FXML
@@ -500,5 +555,20 @@ public class EquipementController {
         if (event.getClickCount() == 2) {
             modifierEquipement();
         }
+    }
+
+
+    /**
+     * Annule la modification en cours et vide le formulaire
+     */
+    @FXML
+    void annulerModification() {
+        // Vider le formulaire
+        clearFields();
+
+        // Désélectionner l'équipement dans le tableau
+        tableEquipement.getSelectionModel().clearSelection();
+
+        System.out.println("✅ Modification annulée");
     }
 }

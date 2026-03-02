@@ -6,13 +6,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modules.dashboard.services.DashboardService;
+import modules.demande.controllers.DemandeController;
+import modules.demande.models.Demande;
+import modules.demande.services.DemandeService;
 import modules.equipement.models.Equipement;
 import modules.equipement.services.EquipementService;
 import modules.review.controllers.UserReviewController;
@@ -20,19 +25,15 @@ import modules.review.models.Review;
 import modules.review.services.ReviewService;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-/**
- * Contrôleur pour le dashboard USER (Agriculteur)
- *
- * RÔLE: Afficher les données personnelles de l'agriculteur
- * Accès: Réservé aux agriculteurs
- */
-public class UserDashboardController {
+public class UserDashboardController implements Initializable {
 
     // =====================================================
-    // STATISTIQUES PERSONNELLES
+    // STATISTIQUES
     // =====================================================
 
     @FXML private Label lblBienvenue;
@@ -40,23 +41,27 @@ public class UserDashboardController {
     @FXML private Label lblMesReviews;
     @FXML private Label lblMesPannes;
     @FXML private Label lblValeurTotale;
+    @FXML private Label lblDemandesEnCours;
 
     // =====================================================
-    // TABLEAUX PERSONNELS
+    // TABLEAUX
     // =====================================================
 
+    // Mes équipements
     @FXML private TableView<Equipement> tableMesEquipements;
-    @FXML private TableColumn<Equipement, String> colNom;
-    @FXML private TableColumn<Equipement, String> colType;
-    @FXML private TableColumn<Equipement, Float> colPrix;
-    @FXML private TableColumn<Equipement, String> colEtat;
-    @FXML private TableColumn<Equipement, Void> colAction;
+    @FXML private TableColumn<Equipement, String> colEquipNom;
+    @FXML private TableColumn<Equipement, String> colEquipType;
+    @FXML private TableColumn<Equipement, Float> colEquipPrix;
+    @FXML private TableColumn<Equipement, String> colEquipEtat;
+    @FXML private TableColumn<Equipement, Void> colEquipAction;
 
+    // Mes reviews
     @FXML private TableView<Review> tableMesReviews;
     @FXML private TableColumn<Review, String> colReviewEquipement;
     @FXML private TableColumn<Review, String> colReviewCommentaire;
     @FXML private TableColumn<Review, Float> colReviewNote;
     @FXML private TableColumn<Review, String> colReviewDate;
+    @FXML private TableColumn<Review, Void> colReviewAction;
 
     // =====================================================
     // SERVICES
@@ -65,6 +70,7 @@ public class UserDashboardController {
     private DashboardService dashboardService = new DashboardService();
     private EquipementService equipementService = new EquipementService();
     private ReviewService reviewService = new ReviewService();
+    private DemandeService demandeService = new DemandeService();
 
     private int userId;
 
@@ -72,132 +78,170 @@ public class UserDashboardController {
     // INITIALISATION
     // =====================================================
 
-    @FXML
-    public void initialize() {
-        // Vérifier les droits d'accès
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         if (!SessionManager.isAgriculteur()) {
-            AlertUtils.showError("Accès refusé", "Cette page est réservée aux agriculteurs");
+            AlertUtils.showError("Accès refusé", "Page réservée aux agriculteurs");
             return;
         }
 
-        // Récupérer l'ID de l'utilisateur connecté
         userId = SessionManager.getCurrentUserId();
-
-        // Afficher le message de bienvenue personnalisé
         lblBienvenue.setText("🌾 Bonjour " + SessionManager.getCurrentUserName());
 
-        // Configurer les tableaux
         configurerTableEquipements();
         configurerTableReviews();
 
-        // Charger les données personnelles
         chargerStatistiques();
         chargerMesEquipements();
         chargerMesReviews();
     }
 
-    /**
-     * Configuration du tableau des équipements personnels
-     */
-    private void configurerTableEquipements() {
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        colEtat.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
+    // =====================================================
+    // CONFIGURATION DES TABLEAUX
+    // =====================================================
 
-        // Formatage du prix
-        colPrix.setCellFactory(tc -> new javafx.scene.control.TableCell<Equipement, Float>() {
+    private void configurerTableEquipements() {
+        colEquipNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        colEquipType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colEquipPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        colEquipEtat.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
+
+        colEquipPrix.setCellFactory(tc -> new TableCell<Equipement, Float>() {
             @Override
             protected void updateItem(Float prix, boolean empty) {
                 super.updateItem(prix, empty);
-                if (empty || prix == null) {
+                if (empty || prix == null) setText(null);
+                else setText(String.format("%.2f DT", prix));
+            }
+        });
+
+        colEquipEtat.setCellFactory(tc -> new TableCell<Equipement, String>() {
+            @Override
+            protected void updateItem(String etat, boolean empty) {
+                super.updateItem(etat, empty);
+                if (empty || etat == null) {
                     setText(null);
                 } else {
-                    setText(String.format("%.2f DT", prix));
+                    setText(etat);
+                    switch(etat) {
+                        case "Disponible": setStyle("-fx-text-fill: #27ae60;"); break;
+                        case "Non disponible": setStyle("-fx-text-fill: #e74c3c;"); break;
+                        case "En maintenance": setStyle("-fx-text-fill: #f39c12;"); break;
+                    }
                 }
             }
         });
 
-        // Colonne action avec bouton pour ajouter une review
-        colAction.setCellFactory(param -> new TableCell<Equipement, Void>() {
-            private final Button btnReview = new Button("⭐ Ajouter review");
+        colEquipAction.setCellFactory(param -> new TableCell<Equipement, Void>() {
+            private final Button btnDemander = new Button("📝 Demander");
+            private final Button btnReview = new Button("⭐ Review");
+            private final HBox box = new HBox(5);
 
             {
-                btnReview.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 5;");
-                btnReview.setPrefWidth(120);
+                btnDemander.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 3;");
+                btnReview.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 3;");
+
+                btnDemander.setOnAction(event -> {
+                    Equipement equipement = getTableView().getItems().get(getIndex());
+                    ouvrirFormulaireDemande(equipement);
+                });
 
                 btnReview.setOnAction(event -> {
                     Equipement equipement = getTableView().getItems().get(getIndex());
                     ouvrirFormulaireReview(equipement);
                 });
+
+                box.getChildren().addAll(btnDemander, btnReview);
+                box.setAlignment(javafx.geometry.Pos.CENTER);
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(btnReview);
-                }
+                setGraphic(empty ? null : box);
             }
         });
     }
 
-    /**
-     * Configuration du tableau des reviews personnelles
-     */
     private void configurerTableReviews() {
+        colReviewEquipement.setCellValueFactory(cellData -> {
+            Review r = cellData.getValue();
+            return new javafx.beans.property.SimpleStringProperty(
+                    r.getEquipement() != null ? r.getEquipement().getNom() : "N/A"
+            );
+        });
         colReviewCommentaire.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
         colReviewNote.setCellValueFactory(new PropertyValueFactory<>("note"));
+        colReviewDate.setCellValueFactory(cellData -> {
+            Review r = cellData.getValue();
+            return new javafx.beans.property.SimpleStringProperty(
+                    r.getDateReview() != null ? r.getDateReview().toString() : ""
+            );
+        });
 
-        // Formatage de la note
-        colReviewNote.setCellFactory(tc -> new javafx.scene.control.TableCell<Review, Float>() {
+        colReviewNote.setCellFactory(tc -> new TableCell<Review, Float>() {
             @Override
             protected void updateItem(Float note, boolean empty) {
                 super.updateItem(note, empty);
-                if (empty || note == null) {
-                    setText(null);
-                } else {
-                    setText(String.format("%.1f ⭐", note));
-                }
+                if (empty || note == null) setText(null);
+                else setText(String.format("%.1f ⭐", note));
             }
         });
 
-        // Nom de l'équipement
-        colReviewEquipement.setCellValueFactory(cellData -> {
-            Review review = cellData.getValue();
-            if (review != null && review.getEquipement() != null) {
-                return new javafx.beans.property.SimpleStringProperty(review.getEquipement().getNom());
-            }
-            return new javafx.beans.property.SimpleStringProperty("N/A");
-        });
+        colReviewAction.setCellFactory(param -> new TableCell<Review, Void>() {
+            private final Button btnModifier = new Button("✏️");
+            private final Button btnSupprimer = new Button("🗑️");
+            private final HBox box = new HBox(5);
 
-        // Date
-        colReviewDate.setCellValueFactory(cellData -> {
-            Review review = cellData.getValue();
-            if (review != null && review.getDateReview() != null) {
-                return new javafx.beans.property.SimpleStringProperty(review.getDateReview().toString());
+            {
+                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 3;");
+                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 3;");
+
+                btnModifier.setOnAction(event -> {
+                    Review review = getTableView().getItems().get(getIndex());
+                    ouvrirFormulaireReview(review);
+                });
+
+                btnSupprimer.setOnAction(event -> {
+                    Review review = getTableView().getItems().get(getIndex());
+                    supprimerReview(review);
+                });
+
+                box.getChildren().addAll(btnModifier, btnSupprimer);
+                box.setAlignment(javafx.geometry.Pos.CENTER);
             }
-            return new javafx.beans.property.SimpleStringProperty("");
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : box);
+            }
         });
     }
 
-    /**
-     * Charger les statistiques personnelles
-     */
+    // =====================================================
+    // CHARGEMENT DES DONNÉES
+    // =====================================================
+
     private void chargerStatistiques() {
-        Map<String, Object> stats = dashboardService.getUserStats(userId);
+        try {
+            Map<String, Object> stats = dashboardService.getUserStats(userId);
 
-        lblMesEquipements.setText(String.valueOf(stats.get("mesEquipements")));
-        lblMesReviews.setText(String.valueOf(stats.get("mesReviews")));
-        lblMesPannes.setText(String.valueOf(stats.get("mesPannes")));
-        lblValeurTotale.setText(stats.get("valeurTotale") + " DT");
+            lblMesEquipements.setText(String.valueOf(stats.get("mesEquipements")));
+            lblMesReviews.setText(String.valueOf(stats.get("mesReviews")));
+            lblMesPannes.setText(String.valueOf(stats.get("mesPannes")));
+            lblValeurTotale.setText(stats.get("valeurTotale") + " DT");
+
+            long demandesEnCours = demandeService.getByAgriculteurId(userId).stream()
+                    .filter(d -> "EN_ATTENTE".equals(d.getStatut()))
+                    .count();
+            lblDemandesEnCours.setText(String.valueOf(demandesEnCours));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Charger mes équipements
-     */
     private void chargerMesEquipements() {
         try {
             ObservableList<Equipement> data = FXCollections.observableArrayList(
@@ -210,9 +254,6 @@ public class UserDashboardController {
         }
     }
 
-    /**
-     * Charger mes reviews
-     */
     private void chargerMesReviews() {
         try {
             ObservableList<Review> data = FXCollections.observableArrayList(
@@ -225,9 +266,10 @@ public class UserDashboardController {
         }
     }
 
-    /**
-     * Ouvrir le formulaire de review pour un équipement spécifique
-     */
+    // =====================================================
+    // GESTION DES REVIEWS
+    // =====================================================
+
     private void ouvrirFormulaireReview(Equipement equipement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/review/user_review.fxml"));
@@ -237,13 +279,13 @@ public class UserDashboardController {
             controller.setEquipement(equipement);
 
             Stage stage = new Stage();
-            stage.setTitle("Ajouter une review - " + equipement.getNom());
+            stage.setTitle("Ajouter une review");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Rafraîchir les reviews après ajout
             chargerMesReviews();
+            chargerStatistiques();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -251,19 +293,86 @@ public class UserDashboardController {
         }
     }
 
-
-    /**
-     * Aller à la page d'ajout d'équipement
-     */
-    @FXML
-    private void allerVersAjoutEquipement() {
+    private void ouvrirFormulaireReview(Review review) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/equipement/user_equipement.fxml"));
-            Stage stage = (Stage) lblBienvenue.getScene().getWindow();
-            stage.getScene().setRoot(root);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/review/user_review.fxml"));
+            Parent root = loader.load();
+
+            UserReviewController controller = loader.getController();
+            controller.setReview(review);
+
+            Stage stage = new Stage();
+            stage.setTitle("Modifier la review");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            chargerMesReviews();
+            chargerStatistiques();
+
         } catch (IOException e) {
             e.printStackTrace();
-            AlertUtils.showError("Erreur", "Impossible de charger la page");
+            AlertUtils.showError("Erreur", "Impossible d'ouvrir le formulaire");
+        }
+    }
+
+    private void supprimerReview(Review review) {
+        if (AlertUtils.showConfirmation("Confirmation", "Supprimer cette review ?")) {
+            try {
+                reviewService.delete(review.getId());
+                chargerMesReviews();
+                chargerStatistiques();
+                AlertUtils.showInfo("Succès", "Review supprimée");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                AlertUtils.showError("Erreur", "Impossible de supprimer");
+            }
+        }
+    }
+
+    // =====================================================
+    // GESTION DES DEMANDES
+    // =====================================================
+
+    private void ouvrirFormulaireDemande(Equipement equipement) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/demande/user_demande.fxml"));
+            Parent root = loader.load();
+
+            DemandeController controller = loader.getController();
+            controller.setEquipement(equipement);
+
+            Stage stage = new Stage();
+            stage.setTitle("Nouvelle demande");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            chargerStatistiques();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertUtils.showError("Erreur", "Impossible d'ouvrir le formulaire");
+        }
+    }
+
+    // =====================================================
+    // 👉 BOUTON "NOUVELLE DEMANDE" - NAVIGUE VERS LA PAGE MES DEMANDES
+    // =====================================================
+
+    @FXML
+    private void nouvelleDemande() {
+        try {
+            // Charger la page des demandes dans la même fenêtre (pas une nouvelle fenêtre)
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/demande/user_demande.fxml"));
+
+            // Remplacer le contenu de la fenêtre actuelle
+            Stage stage = (Stage) lblBienvenue.getScene().getWindow();
+            stage.getScene().setRoot(root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertUtils.showError("Erreur", "Impossible d'ouvrir la page des demandes");
         }
     }
 }

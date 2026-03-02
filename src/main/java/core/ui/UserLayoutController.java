@@ -11,11 +11,6 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
-/**
- * Contrôleur pour le layout USER
- *
- * RÔLE: Menu de navigation pour l'agriculteur
- */
 public class UserLayoutController {
 
     @FXML private StackPane contentArea;
@@ -23,11 +18,10 @@ public class UserLayoutController {
 
     @FXML
     public void initialize() {
-        // Afficher les infos de l'utilisateur
         lblUserInfo.setText(SessionManager.getCurrentUserName());
 
-        // Charger le dashboard par défaut
         try {
+            // Dashboard par défaut
             chargerPage("/fxml/dashboard/user_dashboard.fxml");
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,20 +38,11 @@ public class UserLayoutController {
     }
 
     @FXML
-    private void goMesEquipements() {
+    private void goDemandes() {
         try {
-            chargerPage("/fxml/equipement/user_equipement.fxml");
+            chargerPage("/fxml/demande/user_demande.fxml");
         } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger mes équipements");
-        }
-    }
-
-    @FXML
-    private void goAjouterReview() {
-        try {
-            chargerPage("/fxml/review/user_review.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger le formulaire");
+            AlertUtils.showError("Erreur", "Impossible de charger la page des demandes");
         }
     }
 

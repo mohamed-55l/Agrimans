@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.equipement.controllers.ModifEquipementController"
+      spacing="20" style="-fx-background-color: transparent; -fx-padding: 20;"
+      prefWidth="500" prefHeight="400">
+
+    <!-- Titre -->
+    <Label fx:id="lblTitre" text="✏️ Modifier un équipement"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+
+    <Separator/>
+
+    <!-- Formulaire -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10;">
+
+        <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100"/>
+                <ColumnConstraints minWidth="250"/>
+            </columnConstraints>
+
+            <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="tfNom" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Nom de l'équipement"/>
+
+            <Label text="Type :" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="tfType" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Type d'équipement"/>
+
+            <Label text="Prix (DT) :" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="tfPrix" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Ex: 1299.99"/>
+
+            <Label text="État :" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cbEtat" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="250"/>
+
+            <Label fx:id="lblError" GridPane.rowIndex="4" GridPane.columnIndex="1" textFill="red" managed="false"/>
+        </GridPane>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button text="✅ Modifier" onAction="#modifierEquipement"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
+                    prefWidth="150"/>
+            <Button text="🔙 Retour" onAction="#retourDashboard"
+                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
+                    prefWidth="150"/>
+        </HBox>
+
+    </VBox>
+
+</VBox>
