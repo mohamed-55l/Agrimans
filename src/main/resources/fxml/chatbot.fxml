@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.chatbot.controllers.ChatbotController"
+            style="-fx-background-color: #F0E8D8;">
+
+    <!-- TOP: Titre -->
+    <top>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #2E3D27;">
+            <Label text="🤖 Assistant Agricole Intelligent"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="Posez vos questions sur l'agriculture, les équipements, les cultures..."
+                   style="-fx-text-fill: #7DBF6C;"/>
+        </VBox>
+    </top>
+
+    <!-- CENTER: Zone de chat + questions -->
+    <center>
+        <HBox spacing="10" style="-fx-padding: 10;">
+
+            <!-- Zone des messages -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background: transparent;">
+                    <VBox fx:id="messagesContainer" spacing="10" style="-fx-padding: 10;"/>
+                </ScrollPane>
+
+                <!-- Zone de saisie -->
+                <HBox spacing="10" alignment="CENTER">
+                    <TextField fx:id="inputMessage" promptText="Tapez votre question ici..."
+                               style="-fx-background-radius: 20; -fx-padding: 10;" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnEnvoyer" text="Envoyer" onAction="#envoyerMessage"
+                            style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10 20;"/>
+                    <Button text="🗑️" onAction="#effacerConversation"
+                            style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Questions fréquentes (sidebar) -->
+            <VBox spacing="10" prefWidth="250" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
+                <Label text="📋 Questions fréquentes"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                <ListView fx:id="questionsListView" prefHeight="200"/>
+                <Label text="(Double-cliquez pour poser la question)"
+                       style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
+
+                <Separator/>
+
+                <Label text="🤖 Astuces"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                <Label text="• Tapez 'aide' pour voir les commandes\n• Questions en français\n• Réponses instantanées"
+                       style="-fx-text-fill: #666; -fx-font-size: 12px;" wrapText="true"/>
+            </VBox>
+        </HBox>
+    </center>
+
+    <!-- BOTTOM: Bouton retour -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10;">
+            <Button text="🔙 Retour au Dashboard" onAction="#retourDashboard"
+                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

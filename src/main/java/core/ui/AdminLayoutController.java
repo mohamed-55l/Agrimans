@@ -9,8 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class AdminLayoutController {
 
@@ -97,6 +100,54 @@ public class AdminLayoutController {
     void handleButtonExit(MouseEvent event) {
         Button button = (Button) event.getSource();
         button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: #F0E8D8; -fx-font-size: 14; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-background-radius: 5;");
+    }
+
+    @FXML
+    private void goChatbot() {
+        try {
+            // Essayer sans le / au début
+            URL url = getClass().getResource("fxml/chatbot.fxml");
+            System.out.println("Sans /: " + url);
+
+            // Essayer avec le / au début
+            url = getClass().getResource("/fxml/chatbot.fxml");
+            System.out.println("Avec /: " + url);
+
+            if (url == null) {
+                // Chemin absolu (à adapter à VOTRE PC)
+                File file = new File("C:/Users/dmoha/OneDrive/Desktop/PIjava/Agrimans/src/main/resources/fxml/chatbot.fxml");
+                System.out.println("Chemin absolu: " + file.exists());
+
+                if (file.exists()) {
+                    Parent root = FXMLLoader.load(file.toURI().toURL());
+                    Stage stage = (Stage) lblUserInfo.getScene().getWindow();
+                    stage.getScene().setRoot(root);
+                    return;
+                }
+            }
+
+            chargerPage("/fxml/chatbot.fxml");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertUtils.showError("Erreur", "Erreur: " + e.getMessage());
+        }
+    }
+
+    private void listerFichiers(File dir, String indent) {
+        File[] fichiers = dir.listFiles();
+        if (fichiers != null) {
+            for (File f : fichiers) {
+                if (f.isDirectory()) {
+                    if (f.getName().endsWith("fxml")) {
+                        System.out.println(indent + "📁 " + f.getName());
+                    }
+                    listerFichiers(f, indent + "  ");
+                } else if (f.getName().endsWith(".fxml")) {
+                    System.out.println(indent + "📄 " + f.getName());
+                }
+            }
+        }
     }
 
     private void chargerPage(String fxml) throws IOException {

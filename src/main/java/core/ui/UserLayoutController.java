@@ -60,6 +60,15 @@ public class UserLayoutController {
         }
     }
 
+    @FXML
+    private void goChatbot() {
+        try {
+            chargerPage("/fxml/chatbot.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger le chatbot");
+        }
+    }
+
     private void chargerPage(String fxml) throws IOException {
         Parent page = FXMLLoader.load(getClass().getResource(fxml));
         contentArea.getChildren().clear();
