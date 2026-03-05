@@ -1,25 +1,24 @@
 package modules.meteo.models;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AlerteMeteo {
+
+    private static int compteur = 0;
 
     private int id;
     private String titre;
     private String message;
-    private String type; // "PLUIE", "GEL", "CANICULE", "VENT"
+    private String type;      // "PLUIE", "GEL", "CANICULE", "VENT", "MALADIE"
     private LocalDateTime datePrevue;
     private LocalDateTime dateCreation;
+    private String niveau;     // "INFO", "WARNING", "DANGER"
     private boolean lue;
-    private String niveau; // "INFO", "WARNING", "DANGER"
-
-    public AlerteMeteo() {
-        this.dateCreation = LocalDateTime.now();
-        this.lue = false;
-    }
 
     public AlerteMeteo(String titre, String message, String type,
                        LocalDateTime datePrevue, String niveau) {
+        this.id = ++compteur;
         this.titre = titre;
         this.message = message;
         this.type = type;
@@ -48,11 +47,17 @@ public class AlerteMeteo {
     public LocalDateTime getDateCreation() { return dateCreation; }
     public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 
+    public String getNiveau() { return niveau; }
+    public void setNiveau(String niveau) { this.niveau = niveau; }
+
     public boolean isLue() { return lue; }
     public void setLue(boolean lue) { this.lue = lue; }
 
-    public String getNiveau() { return niveau; }
-    public void setNiveau(String niveau) { this.niveau = niveau; }
+    public String getDateFormatee() {
+        return datePrevue != null ?
+                datePrevue.format(DateTimeFormatter.ofPattern("dd/MM HH:mm")) :
+                dateCreation.format(DateTimeFormatter.ofPattern("dd/MM HH:mm"));
+    }
 
     public String getCouleur() {
         switch(niveau) {
@@ -64,10 +69,11 @@ public class AlerteMeteo {
 
     public String getIcone() {
         switch(type) {
-            case "PLUIE": return "🌧️";
             case "GEL": return "❄️";
             case "CANICULE": return "☀️";
+            case "PLUIE": return "🌧️";
             case "VENT": return "💨";
+            case "MALADIE": return "🦠";
             default: return "🌤️";
         }
     }

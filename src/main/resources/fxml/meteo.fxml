@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -9,7 +8,7 @@
             fx:controller="modules.meteo.controllers.MeteoController"
             style="-fx-background-color: #F0E8D8;">
 
-    <!-- TOP: Recherche -->
+    <!-- TOP: Barre de recherche -->
     <top>
         <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #2E3D27;">
             <Label text="🌤️ Météo Agricole"
@@ -18,20 +17,27 @@
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <TextField fx:id="tfVille" promptText="Nom de la ville..."
                            style="-fx-background-radius: 5; -fx-padding: 10;" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cbSuggestions" prefWidth="300" visible="false" managed="false"/>
                 <Button fx:id="btnRechercher" text="🔍 Rechercher" onAction="#rechercherMeteo"
                         style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
-                <Button fx:id="btnActualiser" text="🔄 Actualiser" onAction="#actualiser"
+                <Button fx:id="btnMaPosition" text="📍 Ma position" onAction="#utiliserMaPosition"
                         style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
+                <Button fx:id="btnAjouterFavoris" text="⭐ Ajouter" onAction="#ajouterFavoris"
+                        style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
             </HBox>
+
+            <Label fx:id="lblStatus" text="Prêt" style="-fx-text-fill: #7DBF6C; -fx-font-size: 12px;"/>
         </VBox>
     </top>
 
     <!-- CENTER: Contenu principal -->
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-background: transparent;">
+        <SplitPane dividerPositions="0.7" orientation="HORIZONTAL">
+
+            <!-- Panneau gauche : Météo et prévisions -->
             <VBox spacing="20" style="-fx-padding: 20;">
 
-                <!-- Météo actuelle -->
+                <!-- Carte météo actuelle -->
                 <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <Label fx:id="lblVille" text="Tunis"
@@ -53,7 +59,7 @@
                             <Label fx:id="lblHumidite" text="Humidité: --%"/>
                             <Label fx:id="lblPression" text="Pression: -- hPa"/>
                             <Label fx:id="lblVent" text="Vent: -- km/h"/>
-                            <Label fx:id="lblPluie" text="Pluie: --"/>
+                            <Label fx:id="lblPluie" text="Pluie: -- mm"/>
                         </VBox>
                     </HBox>
 
@@ -61,52 +67,88 @@
                            style="-fx-background-color: #E8F5E9; -fx-padding: 15; -fx-background-radius: 5; -fx-wrap-text: true;"/>
                 </VBox>
 
-                <!-- Prévisions horaires -->
+                <!-- Prévisions -->
                 <VBox spacing="10">
-                    <Label text="📅 Prévisions des prochaines 24h"
+                    <Label text="📅 Prévisions prochaines heures"
                            style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
                     <HBox fx:id="previsionsContainer" spacing="10" alignment="CENTER"/>
                 </VBox>
 
-                <!-- Graphique des températures -->
-                <VBox spacing="10">
-                    <Label text="📈 Évolution des températures"
-                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                    <LineChart fx:id="chartTemperatures" prefHeight="300"
-                               style="-fx-background-color: white; -fx-background-radius: 10;">
-                        <xAxis>
-                            <CategoryAxis label="Heure"/>
-                        </xAxis>
-                        <yAxis>
-                            <NumberAxis fx:id="yAxis" label="Température (°C)"/>
-                        </yAxis>
-                    </LineChart>
-                </VBox>
+                <!-- Tableau des alertes -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="🚨 Alertes météo"
+                               style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="✓ Tout marquer lu" onAction="#marquerToutesLues"
+                                style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 3; -fx-padding: 5 10;"/>
+                    </HBox>
 
-                <!-- Alertes météo -->
-                <VBox spacing="10">
-                    <Label text="🚨 Alertes météo"
-                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
                     <TableView fx:id="tableAlertes" prefHeight="200">
                         <columns>
-                            <TableColumn fx:id="colAlerteIcone" text="" prefWidth="50"/>
-                            <TableColumn fx:id="colAlerteTitre" text="Alerte" prefWidth="200"/>
-                            <TableColumn fx:id="colAlerteMessage" text="Message" prefWidth="400"/>
-                            <TableColumn fx:id="colAlerteDate" text="Date" prefWidth="100"/>
-                            <TableColumn fx:id="colAlerteNiveau" text="Niveau" prefWidth="100"/>
+                            <TableColumn fx:id="colIcone" text="" prefWidth="40"/>
+                            <TableColumn fx:id="colTitre" text="Alerte" prefWidth="150"/>
+                            <TableColumn fx:id="colMessage" text="Message" prefWidth="300"/>
+                            <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
                         </columns>
                     </TableView>
-                    <Label text="(Double-cliquez sur une alerte pour la marquer comme lue)"
-                           style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
                 </VBox>
 
             </VBox>
-        </ScrollPane>
+
+            <!-- Panneau droit : Historique et favoris -->
+            <VBox spacing="20" style="-fx-padding: 20; -fx-background-color: white;">
+
+                <!-- Historique -->
+                <VBox spacing="10">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="📋 Historique"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="🗑️ Vider" onAction="#viderHistorique"
+                                style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 11px; -fx-background-radius: 3; -fx-padding: 5 10;"/>
+                    </HBox>
+                    <ListView fx:id="listHistorique" prefHeight="150"
+                              onMouseClicked="#rechercherHistorique"/>
+                </VBox>
+
+                <!-- Favoris -->
+                <VBox spacing="10">
+                    <Label text="⭐ Favoris"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+
+                    <ListView fx:id="listFavoris" prefHeight="150"
+                              onMouseClicked="#rechercherFavori"/>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button fx:id="btnSupprimerFavoris" text="❌ Supprimer" onAction="#supprimerFavoris"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15;"
+                                disable="true" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Villes suggérées -->
+                <VBox spacing="10">
+                    <Label text="🌾 Villes agricoles"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+
+                    <FlowPane hgap="5" vgap="5">
+                        <Button text="Tunis" onAction="#rechercherVille" style="-fx-background-color: #E8F5E9; -fx-padding: 8 12;"/>
+                        <Button text="Sfax" onAction="#rechercherVille" style="-fx-background-color: #E8F5E9; -fx-padding: 8 12;"/>
+                        <Button text="Sousse" onAction="#rechercherVille" style="-fx-background-color: #E8F5E9; -fx-padding: 8 12;"/>
+                        <Button text="Bizerte" onAction="#rechercherVille" style="-fx-background-color: #E8F5E9; -fx-padding: 8 12;"/>
+                        <Button text="Béja" onAction="#rechercherVille" style="-fx-background-color: #E8F5E9; -fx-padding: 8 12;"/>
+                        <Button text="Kairouan" onAction="#rechercherVille" style="-fx-background-color: #E8F5E9; -fx-padding: 8 12;"/>
+                    </FlowPane>
+                </VBox>
+
+            </VBox>
+        </SplitPane>
     </center>
 
     <!-- BOTTOM: Retour -->
     <bottom>
-        <HBox alignment="CENTER" style="-fx-padding: 10;">
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #2E3D27;">
             <Button text="🔙 Retour au Dashboard" onAction="#retourDashboard"
                     style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
         </HBox>

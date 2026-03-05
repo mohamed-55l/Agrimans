@@ -14,14 +14,14 @@ public class PrevisionMeteo {
     private int directionVent;
     private String description;
     private String icone;
-    private double probabilitePluie; // 0-100%
-    private double quantitePluie; // mm
+    private double probabilitePluie;
+    private double quantitePluie;
     private String ville;
+    private int nuages;
 
-    // Constructeur
     public PrevisionMeteo() {}
 
-    // Getters et Setters
+    // Getters et Setters existants...
     public LocalDateTime getDate() { return date; }
     public void setDate(LocalDateTime date) { this.date = date; }
 
@@ -58,49 +58,52 @@ public class PrevisionMeteo {
     public String getVille() { return ville; }
     public void setVille(String ville) { this.ville = ville; }
 
-    // Méthodes utilitaires
-    public String getDateFormatee() {
-        return date.format(DateTimeFormatter.ofPattern("EEEE dd/MM/yyyy HH:mm"));
+    public int getNuages() { return nuages; }
+    public void setNuages(int nuages) { this.nuages = nuages; }
+
+    // =====================================================
+    // MÉTHODES AJOUTÉES (manquantes)
+    // =====================================================
+
+    /**
+     * Retourne la date complète formatée (dd/MM/yyyy HH:mm)
+     */
+    public String getDateComplete() {
+        return date != null ? date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "";
     }
 
+    /**
+     * Retourne l'heure formatée (HH:mm)
+     */
     public String getHeureFormatee() {
-        return date.format(DateTimeFormatter.ofPattern("HH:mm"));
+        return date != null ? date.format(DateTimeFormatter.ofPattern("HH:mm")) : "";
     }
 
+    /**
+     * Retourne le jour formaté (EEEE dd/MM)
+     */
     public String getJourFormatee() {
-        return date.format(DateTimeFormatter.ofPattern("EEEE dd/MM"));
+        return date != null ? date.format(DateTimeFormatter.ofPattern("EEEE dd/MM")) : "";
     }
 
-    public boolean vaPleuvoir() {
-        return probabilitePluie > 50 || quantitePluie > 0.1;
+    /**
+     * Convertit la vitesse du vent en km/h (m/s → km/h)
+     */
+    public double getVentKmh() {
+        return vitesseVent * 3.6;
     }
 
-    public String getConseilAgricole() {
-        StringBuilder conseil = new StringBuilder();
-
-        if (vaPleuvoir()) {
-            conseil.append("🌧️ Pluie prévue. ");
-            if (quantitePluie > 10) {
-                conseil.append("Évitez les traitements et reportez les semis. ");
-            } else {
-                conseil.append("Bonne occasion pour les semis. ");
-            }
-        }
-
-        if (temperature < 5) {
-            conseil.append("❄️ Risque de gel. Protégez les cultures sensibles. ");
-        } else if (temperature > 35) {
-            conseil.append("☀️ Canicule. Arrosez abondamment le soir. ");
-        }
-
-        if (vitesseVent > 50) {
-            conseil.append("💨 Vent fort. Évitez les traitements phytosanitaires. ");
-        }
-
-        if (humidite > 80 && temperature > 15) {
-            conseil.append("⚠️ Risque de maladies fongiques (mildiou). Traitez préventivement. ");
-        }
-
-        return conseil.toString();
+    /**
+     * Retourne la direction du vent en texte
+     */
+    public String getDirectionVentTexte() {
+        if (directionVent >= 337.5 || directionVent < 22.5) return "Nord";
+        if (directionVent >= 22.5 && directionVent < 67.5) return "Nord-Est";
+        if (directionVent >= 67.5 && directionVent < 112.5) return "Est";
+        if (directionVent >= 112.5 && directionVent < 157.5) return "Sud-Est";
+        if (directionVent >= 157.5 && directionVent < 202.5) return "Sud";
+        if (directionVent >= 202.5 && directionVent < 247.5) return "Sud-Ouest";
+        if (directionVent >= 247.5 && directionVent < 292.5) return "Ouest";
+        return "Nord-Ouest";
     }
 }

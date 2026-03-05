@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.carte.controllers.GarageFormController"
+      spacing="20" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;"
+      prefWidth="500" prefHeight="450">
+
+    <Label fx:id="lblTitre" text="➕ Ajouter un nouveau garage"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+
+    <Separator/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints minWidth="250"/>
+        </columnConstraints>
+
+        <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfNom" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Nom du garage"/>
+
+        <Label text="Adresse :" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfAdresse" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Adresse complète"/>
+
+        <Label text="Latitude :" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfLatitude" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Ex: 36.8065"/>
+
+        <Label text="Longitude :" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfLongitude" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Ex: 10.1815"/>
+
+        <Label text="Capacité :" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfCapacite" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Nombre d'équipements"/>
+
+        <Label text="Responsable :" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfResponsable" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Nom du responsable"/>
+
+        <Label text="Téléphone :" GridPane.rowIndex="6" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="tfTelephone" GridPane.rowIndex="6" GridPane.columnIndex="1" promptText="Numéro de téléphone"/>
+
+        <Label fx:id="lblError" GridPane.rowIndex="7" GridPane.columnIndex="1" textFill="red" managed="false"/>
+    </GridPane>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="btnValider" text="✅ Ajouter" onAction="#ajouterGarage"
+                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
+                prefWidth="120"/>
+        <Button text="❌ Annuler" onAction="#annuler"
+                style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
+                prefWidth="120"/>
+    </HBox>
+
+</VBox>

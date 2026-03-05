@@ -2,20 +2,18 @@ package modules.meteo.controllers;
 
 import core.session.SessionManager;
 import core.utils.AlertUtils;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,16 +27,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.prefs.Preferences;
 
 public class MeteoController implements Initializable {
 
     @FXML private TextField tfVille;
+    @FXML private ComboBox<String> cbSuggestions;
+    @FXML private ListView<String> listHistorique;
+    @FXML private ListView<String> listFavoris;
     @FXML private Button btnRechercher;
-    @FXML private Button btnActualiser;
+    @FXML private Button btnMaPosition;
+    @FXML private Button btnAjouterFavoris;
+    @FXML private Button btnSupprimerFavoris;
+    @FXML private Label lblStatus;
 
-    // Météo actuelle
     @FXML private Label lblVille;
     @FXML private Label lblDate;
     @FXML private Label lblTemperature;
@@ -50,83 +53,227 @@ public class MeteoController implements Initializable {
     @FXML private Label lblPluie;
     @FXML private Label lblConseil;
 
-    // Prévisions
     @FXML private HBox previsionsContainer;
-
-    // Graphique
-    @FXML private LineChart<String, Number> chartTemperatures;
-    @FXML private NumberAxis yAxis;
-
-    // Alertes
     @FXML private TableView<AlerteMeteo> tableAlertes;
-    @FXML private TableColumn<AlerteMeteo, String> colAlerteIcone;
-    @FXML private TableColumn<AlerteMeteo, String> colAlerteTitre;
-    @FXML private TableColumn<AlerteMeteo, String> colAlerteMessage;
-    @FXML private TableColumn<AlerteMeteo, String> colAlerteDate;
-    @FXML private TableColumn<AlerteMeteo, String> colAlerteNiveau;
+    @FXML private TableColumn<AlerteMeteo, String> colIcone;
+    @FXML private TableColumn<AlerteMeteo, String> colTitre;
+    @FXML private TableColumn<AlerteMeteo, String> colMessage;
+    @FXML private TableColumn<AlerteMeteo, String> colDate;
 
     private MeteoService meteoService;
     private NotificationService notificationService;
+    private Timer timerMeteo;
+    private Stage primaryStage;
+    private Preferences prefs;
+    private ObservableList<String> historiqueList;
+    private ObservableList<String> favorisList;
     private ObservableList<AlerteMeteo> alertesList;
-    private Timeline actualisationAuto;
+    private List<String> suggestionsVilles;
+
+    private final String[] VILLES_AGRICOLES = {
+            "Tunis", "Sfax", "Sousse", "Bizerte", "Béja", "Jendouba",
+            "Kairouan", "Monastir", "Nabeul", "Gabès", "Gafsa", "Kef",
+            "Mahdia", "Médenine", "Siliana", "Zaghouan"
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (!SessionManager.isAdmin()) {
+            AlertUtils.showError("Accès refusé", "Cette page est réservée aux administrateurs");
+            return;
+        }
+
         meteoService = new MeteoService();
-        notificationService = new NotificationService();
+        Platform.runLater(() -> {
+            primaryStage = (Stage) tfVille.getScene().getWindow();
+            notificationService = new NotificationService(primaryStage);
+        });
+
+        prefs = Preferences.userNodeForPackage(MeteoController.class);
+        historiqueList = FXCollections.observableArrayList();
+        favorisList = FXCollections.observableArrayList();
         alertesList = FXCollections.observableArrayList();
+        suggestionsVilles = new ArrayList<>(Arrays.asList(VILLES_AGRICOLES));
+
+        listHistorique.setItems(historiqueList);
+        listFavoris.setItems(favorisList);
+        tableAlertes.setItems(alertesList);
 
         configurerTableAlertes();
+        chargerHistorique();
+        chargerFavoris();
+        configurerAutoCompletion();
+        configurerRaccourcis();
 
-        // Ville par défaut (Tunis)
-        tfVille.setText("Tunis");
-        rechercherMeteo();
+        if (!favorisList.isEmpty()) {
+            tfVille.setText(favorisList.get(0));
+            rechercherMeteo();
+        } else {
+            tfVille.setText("Tunis");
+            rechercherMeteo();
+        }
 
-        // Actualisation automatique toutes les 30 minutes
-        actualisationAuto = new Timeline(
-                new KeyFrame(Duration.minutes(30), e -> rechercherMeteo())
-        );
-        actualisationAuto.setCycleCount(Timeline.INDEFINITE);
-        actualisationAuto.play();
+        demarrerSurveillanceMeteo();
     }
 
     private void configurerTableAlertes() {
-        colAlerteIcone.setCellValueFactory(cellData ->
+        colIcone.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(cellData.getValue().getIcone()));
-        colAlerteTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
-        colAlerteMessage.setCellValueFactory(new PropertyValueFactory<>("message"));
-        colAlerteDate.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getDatePrevue().format(DateTimeFormatter.ofPattern("dd/MM HH:mm"))
-                ));
-        colAlerteNiveau.setCellValueFactory(new PropertyValueFactory<>("niveau"));
+        colTitre.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitre()));
+        colMessage.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMessage()));
+        colDate.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDateFormatee()));
 
-        colAlerteNiveau.setCellFactory(tc -> new TableCell<AlerteMeteo, String>() {
+        tableAlertes.setRowFactory(tv -> new TableRow<AlerteMeteo>() {
             @Override
-            protected void updateItem(String niveau, boolean empty) {
-                super.updateItem(niveau, empty);
-                if (empty || niveau == null) {
-                    setText(null);
+            protected void updateItem(AlerteMeteo item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setStyle("");
                 } else {
-                    setText(niveau);
-                    AlerteMeteo alerte = getTableView().getItems().get(getIndex());
-                    setStyle("-fx-text-fill: " + alerte.getCouleur() + "; -fx-font-weight: bold;");
+                    setStyle("-fx-background-color: " + item.getCouleur() + "20;");
                 }
             }
         });
+    }
 
-        tableAlertes.setItems(alertesList);
+    private void configurerAutoCompletion() {
+        cbSuggestions.setItems(FXCollections.observableArrayList(suggestionsVilles));
+        cbSuggestions.setVisible(false);
+        cbSuggestions.setManaged(false);
 
-        // Double-clic pour marquer comme lue
-        tableAlertes.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                AlerteMeteo alerte = tableAlertes.getSelectionModel().getSelectedItem();
-                if (alerte != null) {
-                    alerte.setLue(true);
-                    tableAlertes.refresh();
+        tfVille.textProperty().addListener((obs, old, newValue) -> {
+            if (newValue.length() >= 2) {
+                List<String> filtered = suggestionsVilles.stream()
+                        .filter(v -> v.toLowerCase().contains(newValue.toLowerCase()))
+                        .toList();
+
+                if (!filtered.isEmpty()) {
+                    cbSuggestions.setItems(FXCollections.observableArrayList(filtered));
+                    cbSuggestions.setVisible(true);
+                    cbSuggestions.setManaged(true);
+                    cbSuggestions.show();
+                } else {
+                    cbSuggestions.setVisible(false);
+                    cbSuggestions.setManaged(false);
                 }
+            } else {
+                cbSuggestions.setVisible(false);
+                cbSuggestions.setManaged(false);
             }
         });
+
+        cbSuggestions.setOnAction(e -> {
+            String selected = cbSuggestions.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                tfVille.setText(selected);
+                cbSuggestions.setVisible(false);
+                cbSuggestions.setManaged(false);
+                rechercherMeteo();
+            }
+        });
+
+        tfVille.focusedProperty().addListener((obs, old, newValue) -> {
+            if (!newValue) {
+                PauseTransition pause = new PauseTransition(Duration.millis(200));
+                pause.setOnFinished(e -> {
+                    cbSuggestions.setVisible(false);
+                    cbSuggestions.setManaged(false);
+                });
+                pause.play();
+            }
+        });
+    }
+
+    private void configurerRaccourcis() {
+        tfVille.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                rechercherMeteo();
+            } else if (event.getCode() == KeyCode.DOWN && cbSuggestions.isVisible()) {
+                cbSuggestions.requestFocus();
+            }
+        });
+
+        cbSuggestions.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String selected = cbSuggestions.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    tfVille.setText(selected);
+                    cbSuggestions.setVisible(false);
+                    rechercherMeteo();
+                }
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                cbSuggestions.setVisible(false);
+                tfVille.requestFocus();
+            }
+        });
+    }
+
+    private void ajouterHistorique(String ville) {
+        if (!historiqueList.contains(ville)) {
+            historiqueList.add(0, ville);
+            if (historiqueList.size() > 10) historiqueList.remove(10);
+            sauvegarderHistorique();
+        }
+    }
+
+    private void sauvegarderHistorique() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (String v : historiqueList) {
+                if (sb.length() > 0) sb.append(",");
+                sb.append(v);
+            }
+            prefs.put("meteo.historique", sb.toString());
+        } catch (Exception e) {
+            System.err.println("Erreur sauvegarde: " + e.getMessage());
+        }
+    }
+
+    private void chargerHistorique() {
+        try {
+            String historique = prefs.get("meteo.historique", "");
+            if (!historique.isEmpty()) {
+                String[] villes = historique.split(",");
+                historiqueList.addAll(Arrays.asList(villes));
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur chargement: " + e.getMessage());
+        }
+    }
+
+    private void sauvegarderFavoris() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (String v : favorisList) {
+                if (sb.length() > 0) sb.append(",");
+                sb.append(v);
+            }
+            prefs.put("meteo.favoris", sb.toString());
+        } catch (Exception e) {
+            System.err.println("Erreur sauvegarde: " + e.getMessage());
+        }
+    }
+
+    private void chargerFavoris() {
+        try {
+            String favoris = prefs.get("meteo.favoris", "");
+            if (!favoris.isEmpty()) {
+                String[] villes = favoris.split(",");
+                favorisList.addAll(Arrays.asList(villes));
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur chargement: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void rechercherVille(ActionEvent event) {
+        Button source = (Button) event.getSource();
+        tfVille.setText(source.getText());
+        rechercherMeteo();
     }
 
     @FXML
@@ -137,129 +284,156 @@ public class MeteoController implements Initializable {
             return;
         }
 
-        try {
-            // Météo actuelle
-            PrevisionMeteo actuelle = meteoService.getMeteoActuelle(ville);
-            if (actuelle != null) {
-                afficherMeteoActuelle(actuelle);
+        lblStatus.setText("🔍 Recherche de " + ville + "...");
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(e -> {
+            PrevisionMeteo meteo = meteoService.getMeteoActuelle(ville);
+
+            if (meteo != null) {
+                lblVille.setText(meteo.getVille());
+                lblDate.setText(meteo.getDateComplete());
+                lblTemperature.setText(String.format("%.1f°C", meteo.getTemperature()));
+                lblDescription.setText(meteo.getDescription());
+                lblRessentie.setText(String.format("Ressentie: %.1f°C", meteo.getTemperatureRessentie()));
+                lblHumidite.setText(String.format("Humidité: %d%%", meteo.getHumidite()));
+                lblPression.setText(String.format("Pression: %.0f hPa", meteo.getPression()));
+                lblVent.setText(String.format("Vent: %.0f km/h %s",
+                        meteo.getVentKmh(), meteo.getDirectionVentTexte()));
+                lblPluie.setText(String.format("Pluie: %.1f mm (%.0f%%)",
+                        meteo.getQuantitePluie(), meteo.getProbabilitePluie()));
+
+                genererConseil(meteo);
+                genererPrevisions(ville);
+                mettreAJourAlertes();
+
+                ajouterHistorique(ville);
+                lblStatus.setText("✅ Mise à jour: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+
+                btnAjouterFavoris.setDisable(favorisList.contains(ville));
+                btnSupprimerFavoris.setDisable(!favorisList.contains(ville));
             }
-
-            // Prévisions
-            List<PrevisionMeteo> previsions = meteoService.getPrevisions(ville);
-            if (!previsions.isEmpty()) {
-                afficherPrevisions(previsions);
-                afficherGraphique(previsions);
-            }
-
-            // Alertes
-            alertesList.setAll(meteoService.getAlertesNonLues());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            AlertUtils.showError("Erreur", "Impossible de récupérer les données météo");
-        }
+        });
+        pause.play();
     }
 
-    private void afficherMeteoActuelle(PrevisionMeteo meteo) {
-        lblVille.setText(meteo.getVille());
-        lblDate.setText(meteo.getDateFormatee());
-        lblTemperature.setText(String.format("%.1f°C", meteo.getTemperature()));
-        lblDescription.setText(meteo.getDescription());
-        lblRessentie.setText(String.format("Ressentie: %.1f°C", meteo.getTemperatureRessentie()));
-        lblHumidite.setText(String.format("Humidité: %d%%", meteo.getHumidite()));
-        lblPression.setText(String.format("Pression: %.0f hPa", meteo.getPression()));
+    private void genererConseil(PrevisionMeteo meteo) {
+        List<String> conseils = new ArrayList<>();
+        double temp = meteo.getTemperature();
+        int humidite = meteo.getHumidite();
+        double vent = meteo.getVentKmh();
+        double pluie = meteo.getQuantitePluie();
 
-        String direction = meteoService.getDirectionVentTexte(meteo.getDirectionVent());
-        lblVent.setText(String.format("Vent: %.0f km/h (%s)",
-                meteo.getVitesseVent() * 3.6, direction));
+        if (temp < 5) conseils.add("❄️ Risque de gel - Protégez les cultures");
+        if (temp > 35) conseils.add("☀️ Canicule - Arrosez le soir");
+        if (pluie > 10) conseils.add("🌧️ Fortes pluies - Évitez les traitements");
+        if (vent > 50) conseils.add("💨 Vent fort - Reportez les pulvérisations");
+        if (humidite > 80 && temp > 15 && temp < 25)
+            conseils.add("🦠 Risque mildiou - Traitement préventif");
 
-        if (meteo.getProbabilitePluie() > 0) {
-            lblPluie.setText(String.format("Pluie: %.0f%% (%.1f mm)",
-                    meteo.getProbabilitePluie(), meteo.getQuantitePluie()));
-        } else {
-            lblPluie.setText("Pluie: Aucune");
-        }
-
-        lblConseil.setText(meteo.getConseilAgricole());
+        lblConseil.setText(conseils.isEmpty() ?
+                "✅ Conditions favorables" : String.join("\n", conseils));
     }
 
-    private void afficherPrevisions(List<PrevisionMeteo> previsions) {
+    private void genererPrevisions(String ville) {
         previsionsContainer.getChildren().clear();
+        List<PrevisionMeteo> previsions = meteoService.getPrevisions(ville);
 
-        // Prendre une prévision toutes les 3 heures pour les 24 prochaines heures
-        for (int i = 0; i < 8 && i < previsions.size(); i++) {
+        for (int i = 0; i < Math.min(5, previsions.size()); i++) {
             PrevisionMeteo prev = previsions.get(i);
 
-            VBox carte = new VBox(5);
-            carte.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);");
-            carte.setPrefWidth(100);
+            VBox box = new VBox(5);
+            box.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;");
+            box.setPrefWidth(100);
+            box.setAlignment(javafx.geometry.Pos.CENTER);
 
-            Label heure = new Label(prev.getHeureFormatee());
-            heure.setStyle("-fx-font-weight: bold;");
+            box.getChildren().addAll(
+                    new Label(prev.getHeureFormatee()),
+                    new Label(prev.getProbabilitePluie() > 30 ? "🌧️" : "☀️"),
+                    new Label(String.format("%.1f°C", prev.getTemperature()))
+            );
 
-            Label icone = new Label(getIconeEmoji(prev.getIcone()));
-            icone.setStyle("-fx-font-size: 24px;");
+            previsionsContainer.getChildren().add(box);
+        }
+    }
 
-            Label temp = new Label(String.format("%.1f°C", prev.getTemperature()));
+    private void mettreAJourAlertes() {
+        alertesList.setAll(meteoService.getAlertes());
+    }
 
-            Label pluie = new Label(String.format("%.0f%%", prev.getProbabilitePluie()));
-            if (prev.vaPleuvoir()) {
-                pluie.setStyle("-fx-text-fill: #3498db;");
+    private void demarrerSurveillanceMeteo() {
+        timerMeteo = new Timer(true);
+        timerMeteo.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                javafx.application.Platform.runLater(() -> {
+                    if (!tfVille.getText().isEmpty()) {
+                        rechercherMeteo();
+                    }
+                });
             }
+        }, 30 * 60 * 1000, 30 * 60 * 1000);
+    }
 
-            carte.getChildren().addAll(heure, icone, temp, pluie);
-            previsionsContainer.getChildren().add(carte);
+    @FXML private void rechercherHistorique() {
+        String selected = listHistorique.getSelectionModel().getSelectedItem();
+        if (selected != null) { tfVille.setText(selected); rechercherMeteo(); }
+    }
+
+    @FXML private void rechercherFavori() {
+        String selected = listFavoris.getSelectionModel().getSelectedItem();
+        if (selected != null) { tfVille.setText(selected); rechercherMeteo(); }
+    }
+
+    @FXML private void ajouterFavoris() {
+        String ville = tfVille.getText().trim();
+        if (!ville.isEmpty() && !favorisList.contains(ville)) {
+            favorisList.add(ville);
+            sauvegarderFavoris();
+            btnAjouterFavoris.setDisable(true);
+            btnSupprimerFavoris.setDisable(false);
+            AlertUtils.showInfo("Succès", ville + " ajouté aux favoris");
         }
     }
 
-    private void afficherGraphique(List<PrevisionMeteo> previsions) {
-        chartTemperatures.getData().clear();
-
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Température (°C)");
-
-        // Prendre une valeur toutes les 3 heures pour 24h
-        for (int i = 0; i < 8 && i < previsions.size(); i++) {
-            PrevisionMeteo prev = previsions.get(i);
-            series.getData().add(new XYChart.Data<>(
-                    prev.getHeureFormatee(),
-                    prev.getTemperature()
-            ));
-        }
-
-        chartTemperatures.getData().add(series);
-    }
-
-    private String getIconeEmoji(String iconeCode) {
-        switch(iconeCode) {
-            case "01d": return "☀️";
-            case "01n": return "🌙";
-            case "02d": case "02n": return "⛅";
-            case "03d": case "03n": return "☁️";
-            case "04d": case "04n": return "☁️☁️";
-            case "09d": case "09n": return "🌧️";
-            case "10d": case "10n": return "🌦️";
-            case "11d": case "11n": return "⛈️";
-            case "13d": case "13n": return "❄️";
-            case "50d": case "50n": return "🌫️";
-            default: return "☀️";
+    @FXML private void supprimerFavoris() {
+        String selected = listFavoris.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            favorisList.remove(selected);
+            sauvegarderFavoris();
+            btnAjouterFavoris.setDisable(favorisList.contains(tfVille.getText().trim()));
+            btnSupprimerFavoris.setDisable(true);
+            AlertUtils.showInfo("Succès", selected + " retiré des favoris");
         }
     }
 
-    @FXML
-    private void actualiser() {
-        rechercherMeteo();
+    @FXML private void viderHistorique() {
+        if (AlertUtils.showConfirmation("Confirmation", "Vider l'historique ?")) {
+            historiqueList.clear();
+            sauvegarderHistorique();
+        }
     }
 
-    @FXML
-    private void retourDashboard() {
+    @FXML private void marquerToutesLues() {
+        meteoService.marquerToutesLues();
+        tableAlertes.refresh();
+    }
+
+    @FXML private void utiliserMaPosition() {
+        lblStatus.setText("📍 Recherche de votre position...");
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(e -> { tfVille.setText("Tunis"); rechercherMeteo(); });
+        pause.play();
+    }
+
+    @FXML private void retourDashboard() {
+        if (timerMeteo != null) timerMeteo.cancel();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/dashboard/admin_dashboard.fxml"));
-            Stage stage = (Stage) tfVille.getScene().getWindow();
-            stage.getScene().setRoot(root);
+            ((Stage) tfVille.getScene().getWindow()).getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
-            AlertUtils.showError("Erreur", "Impossible de retourner au dashboard");
+            AlertUtils.showError("Erreur", "Impossible de retourner");
         }
     }
 }

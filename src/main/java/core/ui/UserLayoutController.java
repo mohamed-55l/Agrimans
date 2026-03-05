@@ -69,6 +69,15 @@ public class UserLayoutController {
         }
     }
 
+    @FXML
+    private void goCarte() {
+        try {
+            chargerPage("/fxml/carte.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la carte");
+        }
+    }
+
     private void chargerPage(String fxml) throws IOException {
         Parent page = FXMLLoader.load(getClass().getResource(fxml));
         contentArea.getChildren().clear();

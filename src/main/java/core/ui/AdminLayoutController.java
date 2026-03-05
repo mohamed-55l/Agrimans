@@ -112,6 +112,15 @@ public class AdminLayoutController {
     }
 
     @FXML
+    private void goCarte() {
+        try {
+            chargerPage("/fxml/carte.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la carte");
+        }
+    }
+
+    @FXML
     private void goChatbot() {
         try {
             // Essayer sans le / au début
