@@ -105,6 +105,7 @@
             </HBox>
 
         </VBox>
+
     </center>
 
     <!-- BOTTOM: Retour -->
@@ -113,6 +114,8 @@
             <Button text="🔙 Retour au Dashboard" onAction="#retourDashboard"
                     style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
         </HBox>
+
+
     </bottom>
 
 </BorderPane>
