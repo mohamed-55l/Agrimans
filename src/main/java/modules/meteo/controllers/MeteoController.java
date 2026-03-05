@@ -78,10 +78,7 @@ public class MeteoController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (!SessionManager.isAdmin()) {
-            AlertUtils.showError("Accès refusé", "Cette page est réservée aux administrateurs");
-            return;
-        }
+
 
         meteoService = new MeteoService();
         Platform.runLater(() -> {

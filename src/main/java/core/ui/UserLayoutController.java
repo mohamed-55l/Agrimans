@@ -69,12 +69,32 @@ public class UserLayoutController {
         }
     }
 
+
+    @FXML
+    private void goSentiment() {
+        try {
+            chargerPage("/fxml/sentiment.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger l'analyse de sentiments");
+        }
+    }
+
+
     @FXML
     private void goCarte() {
         try {
-            chargerPage("/fxml/carte.fxml");
+            chargerPage("/fxml/carte/user_garage.fxml");
         } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la carte");
+            AlertUtils.showError("Erreur", "Impossible de charger la liste des garages");
+        }
+    }
+
+    @FXML
+    private void goMeteo() {
+        try {
+            chargerPage("/fxml/meteo.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la météo");
         }
     }
 

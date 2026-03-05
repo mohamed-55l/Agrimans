@@ -121,6 +121,15 @@ public class AdminLayoutController {
     }
 
     @FXML
+    private void goSentiment() {
+        try {
+            chargerPage("/fxml/sentiment.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger l'analyse de sentiments");
+        }
+    }
+
+    @FXML
     private void goChatbot() {
         try {
             // Essayer sans le / au début
