@@ -103,6 +103,15 @@ public class AdminLayoutController {
     }
 
     @FXML
+    private void goMeteo() {
+        try {
+            chargerPage("/fxml/meteo.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la météo");
+        }
+    }
+
+    @FXML
     private void goChatbot() {
         try {
             // Essayer sans le / au début
@@ -133,6 +142,9 @@ public class AdminLayoutController {
             AlertUtils.showError("Erreur", "Erreur: " + e.getMessage());
         }
     }
+
+
+
 
     private void listerFichiers(File dir, String indent) {
         File[] fichiers = dir.listFiles();

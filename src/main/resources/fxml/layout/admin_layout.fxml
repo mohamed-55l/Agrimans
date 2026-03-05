@@ -44,6 +44,10 @@
                     style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
                     prefWidth="170" maxWidth="170"/>
 
+            <Button text="🌤️ Météo" onAction="#goMeteo"
+                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
+                    prefWidth="170" maxWidth="170"/>
+
         </VBox>
     </left>
 
