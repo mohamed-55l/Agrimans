@@ -1,0 +1,17 @@
+﻿C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\MainFX.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\core\database\IService.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\core\database\Mydb.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\core\session\SessionManager.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\core\ui\LayoutController.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\dashboard\controllers\DashboardController.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\equipement\controllers\EquipementController.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\equipement\models\Equipement.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\equipement\services\EquipementService.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\review\controllers\ReviewController.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\review\models\Review.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\java\modules\review\services\ReviewService.java
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\resources\fxml\dashboard\dashboard.fxml
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\resources\fxml\equipement\equipement.fxml
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\resources\fxml\layout\layout.fxml
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\main\resources\fxml\review\review.fxml
+C:\Users\dmoha\OneDrive\Desktop\PIjava\Agrimans\Gestion Animal\src\test\java\EquipementTest.java

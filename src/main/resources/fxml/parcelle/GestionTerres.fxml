@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane xmlns:fx="http://javafx.com/fxml"
+         styleClass="tab-pane-modern"
+         tabClosingPolicy="UNAVAILABLE"
+         VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+    
+    <tabs>
+        <Tab text="🌱 Mes Parcelles">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/parcelle/ListeParcelle.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+        
+        <Tab text="🌾 Mes Cultures">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/parcelle/ListeCulture.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+        
+        <Tab text="🤖 Assistant Agronome (IA)">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/parcelle/AIChat.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+        
+        <Tab text="📊 Statistiques &amp; Analyses">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/parcelle/Statistique.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+    </tabs>
+
+</TabPane>

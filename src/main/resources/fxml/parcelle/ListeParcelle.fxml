@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="modules.parcelle.controllers.ListeParcelleController">
+
+    <VBox spacing="15"
+          AnchorPane.topAnchor="15"
+          AnchorPane.bottomAnchor="15"
+          AnchorPane.leftAnchor="15"
+          AnchorPane.rightAnchor="15">
+
+        <!-- Titre -->
+        <Label text="Liste des Parcelles"
+               style="-fx-font-size:20px; -fx-font-weight:bold;" />
+
+        <!-- Boutons -->
+        <HBox spacing="10">
+            <Button text="Actualiser" onAction="#refreshTable"/>
+            <Button text="Modifier" onAction="#openModifier"/>
+            <Button text="Supprimer" onAction="#supprimerParcelle"/>
+        </HBox>
+
+        <!-- Recherche -->
+        <HBox spacing="10">
+            <Label text="Rechercher :" />
+            <TextField fx:id="searchField"
+                       promptText="Rechercher (nom, localisation, sol, superficie...)"
+                       prefWidth="300"/>
+        </HBox>
+
+        <!-- TABLEAU + CARTE -->
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+
+            <!-- TABLEAU -->
+            <VBox spacing="10" prefWidth="600">
+
+                <TableView fx:id="tableParcelle" VBox.vgrow="ALWAYS">
+                    <columns>
+
+                        <TableColumn fx:id="colNom"
+                                     text="Nom"
+                                     prefWidth="120"/>
+
+                        <TableColumn fx:id="colSuperficie"
+                                     text="Superficie"
+                                     prefWidth="90"/>
+
+                        <TableColumn fx:id="colLocalisation"
+                                     text="Localisation"
+                                     prefWidth="120"/>
+
+                        <TableColumn fx:id="colTypeSol"
+                                     text="Type Sol"
+                                     prefWidth="100"/>
+
+                        <TableColumn fx:id="colUserNom"
+                                     text="Utilisateur"
+                                     prefWidth="140"/>
+
+                    </columns>
+                </TableView>
+
+                <Separator/>
+
+                <!-- Météo -->
+                <Label text="Informations de la parcelle sélectionnée :"
+                       style="-fx-font-weight:bold;"/>
+
+                <Label fx:id="meteoLabel"
+                       text="Sélectionnez une parcelle..."
+                       style="-fx-text-fill:green; -fx-font-size:13;"/>
+
+            </VBox>
+
+            <!-- CARTE (plus grande) -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                <Label text="Localisation sur la carte :"
+                       style="-fx-font-weight:bold; -fx-font-size:14;"/>
+
+                <WebView fx:id="mapView"
+                         prefWidth="900"
+                         prefHeight="520"/>
+
+            </VBox>
+
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>

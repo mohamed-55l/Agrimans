@@ -1,0 +1,67 @@
+package modules.user.controllers;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class HomeController {
+    @FXML
+    private Button minBtn, maxBtn, closeBtn;
+
+    @FXML
+    private HBox titleBar;
+
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    @FXML
+    public void initialize() {
+
+        Platform.runLater(() -> {
+
+            Stage stage = (Stage) titleBar.getScene().getWindow();
+
+            closeBtn.setOnAction(e -> stage.close());
+
+            minBtn.setOnAction(e -> stage.setIconified(true));
+
+            maxBtn.setOnAction(e -> stage.setMaximized(!stage.isMaximized()));
+
+            titleBar.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+
+            titleBar.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
+
+        });
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(
+                    getClass().getResource("/fxml/user/login-view.fxml")
+            );
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

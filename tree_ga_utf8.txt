@@ -1,0 +1,62 @@
+﻿Structure du dossier
+Le numÚro de sÚrie du volume est 2EDB-C4F1
+C:\USERS\DMOHA\ONEDRIVE\DESKTOP\PIJAVA\AGRIMANS\GESTION ANIMAL
++---src
+    +---main
+    ª   +---java
+    ª   ª   ª   MainFX.java
+    ª   ª   ª   
+    ª   ª   +---core
+    ª   ª   ª   +---database
+    ª   ª   ª   ª       IService.java
+    ª   ª   ª   ª       Mydb.java
+    ª   ª   ª   ª       
+    ª   ª   ª   +---session
+    ª   ª   ª   ª       SessionManager.java
+    ª   ª   ª   ª       
+    ª   ª   ª   +---ui
+    ª   ª   ª           LayoutController.java
+    ª   ª   ª           
+    ª   ª   +---modules
+    ª   ª       +---dashboard
+    ª   ª       ª   +---controllers
+    ª   ª       ª           DashboardController.java
+    ª   ª       ª           
+    ª   ª       +---equipement
+    ª   ª       ª   +---controllers
+    ª   ª       ª   ª       EquipementController.java
+    ª   ª       ª   ª       
+    ª   ª       ª   +---models
+    ª   ª       ª   ª       Equipement.java
+    ª   ª       ª   ª       
+    ª   ª       ª   +---services
+    ª   ª       ª           EquipementService.java
+    ª   ª       ª           
+    ª   ª       +---review
+    ª   ª           +---controllers
+    ª   ª           ª       ReviewController.java
+    ª   ª           ª       
+    ª   ª           +---models
+    ª   ª           ª       Review.java
+    ª   ª           ª       
+    ª   ª           +---services
+    ª   ª                   ReviewService.java
+    ª   ª                   
+    ª   +---resources
+    ª       +---fxml
+    ª           +---dashboard
+    ª           ª       dashboard.fxml
+    ª           ª       
+    ª           +---equipement
+    ª           ª       equipement.fxml
+    ª           ª       
+    ª           +---layout
+    ª           ª       layout.fxml
+    ª           ª       
+    ª           +---review
+    ª                   review.fxml
+    ª                   
+    +---test
+        +---java
+                EquipementTest.java
+                

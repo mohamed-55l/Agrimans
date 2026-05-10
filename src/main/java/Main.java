@@ -11,24 +11,21 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // POUR TESTER EN ADMIN - Décommentez cette ligne
-            // User admin = new User(1, "Admin", "Chef", "admin@agrimans.com", "ADMIN");
-            // SessionManager.login(admin);
+            // POUR TESTER EN ADMIN
+            User admin = new User();
+            admin.setFullName("Admin Chef");
+            admin.setEmail("admin@agrimans.com");
+            admin.setRole("ADMIN");
+            SessionManager.login(admin);
 
-            // POUR TESTER EN USER - Décommentez cette ligne
-            User user = new User(2, "Jean", "Agriculteur", "jean@agrimans.com", "AGRICULTEUR");
-            SessionManager.login(user);
-
-            // Charger directement le layout correspondant
-            String fxmlPath = SessionManager.isAdmin() ?
-                    "/fxml/layout/admin_layout.fxml" :
-                    "/fxml/layout/user_layout.fxml";
-
-            System.out.println("🚀 Démarrage avec: " + fxmlPath);
-
+            String fxmlPath = "/fxml/layout/admin_layout.fxml";
+            
+            System.out.println("🚀 Démarrage de l'application avec : " + fxmlPath);
+            
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            primaryStage.setTitle("Agrimans - " + SessionManager.getCurrentUserName());
-            primaryStage.setScene(new Scene(root, 1200, 700));
+            primaryStage.setTitle("Agrimans - Admin Dashboard");
+            primaryStage.setScene(new Scene(root, 1366, 768));
+            primaryStage.centerOnScreen();
             primaryStage.show();
 
         } catch (Exception e) {

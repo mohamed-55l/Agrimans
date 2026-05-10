@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.carte.controllers.UserGarageController"
+            style="-fx-background-color: #F0E8D8;">
+
+    <!-- TOP: Contrôles -->
+    <top>
+        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #2E3D27;">
+            <Label text="📋 Liste des équipements par Garage"
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Garage:" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="cbGarages" prefWidth="300" 
+                          promptText="Sélectionnez un garage..."/>
+                <Button text="🔄 Actualiser" onAction="#actualiser"
+                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER: Contenu -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+            <BorderPane.margin>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </BorderPane.margin>
+            
+            <HBox spacing="20">
+                <Label text="📍 Équipements du garage"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <SplitPane VBox.vgrow="ALWAYS" dividerPositions="0.4">
+                <TableView fx:id="tableEquipements">
+                    <columns>
+                        <TableColumn fx:id="colIcone" text="" prefWidth="40"/>
+                        <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
+                        <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="120"/>
+                        <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="150"/>
+                    </columns>
+                </TableView>
+                <WebView fx:id="webView" prefWidth="400"/>
+            </SplitPane>
+        </VBox>
+    </center>
+
+    <!-- BOTTOM: Retour -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10;">
+            <Button text="🔙 Retour au Dashboard" onAction="#retourDashboard"
+                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

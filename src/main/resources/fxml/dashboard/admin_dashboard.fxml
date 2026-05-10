@@ -8,83 +8,86 @@
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="modules.dashboard.controllers.AdminDashboardController"
             fitToWidth="true"
-            style="-fx-background-color: transparent;">
+            style="-fx-background-color: transparent; -fx-background: transparent;"
+            stylesheets="@../../css/admin-dark.css">
 
     <VBox spacing="25" style="-fx-background-color: transparent; -fx-padding: 20;">
 
         <!-- En-tête -->
-        <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label text="👑" style="-fx-font-size: 40px;"/>
-            <VBox>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <StackPane style="-fx-background-radius: 12; -fx-background-color: rgba(16,185,129,0.15); -fx-padding: 16;">
+                <Label text="👑" style="-fx-font-size: 32px;"/>
+            </StackPane>
+            <VBox spacing="4">
                 <Label text="Dashboard Administrateur"
-                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+                       style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
                 <Label fx:id="lblBienvenue"
-                       style="-fx-font-size: 16px; -fx-text-fill: #4B8B3B;"/>
+                       style="-fx-font-size: 14px; -fx-text-fill: #10B981; -fx-font-weight: 500;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="btnAjouterEquipement" text="➕ Ajouter un équipement" onAction="#allerVersAjoutEquipement"
-                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 8 15;"/>
+            <Button fx:id="btnAjouterEquipement" text="➕  Ajouter un équipement" onAction="#allerVersAjoutEquipement"
+                    style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: 700; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand;"/>
         </HBox>
 
         <!-- Cartes statistiques -->
-        <HBox spacing="15" alignment="CENTER">
+        <HBox spacing="16" alignment="CENTER">
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="⚙️" style="-fx-font-size: 30px;"/>
-                <Label text="Total" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="⚙️" style="-fx-font-size: 28px;"/>
+                <Label text="Total" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblTotalEquipements" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                <Label text="Équipements" style="-fx-font-size: 10px;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                <Label text="Équipements" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
             </VBox>
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="✅" style="-fx-font-size: 30px;"/>
-                <Label text="Disponibles" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="✅" style="-fx-font-size: 28px;"/>
+                <Label text="Disponibles" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblEquipementsDisponibles" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #10B981;"/>
             </VBox>
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="⚠️" style="-fx-font-size: 30px;"/>
-                <Label text="En panne" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="⚠️" style="-fx-font-size: 28px;"/>
+                <Label text="En panne" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblEquipementsEnPanne" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #EF4444;"/>
             </VBox>
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="🔧" style="-fx-font-size: 30px;"/>
-                <Label text="Maintenance" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="🔧" style="-fx-font-size: 28px;"/>
+                <Label text="Maintenance" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblEquipementsMaintenance" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F59E0B;"/>
             </VBox>
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="⭐" style="-fx-font-size: 30px;"/>
-                <Label text="Reviews" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="⭐" style="-fx-font-size: 28px;"/>
+                <Label text="Reviews" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblTotalReviews" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
-                <Label fx:id="lblNoteMoyenne" text="0.0" style="-fx-font-size: 10px;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F59E0B;"/>
+                <Label fx:id="lblNoteMoyenne" text="0.0" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
             </VBox>
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="👥" style="-fx-font-size: 30px;"/>
-                <Label text="Agriculteurs" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="👥" style="-fx-font-size: 28px;"/>
+                <Label text="Agriculteurs" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblTotalAgriculteurs" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #3B82F6;"/>
             </VBox>
 
-            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                  prefWidth="140" alignment="CENTER" spacing="10">
-                <Label text="📋" style="-fx-font-size: 30px;"/>
-                <Label text="Demandes" style="-fx-font-size: 11px;"/>
+            <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+                  HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                <Label text="📋" style="-fx-font-size: 28px;"/>
+                <Label text="Demandes" style="-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
                 <Label fx:id="lblDemandesEnAttente" text="0"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #e67e22;"/>
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F97316;"/>
             </VBox>
         </HBox>
 
@@ -92,10 +95,10 @@
         <VBox fx:id="formulaireModification" spacing="10"/>
 
         <!-- Tableau des équipements -->
-        <VBox spacing="10">
-            <Label text="📋 Liste des équipements"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-            <TableView fx:id="tableEquipements" prefHeight="250">
+        <VBox spacing="16" style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;">
+            <Label text="📋   Liste des équipements"
+                   style="-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #F1F5F9;"/>
+            <TableView fx:id="tableEquipements" prefHeight="250" style="-fx-background-color: transparent; -fx-border-color: transparent;">
                 <columns>
                     <TableColumn fx:id="colEquipId" text="ID" prefWidth="50"/>
                     <TableColumn fx:id="colEquipNom" text="Nom" prefWidth="150"/>
@@ -109,20 +112,20 @@
         </VBox>
 
         <!-- Graphique et Demandes récentes -->
-        <HBox spacing="20">
+        <HBox spacing="24">
 
             <!-- Graphique circulaire -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                <Label text="📊 Répartition des équipements"
-                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+            <VBox spacing="16" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;">
+                <Label text="📊   Répartition des équipements"
+                       style="-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #F1F5F9;"/>
                 <PieChart fx:id="pieChartEquipements" prefHeight="200"/>
             </VBox>
 
             <!-- Demandes récentes -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                <Label text="📋 Demandes récentes"
-                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                <TableView fx:id="tableDemandes" prefHeight="200">
+            <VBox spacing="16" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;">
+                <Label text="📋   Demandes récentes"
+                       style="-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #F1F5F9;"/>
+                <TableView fx:id="tableDemandes" prefHeight="200" style="-fx-background-color: transparent; -fx-border-color: transparent;">
                     <columns>
                         <TableColumn fx:id="colDemandeEquipement" text="Équipement" prefWidth="120"/>
                         <TableColumn fx:id="colDemandeAgriculteur" text="Agriculteur" prefWidth="120"/>
@@ -134,10 +137,10 @@
         </HBox>
 
         <!-- Tableau des reviews -->
-        <VBox spacing="10">
-            <Label text="⭐ Toutes les reviews"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-            <TableView fx:id="tableReviews" prefHeight="200">
+        <VBox spacing="16" style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24; -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;">
+            <Label text="⭐   Toutes les reviews"
+                   style="-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #F1F5F9;"/>
+            <TableView fx:id="tableReviews" prefHeight="200" style="-fx-background-color: transparent; -fx-border-color: transparent;">
                 <columns>
                     <TableColumn fx:id="colReviewCommentaire" text="Commentaire" prefWidth="300"/>
                     <TableColumn fx:id="colReviewNote" text="Note" prefWidth="60"/>

@@ -1,0 +1,160 @@
+/* Add these to your existing style.css */
+
+/* Product Card Styles */
+.product-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(46, 61, 39, 0.1), 15, 0, 0, 5);
+    -fx-transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(46, 61, 39, 0.15), 25, 0, 0, 10);
+    -fx-translate-y: -2px;
+}
+
+.product-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E3D27;
+}
+
+.category-badge {
+    -fx-background-color: #4B8B3B;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 20px;
+}
+
+.supplier {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+}
+
+.price {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4B8B3B;
+}
+
+.stock {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7DBF6C;
+    -fx-background-color: rgba(125, 191, 108, 0.1);
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 20px;
+}
+
+.expiry {
+    -fx-font-size: 12px;
+    -fx-text-fill: #FF6B6B;
+    -fx-background-color: #FFE5E5;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 20px;
+}
+
+.add-to-cart-btn {
+    -fx-background-color: #4B8B3B;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-background-radius: 30px;
+    -fx-cursor: hand;
+}
+
+.add-to-cart-btn:hover {
+    -fx-background-color: #7DBF6C;
+}
+
+.add-to-cart-btn:disabled {
+    -fx-background-color: #cccccc;
+    -fx-cursor: not-allowed;
+}
+
+.search-box {
+    -fx-background-color: white;
+    -fx-background-radius: 30px;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 30px;
+}
+
+.search-box:focused {
+    -fx-border-color: #4B8B3B;
+}
+
+.filter-combo {
+    -fx-background-color: white;
+    -fx-background-radius: 30px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 30px;
+    -fx-padding: 4px 8px;
+}
+
+.button-primary {
+    -fx-background-color: #4B8B3B;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 30px;
+    -fx-cursor: hand;
+}
+
+.button-primary:hover {
+    -fx-background-color: #7DBF6C;
+}
+
+.button-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4B8B3B;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 30px;
+    -fx-border-color: #4B8B3B;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30px;
+    -fx-cursor: hand;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #4B8B3B;
+    -fx-text-fill: white;
+}
+
+/* Search Box */
+.search-box {
+    -fx-background-color: white;
+    -fx-background-radius: 30px;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 30px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+.search-box:focused {
+    -fx-border-color: #4B8B3B;
+}
+
+/* Filter Combo Box */
+.filter-combo {
+    -fx-background-color: white;
+    -fx-background-radius: 30px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 30px;
+    -fx-padding: 4px 8px;
+}
+
+/* FlowPane */
+.flow-pane {
+    -fx-background-color: #F5F5F5;
+    -fx-padding: 20px;
+}

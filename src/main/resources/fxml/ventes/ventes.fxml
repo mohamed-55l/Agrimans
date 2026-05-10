@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.ventes.controllers.VentesController"
+      alignment="CENTER" spacing="20"
+      style="-fx-background-color: transparent; -fx-padding: 40;">
+
+    <Label text="💰" style="-fx-font-size: 64px;"/>
+    <Label text="Module Ventes"
+           style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+    <Label text="La gestion des ventes sera disponible prochainement."
+           style="-fx-font-size: 15px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
+
+    <VBox alignment="CENTER" spacing="12" maxWidth="440"
+          style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 30;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+        <Label text="🚧  En Construction"
+               style="-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #FBBF24;"/>
+        <Label text="Cette fonctionnalité sera intégrée dans la prochaine version de l'application."
+               style="-fx-font-size: 13px; -fx-text-fill: #94A3B8; -fx-wrap-text: true; -fx-text-alignment: center;"/>
+    </VBox>
+</VBox>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.parcelle.controllers.StatistiqueController">
+
+    <children>
+
+        <BarChart fx:id="chartLocalisation"
+                  title="Nombre de parcelles par localisation"
+                  AnchorPane.topAnchor="20"
+                  AnchorPane.leftAnchor="20"
+                  AnchorPane.rightAnchor="20"
+                  AnchorPane.bottomAnchor="20">
+
+            <xAxis>
+                <CategoryAxis label="Localisation"/>
+            </xAxis>
+
+            <yAxis>
+                <NumberAxis fx:id="yAxis" label="Nombre de parcelles"/>
+            </yAxis>
+
+        </BarChart>
+
+    </children>
+
+</AnchorPane>

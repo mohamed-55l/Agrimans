@@ -5,15 +5,10 @@ import core.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class AdminLayoutController {
 
@@ -23,7 +18,6 @@ public class AdminLayoutController {
     @FXML
     public void initialize() {
         lblUserInfo.setText(SessionManager.getCurrentUserName() + " (Admin)");
-
         try {
             chargerPage("/fxml/dashboard/admin_dashboard.fxml");
         } catch (IOException e) {
@@ -31,58 +25,76 @@ public class AdminLayoutController {
         }
     }
 
-    @FXML
-    private void goDashboard() {
-        try {
-            chargerPage("/fxml/dashboard/admin_dashboard.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger le dashboard");
-        }
+    // ── VUE D'ENSEMBLE ───────────────────────────────────────────────────────
+    @FXML private void goDashboard() {
+        charger("/fxml/dashboard/admin_dashboard.fxml", "le dashboard");
     }
 
-    @FXML
-    private void goEquipements() {
-        try {
-            chargerPage("/fxml/equipement/equipement.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la gestion des équipements");
-        }
+    @FXML private void goUtilisateurs() {
+        charger("/fxml/user/admin-dashboard.fxml", "la gestion des utilisateurs");
     }
 
-    @FXML
-    private void goReviews() {
-        try {
-            chargerPage("/fxml/review/review.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la gestion des reviews");
-        }
+    // ── GESTION AGRICOLE ─────────────────────────────────────────────────────
+    @FXML private void goEquipements() {
+        charger("/fxml/equipement/equipement.fxml", "la gestion des équipements");
     }
 
-    @FXML
-    private void goDemandes() {
-        try {
-            chargerPage("/fxml/demande/admin_demandes.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la gestion des demandes");
-        }
+    @FXML private void goAnimaux() {
+        charger("/fxml/animal/animal.fxml", "la gestion des animaux");
     }
 
-    @FXML
-    private void goUtilisateurs() {
-        try {
-            chargerPage("/fxml/user/user_management.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la gestion des utilisateurs");
-        }
+    @FXML private void goParcelles() {
+        charger("/fxml/parcelle/GestionTerres.fxml", "la gestion des parcelles");
     }
 
-    @FXML
-    private void logout() {
+    // ── OPÉRATIONS ───────────────────────────────────────────────────────────
+    @FXML private void goDemandes() {
+        charger("/fxml/demande/admin_demandes.fxml", "la gestion des demandes");
+    }
+
+    @FXML private void goReviews() {
+        charger("/fxml/review/review.fxml", "la gestion des évaluations");
+    }
+
+    @FXML private void goProduction() {
+        charger("/fxml/production/production.fxml", "la production");
+    }
+
+    @FXML private void goStock() {
+        charger("/fxml/stock/stock.fxml", "le stock");
+    }
+
+    @FXML private void goVentes() {
+        charger("/fxml/ventes/ventes.fxml", "les ventes");
+    }
+
+    @FXML private void goMarketplaceDashboard() {
+        charger("/fxml/marketplace/dashboard.fxml", "le Marketplace");
+    }
+
+    // ── INTELLIGENCE & OUTILS ────────────────────────────────────────────────
+    @FXML private void goMeteo() {
+        charger("/fxml/meteo.fxml", "la météo");
+    }
+
+    @FXML private void goCarte() {
+        charger("/fxml/carte.fxml", "la carte");
+    }
+
+    @FXML private void goChatbot() {
+        charger("/fxml/chatbot.fxml", "le chatbot");
+    }
+
+    @FXML private void goSentiment() {
+        charger("/fxml/sentiment.fxml", "l'analyse de sentiments");
+    }
+
+    // ── DÉCONNEXION ──────────────────────────────────────────────────────────
+    @FXML private void logout() {
         if (AlertUtils.showConfirmation("Déconnexion", "Voulez-vous vraiment vous déconnecter ?")) {
             SessionManager.logout();
-
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/fxml/user/login-view.fxml"));
                 contentArea.getScene().setRoot(root);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -90,93 +102,13 @@ public class AdminLayoutController {
         }
     }
 
-    @FXML
-    void handleButtonEnter(MouseEvent event) {
-        Button button = (Button) event.getSource();
-        button.setStyle("-fx-background-color: #7DBF6C; -fx-text-fill: #2E3D27; -fx-font-size: 14; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-background-radius: 5;");
-    }
-
-    @FXML
-    void handleButtonExit(MouseEvent event) {
-        Button button = (Button) event.getSource();
-        button.setStyle("-fx-background-color: #4B8B3B; -fx-text-fill: #F0E8D8; -fx-font-size: 14; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-background-radius: 5;");
-    }
-
-    @FXML
-    private void goMeteo() {
+    // ── UTILITAIRES ──────────────────────────────────────────────────────────
+    private void charger(String fxmlPath, String nom) {
         try {
-            chargerPage("/fxml/meteo.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la météo");
-        }
-    }
-
-    @FXML
-    private void goCarte() {
-        try {
-            chargerPage("/fxml/carte.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger la carte");
-        }
-    }
-
-    @FXML
-    private void goSentiment() {
-        try {
-            chargerPage("/fxml/sentiment.fxml");
-        } catch (IOException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger l'analyse de sentiments");
-        }
-    }
-
-    @FXML
-    private void goChatbot() {
-        try {
-            // Essayer sans le / au début
-            URL url = getClass().getResource("fxml/chatbot.fxml");
-            System.out.println("Sans /: " + url);
-
-            // Essayer avec le / au début
-            url = getClass().getResource("/fxml/chatbot.fxml");
-            System.out.println("Avec /: " + url);
-
-            if (url == null) {
-                // Chemin absolu (à adapter à VOTRE PC)
-                File file = new File("C:/Users/dmoha/OneDrive/Desktop/PIjava/Agrimans/src/main/resources/fxml/chatbot.fxml");
-                System.out.println("Chemin absolu: " + file.exists());
-
-                if (file.exists()) {
-                    Parent root = FXMLLoader.load(file.toURI().toURL());
-                    Stage stage = (Stage) lblUserInfo.getScene().getWindow();
-                    stage.getScene().setRoot(root);
-                    return;
-                }
-            }
-
-            chargerPage("/fxml/chatbot.fxml");
-
-        } catch (IOException e) {
+            chargerPage(fxmlPath);
+        } catch (Exception e) {
             e.printStackTrace();
-            AlertUtils.showError("Erreur", "Erreur: " + e.getMessage());
-        }
-    }
-
-
-
-
-    private void listerFichiers(File dir, String indent) {
-        File[] fichiers = dir.listFiles();
-        if (fichiers != null) {
-            for (File f : fichiers) {
-                if (f.isDirectory()) {
-                    if (f.getName().endsWith("fxml")) {
-                        System.out.println(indent + "📁 " + f.getName());
-                    }
-                    listerFichiers(f, indent + "  ");
-                } else if (f.getName().endsWith(".fxml")) {
-                    System.out.println(indent + "📄 " + f.getName());
-                }
-            }
+            AlertUtils.showError("Erreur", "Impossible de charger " + nom + "\n" + e.getMessage());
         }
     }
 

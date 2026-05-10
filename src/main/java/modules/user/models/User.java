@@ -6,6 +6,34 @@ import java.time.LocalDateTime;
  * Modèle représentant un utilisateur
  */
 public class User {
+        // --- Added for compatibility with controllers ---
+        public String getFullName() {
+            return (prenom != null ? prenom : "") + " " + (nom != null ? nom : "").trim();
+        }
+
+        public void setFullName(String fullName) {
+            if (fullName == null) {
+                this.nom = "";
+                this.prenom = "";
+            } else {
+                String[] parts = fullName.trim().split(" ", 2);
+                if (parts.length == 2) {
+                    this.prenom = parts[0];
+                    this.nom = parts[1];
+                } else if (parts.length == 1) {
+                    this.prenom = parts[0];
+                    this.nom = "";
+                }
+            }
+        }
+
+        public String getPhone() {
+            return telephone;
+        }
+
+        public void setPhone(String phone) {
+            this.telephone = phone;
+        }
     private int id;
     private String nom;
     private String prenom;

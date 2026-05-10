@@ -1,0 +1,324 @@
+﻿Structure du dossier
+Le numÚro de sÚrie du volume est 2EDB-C4F1
+C:\USERS\DMOHA\ONEDRIVE\DESKTOP\PIJAVA\AGRIMANS\SRC
++---main
+ª   +---java
+ª   ª   ª   FixDB.java
+ª   ª   ª   Main.java
+ª   ª   ª   MainFX.java
+ª   ª   ª   TestFXML.java
+ª   ª   ª   
+ª   ª   +---core
+ª   ª   ª   +---database
+ª   ª   ª   ª       DBConnection.java
+ª   ª   ª   ª       IService.java
+ª   ª   ª   ª       Mydb.java
+ª   ª   ª   ª       
+ª   ª   ª   +---events
+ª   ª   ª   +---session
+ª   ª   ª   ª       SessionManager.java
+ª   ª   ª   ª       
+ª   ª   ª   +---ui
+ª   ª   ª   ª       AdminLayoutController.java
+ª   ª   ª   ª       LayoutController.java
+ª   ª   ª   ª       SceneSwitcher.java
+ª   ª   ª   ª       UserLayoutController.java
+ª   ª   ª   ª       
+ª   ª   ª   +---utils
+ª   ª   ª           AlertUtils.java
+ª   ª   ª           Constants.java
+ª   ª   ª           NavigationHelper.java
+ª   ª   ª           PasswordCryp.java
+ª   ª   ª           
+ª   ª   +---modules
+ª   ª       +---animal
+ª   ª       ª   +---controllers
+ª   ª       ª   +---events
+ª   ª       ª   +---models
+ª   ª       ª   +---services
+ª   ª       +---carte
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       AssignationController.java
+ª   ª       ª   ª       CarteController.java
+ª   ª       ª   ª       GarageFormController.java
+ª   ª       ª   ª       UserGarageController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---models
+ª   ª       ª   ª       EquipementGeo.java
+ª   ª       ª   ª       Garage.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           CarteService.java
+ª   ª       ª           
+ª   ª       +---chatbot
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       ChatbotController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---models
+ª   ª       ª   ª       Message.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           ChatbotService.java
+ª   ª       ª           
+ª   ª       +---dashboard
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       AdminDashboardController.java
+ª   ª       ª   ª       UserDashboardController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---events
+ª   ª       ª   +---models
+ª   ª       ª   +---services
+ª   ª       ª           DashboardService.java
+ª   ª       ª           
+ª   ª       +---demande
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       AdminDemandeController.java
+ª   ª       ª   ª       DemandeController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---models
+ª   ª       ª   ª       Demande.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           DemandeService.java
+ª   ª       ª           
+ª   ª       +---equipement
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       EquipementController.java
+ª   ª       ª   ª       ModifEquipementController.java
+ª   ª       ª   ª       UserEquipementController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---events
+ª   ª       ª   +---models
+ª   ª       ª   ª       Equipement.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           EquipementService.java
+ª   ª       ª           
+ª   ª       +---marketplace
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       CartController.java
+ª   ª       ª   ª       MarketplaceDashboardController.java
+ª   ª       ª   ª       ProductController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---models
+ª   ª       ª   ª       CartItem.java
+ª   ª       ª   ª       Order.java
+ª   ª       ª   ª       Product.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           CartService.java
+ª   ª       ª           ProductService.java
+ª   ª       ª           
+ª   ª       +---meteo
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       MeteoController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---models
+ª   ª       ª   ª       AlerteMeteo.java
+ª   ª       ª   ª       PrevisionMeteo.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           MeteoService.java
+ª   ª       ª           NotificationService.java
+ª   ª       ª           
+ª   ª       +---parcelle
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       Add_Culture_Controller.java
+ª   ª       ª   ª       AIChatController.java
+ª   ª       ª   ª       AjouterParcelleController.java
+ª   ª       ª   ª       ListeCultureController.java
+ª   ª       ª   ª       ListeParcelleController.java
+ª   ª       ª   ª       MainController.java
+ª   ª       ª   ª       ModifierCultureController.java
+ª   ª       ª   ª       ModifierParcelleController.java
+ª   ª       ª   ª       StatistiqueController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---events
+ª   ª       ª   +---models
+ª   ª       ª   ª       Culture.java
+ª   ª       ª   ª       Parcelle.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           AIService.java
+ª   ª       ª           CultureService.java
+ª   ª       ª           MeteoService.java
+ª   ª       ª           NotificationService.java
+ª   ª       ª           ParcelleService.java
+ª   ª       ª           RecommendationService.java
+ª   ª       ª           RendementService.java
+ª   ª       ª           
+ª   ª       +---production
+ª   ª       ª   +---controllers
+ª   ª       ª           ProductionController.java
+ª   ª       ª           
+ª   ª       +---review
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       ReviewController.java
+ª   ª       ª   ª       UserReviewController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---events
+ª   ª       ª   +---models
+ª   ª       ª   ª       Review.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           ReviewService.java
+ª   ª       ª           
+ª   ª       +---sentiment
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       SentimentController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---models
+ª   ª       ª   ª       AnalyseSentiment.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           SentimentNotificationService.java
+ª   ª       ª           SentimentService.java
+ª   ª       ª           
+ª   ª       +---stock
+ª   ª       ª   +---controllers
+ª   ª       ª           StockController.java
+ª   ª       ª           
+ª   ª       +---user
+ª   ª       ª   +---controllers
+ª   ª       ª   ª       AdminDashboardController.java
+ª   ª       ª   ª       BaseController.java
+ª   ª       ª   ª       HomeController.java.bak
+ª   ª       ª   ª       LoginController.java
+ª   ª       ª   ª       OtpController.java
+ª   ª       ª   ª       ReclamationController.java
+ª   ª       ª   ª       RegisterController.java
+ª   ª       ª   ª       ResetPasswordController.java
+ª   ª       ª   ª       UpdateUserController.java
+ª   ª       ª   ª       UserDashboardController.java
+ª   ª       ª   ª       VerifyController.java
+ª   ª       ª   ª       
+ª   ª       ª   +---events
+ª   ª       ª   +---models
+ª   ª       ª   ª       Reclamation.java
+ª   ª       ª   ª       User.java
+ª   ª       ª   ª       
+ª   ª       ª   +---services
+ª   ª       ª           EmailService.java
+ª   ª       ª           ForgotPasswordService.java
+ª   ª       ª           OtpService.java
+ª   ª       ª           RecaptchaService.java
+ª   ª       ª           ReclamationDAO.java
+ª   ª       ª           SmsService.java
+ª   ª       ª           UserDAO.java
+ª   ª       ª           UserService.java
+ª   ª       ª           
+ª   ª       +---ventes
+ª   ª           +---controllers
+ª   ª                   VentesController.java
+ª   ª                   
+ª   +---resources
+ª       ª   logback.xml
+ª       ª   
+ª       +---css
+ª       ª       admin-dashboard.css
+ª       ª       style-register.css
+ª       ª       style.css
+ª       ª       styleeee.css
+ª       ª       window-buttons.css
+ª       ª       
+ª       +---fxml
+ª       ª   ª   carte.fxml
+ª       ª   ª   chatbot.fxml
+ª       ª   ª   meteo.fxml
+ª       ª   ª   sentiment.fxml
+ª       ª   ª   
+ª       ª   +---animal
+ª       ª   +---carte
+ª       ª   ª       assignation.fxml
+ª       ª   ª       garage_form.fxml
+ª       ª   ª       user_garage.fxml
+ª       ª   ª       
+ª       ª   +---dashboard
+ª       ª   ª       admin_dashboard.fxml
+ª       ª   ª       user_dashboard.fxml
+ª       ª   ª       
+ª       ª   +---demande
+ª       ª   ª       admin_demandes.fxml
+ª       ª   ª       user_demande.fxml
+ª       ª   ª       
+ª       ª   +---equipement
+ª       ª   ª       AdminGestionMateriel.fxml
+ª       ª   ª       equipement.fxml
+ª       ª   ª       GestionMateriel.fxml
+ª       ª   ª       modif_equipement.fxml
+ª       ª   ª       user_equipement.fxml
+ª       ª   ª       
+ª       ª   +---layout
+ª       ª   ª       admin_layout.fxml
+ª       ª   ª       layout.fxml
+ª       ª   ª       user_layout.fxml
+ª       ª   ª       
+ª       ª   +---marketplace
+ª       ª   ª   ª   cart.fxml
+ª       ª   ª   ª   chatbot.fxml
+ª       ª   ª   ª   dashboard.fxml
+ª       ª   ª   ª   login.fxml
+ª       ª   ª   ª   products.fxml
+ª       ª   ª   ª   register.fxml
+ª       ª   ª   ª   
+ª       ª   ª   +---css
+ª       ª   ª           style.css
+ª       ª   ª           
+ª       ª   +---parcelle
+ª       ª   ª       AIChat.fxml
+ª       ª   ª       AjoutCulture.fxml
+ª       ª   ª       AjouterParcelle.fxml
+ª       ª   ª       GestionTerres.fxml
+ª       ª   ª       ListeCulture.fxml
+ª       ª   ª       ListeParcelle.fxml
+ª       ª   ª       MainLayout.fxml
+ª       ª   ª       ModifierCulture.fxml
+ª       ª   ª       ModifierParcelle.fxml
+ª       ª   ª       Statistique.fxml
+ª       ª   ª       
+ª       ª   +---production
+ª       ª   ª       production.fxml
+ª       ª   ª       
+ª       ª   +---review
+ª       ª   ª       review.fxml
+ª       ª   ª       user_review.fxml
+ª       ª   ª       
+ª       ª   +---stock
+ª       ª   ª       stock.fxml
+ª       ª   ª       
+ª       ª   +---user
+ª       ª   ª       admin-dashboard.css
+ª       ª   ª       admin-dashboard.fxml
+ª       ª   ª       home-view.fxml.bak
+ª       ª   ª       login-view.fxml
+ª       ª   ª       login.fxml
+ª       ª   ª       otp-view.fxml
+ª       ª   ª       reclamation-view.fxml
+ª       ª   ª       register-view.fxml
+ª       ª   ª       reset-password-view.fxml
+ª       ª   ª       style-register.css
+ª       ª   ª       style.css
+ª       ª   ª       update-user.fxml
+ª       ª   ª       user-dashboard.fxml
+ª       ª   ª       window-buttons.css
+ª       ª   ª       
+ª       ª   +---ventes
+ª       ª           ventes.fxml
+ª       ª           
+ª       +---image
+ª               .jpg
+ª               ChatGPT Image 15 fÚvr. 2026, 22_35_24.png
+ª               ChatGPT Image 15 fÚvr. 2026, 22_46_05.png
+ª               efarming1.jpg
+ª               icon.png
+ª               icons8-lock-100 (1).png
+ª               icons8-lock-100.png
+ª               icons8-lock-50.png
+ª               lock-512.png
+ª               login.png
+ª               smart-agriculture-iot-with-hand-planting-tree-background.jpg
+ª               
++---test
+    +---java
+            EquipementTest.java
+            

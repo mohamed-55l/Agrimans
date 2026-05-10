@@ -54,7 +54,7 @@ public class DemandeService {
         List<Demande> list = new ArrayList<>();
 
         String sql = "SELECT d.*, " +
-                "u.id as u_id, u.nom as u_nom, u.prenom as u_prenom, u.email, " +
+                "u.id as u_id, u.full_name as u_nom, u.email, " +
                 "e.id as e_id, e.nom as e_nom, e.type as e_type " +
                 "FROM demande d " +
                 "JOIN user u ON d.agriculteur_id = u.id " +
@@ -78,7 +78,7 @@ public class DemandeService {
         List<Demande> list = new ArrayList<>();
 
         String sql = "SELECT d.*, " +
-                "u.id as u_id, u.nom as u_nom, u.prenom as u_prenom, u.email, " +
+                "u.id as u_id, u.full_name as u_nom, u.email, " +
                 "e.id as e_id, e.nom as e_nom, e.type as e_type " +
                 "FROM demande d " +
                 "JOIN user u ON d.agriculteur_id = u.id " +
@@ -222,7 +222,7 @@ public class DemandeService {
         List<Demande> list = new ArrayList<>();
 
         String sql = "SELECT d.*, " +
-                "u.id as u_id, u.nom as u_nom, u.email, " +
+                "u.id as u_id, u.full_name as u_nom, u.email, " +
                 "e.id as e_id, e.nom as e_nom, e.type as e_type " +
                 "FROM demande d " +
                 "LEFT JOIN user u ON d.agriculteur_id = u.id " +

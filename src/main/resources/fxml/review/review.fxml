@@ -7,126 +7,101 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="modules.review.controllers.ReviewController"
       spacing="20"
-      style="-fx-background-color: transparent;">
+      style="-fx-background-color: transparent; -fx-padding: 28 30;">
 
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="4">
+            <Label text="⭐  Gestion des Évaluations"
+                   style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+            <Label text="Consultez et gérez les avis des agriculteurs"
+                   style="-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
+        </VBox>
+    </HBox>
 
-    <!-- Titre -->
-    <Label text="⭐ Gestion des Reviews"
-           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27; -fx-font-family: 'Segoe UI';"/>
+    <!-- Tableau -->
+    <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+        <TableView fx:id="tableReview" prefHeight="260"
+                   style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <columns>
+                <TableColumn fx:id="colCommentaire" text="Commentaire"  prefWidth="300"/>
+                <TableColumn fx:id="colNote"        text="Note / 5"     prefWidth="100"/>
+                <TableColumn fx:id="colEquipement"  text="Équipement"   prefWidth="200"/>
+                <TableColumn fx:id="colAuteur"      text="Agriculteur"  prefWidth="180"/>
+                <TableColumn fx:id="colDate"        text="Date"         prefWidth="140"/>
+            </columns>
+        </TableView>
+    </VBox>
 
-    <!-- Tableau des reviews -->
-    <TableView fx:id="tableReview"
-               prefHeight="250"
-               style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
-        <columns>
-            <TableColumn fx:id="colCommentaire" text="Commentaire" prefWidth="300"/>
-            <TableColumn fx:id="colNote" text="Note/5" prefWidth="100"/>
-            <TableColumn fx:id="colEquipement" text="Équipement" prefWidth="200"/>
-            <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
-        </columns>
-    </TableView>
+    <!-- Formulaire -->
+    <VBox spacing="16"
+          style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
 
-    <!-- Formulaire avec validation -->
-    <TitledPane text="Nouvelle Review" expanded="true"
-                style="-fx-text-fill: #4B8B3B; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="✍️" style="-fx-font-size: 18px;"/>
+            <Label text="Nouvelle Évaluation"
+                   style="-fx-font-size: 15px; -fx-font-weight: 800; -fx-text-fill: #10B981;"/>
+        </HBox>
 
-        <GridPane hgap="15" vgap="10" style="-fx-padding: 15;">
+        <GridPane hgap="20" vgap="14">
             <columnConstraints>
-                <ColumnConstraints minWidth="100"/>
-                <ColumnConstraints minWidth="300"/>
-                <ColumnConstraints minWidth="200"/>
+                <ColumnConstraints minWidth="130" maxWidth="130"/>
+                <ColumnConstraints minWidth="320" hgrow="ALWAYS"/>
+                <ColumnConstraints minWidth="220"/>
             </columnConstraints>
 
-            <!-- Ligne 0: Commentaire -->
-            <Label text="Commentaire:" GridPane.rowIndex="0" GridPane.columnIndex="0"
-                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-            <TextField fx:id="tfCommentaire"
-                       GridPane.rowIndex="0" GridPane.columnIndex="1"
-                       prefWidth="300"
-                       promptText="Votre commentaire (5-500 caractères)"
-                       style="-fx-background-radius: 5;"/>
-            <Label fx:id="lblCommentaireError"
-                   GridPane.rowIndex="0" GridPane.columnIndex="2"
-                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
-                   visible="false"
-                   text=" "
-                   wrapText="true"/>
+            <Label text="Commentaire :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfCommentaire" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       styleClass="text-field" promptText="Votre commentaire (5-500 caractères)"/>
+            <Label fx:id="lblCommentaireError" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;"
+                   visible="false" text=" " wrapText="true"/>
 
-            <!-- Ligne 1: Note -->
-            <Label text="Note (0-5):" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-            <TextField fx:id="tfNote"
-                       GridPane.rowIndex="1" GridPane.columnIndex="1"
-                       prefWidth="100"
-                       promptText="Ex: 4.5"
-                       style="-fx-background-radius: 5;"/>
-            <Label fx:id="lblNoteError"
-                   GridPane.rowIndex="1" GridPane.columnIndex="2"
-                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
-                   visible="false"
-                   text=" "
-                   wrapText="true"/>
+            <Label text="Note (0-5) :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfNote" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       styleClass="text-field" prefWidth="120" promptText="Ex: 4.5"/>
+            <Label fx:id="lblNoteError" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;"
+                   visible="false" text=" " wrapText="true"/>
 
-            <!-- Ligne 2: Équipement -->
-            <Label text="Équipement:" GridPane.rowIndex="2" GridPane.columnIndex="0"
-                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-            <ComboBox fx:id="cbEquipement"
-                      GridPane.rowIndex="2" GridPane.columnIndex="1"
-                      prefWidth="300"
-                      promptText="Sélectionner un équipement"
-                      style="-fx-background-radius: 5;"/>
-            <Label fx:id="lblEquipementError"
-                   GridPane.rowIndex="2" GridPane.columnIndex="2"
-                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
-                   visible="false"
-                   text=" "
-                   wrapText="true"/>
+            <Label text="Équipement :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <ComboBox fx:id="cbEquipement" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                      styleClass="combo-box" prefWidth="320" promptText="Sélectionner un équipement"/>
+            <Label fx:id="lblEquipementError" GridPane.rowIndex="2" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;"
+                   visible="false" text=" " wrapText="true"/>
 
-            <!-- Ligne 3: Date (automatique) -->
-            <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"
-                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-            <Label text="(Automatique - aujourd'hui)"
+            <Label text="Date :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <Label text="✅ Automatique — aujourd'hui"
                    GridPane.rowIndex="3" GridPane.columnIndex="1"
-                   style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;"/>
-
+                   style="-fx-text-fill: #64748B; -fx-font-style: italic; -fx-font-size: 13px;"/>
         </GridPane>
-    </TitledPane>
 
-    <!-- Boutons d'action -->
-    <HBox spacing="15" alignment="CENTER">
-        <Button text="➕ Ajouter"
-                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
-                onAction="#ajouterReview"
-                onMouseEntered="#handleButtonEnter"
-                onMouseExited="#handleButtonExit"
-                prefWidth="120"/>
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+            <Button text="➕  Ajouter"   onAction="#ajouterReview"
+                    onMouseEntered="#handleButtonEnter" onMouseExited="#handleButtonExit"
+                    styleClass="button, btn-primary"   prefWidth="145"/>
+            <Button text="✏️  Modifier"  onAction="#modifierReview"
+                    onMouseEntered="#handleButtonEnter" onMouseExited="#handleButtonExit"
+                    styleClass="button, btn-secondary" prefWidth="145"/>
+            <Button text="🗑️  Supprimer" onAction="#supprimerReview"
+                    onMouseEntered="#handleButtonEnter" onMouseExited="#handleButtonExit"
+                    styleClass="button, btn-danger"    prefWidth="145"/>
+        </HBox>
 
-        <Button text="✏️ Modifier"
-                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
-                onAction="#modifierReview"
-                onMouseEntered="#handleButtonEnter"
-                onMouseExited="#handleButtonExit"
-                prefWidth="120"/>
-
-        <Button text="🗑️ Supprimer"
-                style="-fx-background-color: #2E3D27; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
-                onAction="#supprimerReview"
-                onMouseEntered="#handleButtonEnter"
-                onMouseExited="#handleButtonExit"
-                prefWidth="120"/>
-    </HBox>
-
-    <!-- Indicateurs de validation -->
-    <HBox spacing="10" alignment="CENTER">
-        <Label text="✅ Champs obligatoires"
-               style="-fx-text-fill: #4B8B3B; -fx-font-size: 11px;"/>
-        <Label text="⚠️ Note entre 0 et 5"
-               style="-fx-text-fill: #e67e22; -fx-font-size: 11px;"/>
-        <Label text="📝 Commentaire: 5-500 caractères"
-               style="-fx-text-fill: #3498db; -fx-font-size: 11px;"/>
-    </HBox>
+        <HBox spacing="18" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+            <Label text="✅  Champs obligatoires"        style="-fx-text-fill: #10B981; -fx-font-size: 11px;"/>
+            <Label text="⚠️  Note entre 0 et 5"          style="-fx-text-fill: #FBBF24; -fx-font-size: 11px;"/>
+            <Label text="💬  Commentaire : 5-500 car."   style="-fx-text-fill: #93C5FD; -fx-font-size: 11px;"/>
+        </HBox>
+    </VBox>
 
 </VBox>

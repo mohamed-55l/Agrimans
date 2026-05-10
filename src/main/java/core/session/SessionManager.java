@@ -4,6 +4,11 @@ import modules.user.models.User;
 
 public class SessionManager {
 
+    // Added for compatibility with controllers
+    public static void clearSession() {
+        getInstance().currentUser = null;
+    }
+
     private static SessionManager instance;
     private User currentUser;
 
@@ -56,12 +61,12 @@ public class SessionManager {
     }
 
     /**
-     * Vérifier si l'utilisateur est AGRICULTEUR
+     * Vérifier si l'utilisateur est AGRICULTEUR (ou USER)
      */
     public static boolean isAgriculteur() {
         User user = getCurrentUser();
-        boolean result = user != null && "AGRICULTEUR".equals(user.getRole());
-        System.out.println("🔍 Vérification rôle AGRICULTEUR: " + result);
+        boolean result = user != null && ("AGRICULTEUR".equals(user.getRole()) || "USER".equals(user.getRole()));
+        System.out.println("🔍 Vérification rôle AGRICULTEUR/USER: " + result);
         return result;
     }
 

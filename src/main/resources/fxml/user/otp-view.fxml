@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="650"
+      prefWidth="900"
+      style="-fx-background-color: #0f6b3b;"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="modules.user.controllers.OtpController">
+
+    <!-- ================= TITLE BAR ================= -->
+    <HBox alignment="CENTER_RIGHT"
+          onMousePressed="#handleMousePressed"
+          onMouseDragged="#handleMouseDragged"
+          prefHeight="40"
+          style="-fx-background-color: #1e1e1e;">
+
+        <Label text="AGRI Samir"
+               HBox.hgrow="ALWAYS"
+               style="-fx-text-fill: white;
+                      -fx-padding: 0 0 0 15;
+                      -fx-font-weight: bold;" />
+
+        <Button text="â€”" onAction="#handleMinimize"/>
+        <Button text="â˜" onAction="#handleMaximize"/>
+        <Button text="âœ•" onAction="#handleClose"/>
+
+    </HBox>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <StackPane VBox.vgrow="ALWAYS">
+
+        <HBox maxHeight="520"
+              maxWidth="850"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 25;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.3, 0, 8);">
+
+            <!-- ================= LEFT SIDE OTP ================= -->
+            <VBox alignment="CENTER_LEFT"
+                  prefWidth="450"
+                  spacing="15"
+                  style="-fx-padding: 60;">
+
+                <Label text="VÃ©rification OTP"
+                       style="-fx-text-fill: #555555; -fx-font-size: 16px;" />
+
+                <Label text="Entrez le code reÃ§u par SMS"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+                <TextField fx:id="otpField"
+                           prefWidth="250"
+                           promptText="Code OTP"
+                           style="-fx-background-radius: 8;
+                                  -fx-border-radius: 8;
+                                  -fx-border-color: #cfcfcf;
+                                  -fx-padding: 10;" />
+
+                <Button text="VÃ©rifier"
+                        prefHeight="40"
+                        prefWidth="250"
+                        onAction="#verifyOtp"
+                        style="-fx-background-color: #0f6b3b;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 10;" />
+
+                <Button text="Retour au Login"
+                        prefHeight="40"
+                        prefWidth="250"
+                        onAction="#goToLogin"
+                        style="-fx-background-color: transparent;
+               -fx-border-color: #0f6b3b;
+               -fx-text-fill: #0f6b3b;
+               -fx-font-weight: bold;
+               -fx-border-radius: 10;
+               -fx-background-radius: 10;" />
+
+                <Label fx:id="messageLabel"
+                       wrapText="true"
+                       style="-fx-font-weight: bold;" />
+
+            </VBox>
+
+            <!-- ================= RIGHT SIDE IMAGE ================= -->
+            <VBox alignment="CENTER"
+                  prefWidth="450"
+                  style="-fx-background-color: #0f6b3b;
+                         -fx-background-radius: 0 25 25 0;">
+
+                <ImageView fitHeight="520"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@../../image/login.png"/>
+                    </image>
+                </ImageView>
+
+            </VBox>
+
+        </HBox>
+
+    </StackPane>
+
+</VBox>
+

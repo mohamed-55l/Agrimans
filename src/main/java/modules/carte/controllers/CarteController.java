@@ -331,7 +331,7 @@ public class CarteController implements Initializable {
         if (!cartePret) return;
 
         try {
-            String script = String.format("map.setView([%f, %f], %d);", lat, lng, zoom);
+            String script = String.format(java.util.Locale.US, "map.setView([%f, %f], %d);", lat, lng, zoom);
             webEngine.executeScript(script);
         } catch (Exception e) {
             System.err.println("Erreur centrage carte: " + e.getMessage());
@@ -364,21 +364,21 @@ public class CarteController implements Initializable {
 
     private void ajouterMarqueurGarage(Garage garage) {
         try {
-            String popupContent = String.format(
+            String popupContent = String.format(java.util.Locale.US,
                     "<b>🏠 %s</b><br>" +
                             "📍 %s<br>" +
                             "📊 %d/%d équipements<br>" +
                             "👤 %s<br>" +
                             "📞 %s",
-                    garage.getNom(),
-                    garage.getAdresse(),
+                    garage.getNom() != null ? garage.getNom().replace("'", "\\'") : "",
+                    garage.getAdresse() != null ? garage.getAdresse().replace("'", "\\'") : "",
                     garage.getEquipementsCount(),
                     garage.getCapacite(),
-                    garage.getResponsable(),
-                    garage.getTelephone()
+                    garage.getResponsable() != null ? garage.getResponsable().replace("'", "\\'") : "",
+                    garage.getTelephone() != null ? garage.getTelephone().replace("'", "\\'") : ""
             );
 
-            String script = String.format(
+            String script = String.format(java.util.Locale.US,
                     "L.marker([%f, %f], {icon: garageIcon}).addTo(map).bindPopup('%s');",
                     garage.getLatitude(), garage.getLongitude(), popupContent
             );
@@ -393,20 +393,21 @@ public class CarteController implements Initializable {
         try {
             if (equipement.getLatitude() == 0 || equipement.getLongitude() == 0) return;
 
-            String popupContent = String.format(
+            String popupContent = String.format(java.util.Locale.US,
                     "<b>%s %s</b><br>" +
                             "Type: %s<br>" +
                             "État: %s<br>" +
                             "Statut: %s",
-                    equipement.getIcone(), equipement.getNom(),
-                    equipement.getType(),
-                    equipement.getDisponibilite(),
-                    equipement.getStatutGarage()
+                    equipement.getIcone() != null ? equipement.getIcone() : "", 
+                    equipement.getNom() != null ? equipement.getNom().replace("'", "\\'") : "",
+                    equipement.getType() != null ? equipement.getType().replace("'", "\\'") : "",
+                    equipement.getDisponibilite() != null ? equipement.getDisponibilite().replace("'", "\\'") : "",
+                    equipement.getStatutGarage() != null ? equipement.getStatutGarage().replace("'", "\\'") : ""
             );
 
             String couleur = equipement.getCouleurMarqueur();
 
-            String script = String.format(
+            String script = String.format(java.util.Locale.US,
                     "L.marker([%f, %f], {icon: getColoredIcon('%s')}).addTo(map).bindPopup('%s');",
                     equipement.getLatitude(), equipement.getLongitude(), couleur, popupContent
             );

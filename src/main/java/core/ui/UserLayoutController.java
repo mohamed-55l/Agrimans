@@ -52,7 +52,7 @@ public class UserLayoutController {
             SessionManager.logout();
 
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/fxml/user/login-view.fxml"));
                 contentArea.getScene().setRoot(root);
             } catch (IOException e) {
                 e.printStackTrace();

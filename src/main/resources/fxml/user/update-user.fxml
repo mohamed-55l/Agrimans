@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="modules.user.controllers.UpdateUserController">
+
+    <StackPane AnchorPane.topAnchor="0"
+               AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               style="-fx-background-color: #0f6b3b;">
+
+        <HBox maxWidth="1000"
+              maxHeight="600"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 25;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.3, 0, 5);">
+
+            <!-- ================= LEFT FORM ================= -->
+            <VBox spacing="10"
+                  prefWidth="450"
+                  style="-fx-padding: 40;">
+
+                <Label text="Modifier utilisateur"
+                       style="-fx-font-size: 28px;
+                              -fx-font-weight: bold;" />
+
+                <Label text="Mettre Ã  jour les informations"
+                       style="-fx-text-fill: #777;" />
+
+                <!-- Nom -->
+                <Label text="Nom et prÃ©nom" />
+                <TextField fx:id="txtFullName" prefHeight="35" />
+                <Label fx:id="errName" textFill="red" />
+
+                <!-- Email -->
+                <Label text="Adresse email" />
+                <TextField fx:id="txtEmail" prefHeight="35" />
+                <Label fx:id="errEmail" textFill="red" />
+
+                <!-- TÃ©lÃ©phone -->
+                <Label text="TÃ©lÃ©phone" />
+                <TextField fx:id="txtPhone" prefHeight="35" />
+                <Label fx:id="errPhone" textFill="red" />
+
+                <!-- RÃ´le -->
+                <Label text="RÃ´le" />
+                <ComboBox fx:id="comboRole" prefHeight="50" />
+                <Label fx:id="errRole" textFill="red" />
+
+                <!-- Password -->
+                <Label text="Nouveau mot de passe (optionnel)" />
+                <PasswordField fx:id="passwordField" prefHeight="35" />
+                <Label fx:id="errPassword" textFill="red" />
+
+                <Label text="Confirmer mot de passe" />
+                <PasswordField fx:id="confirmPasswordField" prefHeight="35" />
+                <Label fx:id="errConfirm" textFill="red" />
+
+                <!-- Buttons -->
+                <HBox spacing="15" style="-fx-padding: 15 0 0 0;">
+
+                    <Button text="Mettre Ã  jour"
+                            prefHeight="42"
+                            prefWidth="150"
+                            onAction="#handleUpdate"
+                            style="-fx-background-color: #0f6b3b;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 12;" />
+
+                    <Button text="Retour"
+                            prefHeight="42"
+                            prefWidth="120"
+                            onAction="#handleCancel"
+                            style="-fx-background-color: #cccccc;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 12;" />
+
+                </HBox>
+
+            </VBox>
+
+            <!-- ================= RIGHT IMAGE ================= -->
+            <VBox alignment="CENTER"
+                  prefWidth="550"
+                  style="-fx-background-color: #0f6b3b;
+                         -fx-background-radius: 0 25 25 0;">
+
+                <ImageView fitWidth="450"
+                           preserveRatio="true">
+
+                    <image>
+                        <Image url="@../../image/login.png"/>
+                    </image>
+
+                </ImageView>
+
+            </VBox>
+
+        </HBox>
+
+    </StackPane>
+
+</AnchorPane>

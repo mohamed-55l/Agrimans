@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="650" prefWidth="1000"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="modules.user.controllers.ReclamationController"
+            style="-fx-background-color: linear-gradient(to bottom, #e8f5e9, #f1f8e9);">
+
+    <!-- ===================== TITLE BAR ===================== -->
+    <HBox alignment="CENTER_RIGHT"
+          AnchorPane.topAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          prefHeight="40"
+          spacing="5"
+          onMousePressed="#handleMousePressed"
+          onMouseDragged="#handleMouseDragged"
+          style="-fx-background-color: #1b5e20;
+                 -fx-padding: 0 10 0 10;">
+
+        <Label text="ðŸŒ¿ AGRI Samir - RÃ©clamations"
+               style="-fx-text-fill: white;
+                      -fx-font-size: 15px;
+                      -fx-font-weight: bold;"
+               HBox.hgrow="ALWAYS"/>
+
+        <Button text="â€”"
+                onAction="#handleMinimize"
+                style="-fx-background-color: transparent;
+                       -fx-text-fill: white;
+                       -fx-font-size: 14px;
+                       -fx-font-weight: bold;
+                       -fx-cursor: hand;"/>
+
+        <Button text="â˜"
+                onAction="#handleMaximize"
+                style="-fx-background-color: transparent;
+                       -fx-text-fill: white;
+                       -fx-font-size: 14px;
+                       -fx-font-weight: bold;
+                       -fx-cursor: hand;"/>
+
+        <Button text="âœ•"
+                onAction="#handleClose"
+                style="-fx-background-color: #c62828;
+                       -fx-text-fill: white;
+                       -fx-font-size: 14px;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 8;
+                       -fx-cursor: hand;"/>
+    </HBox>
+
+
+    <!-- ===================== SECOND BAR (LOGOUT) ===================== -->
+    <HBox AnchorPane.topAnchor="40"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          prefHeight="55"
+          alignment="CENTER_LEFT"
+          spacing="15"
+          style="-fx-background-color: rgba(255,255,255,0.7);
+                 -fx-padding: 0 20 0 20;
+                 -fx-border-color: rgba(0,0,0,0.1);
+                 -fx-border-width: 0 0 1 0;">
+
+        <Label text="ðŸ“Œ Envoyer une rÃ©clamation"
+               style="-fx-font-size: 18px;
+                      -fx-font-weight: bold;
+                      -fx-text-fill: #1b5e20;"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="DÃ©connexion"
+                onAction="#handleLogout"
+                style="-fx-background-color: #2e7d32;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-font-size: 13px;
+                       -fx-padding: 10 20;
+                       -fx-background-radius: 12;
+                       -fx-cursor: hand;
+                       -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0.2, 0, 3);"/>
+    </HBox>
+
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <StackPane AnchorPane.topAnchor="95"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               AnchorPane.bottomAnchor="0"
+               style="-fx-padding: 40;">
+
+        <!-- GLASS BOX -->
+        <VBox spacing="18"
+              alignment="TOP_LEFT"
+              prefWidth="650"
+              style="-fx-background-color: rgba(255,255,255,0.65);
+                     -fx-background-radius: 20;
+                     -fx-border-color: rgba(46,125,50,0.35);
+                     -fx-border-radius: 20;
+                     -fx-border-width: 2;
+                     -fx-padding: 35;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 18, 0.3, 0, 5);">
+
+            <Label text="ðŸŒ± Formulaire de rÃ©clamation"
+                   style="-fx-font-size: 26px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #1b5e20;"/>
+
+            <Label text="Veuillez dÃ©crire votre problÃ¨me en dÃ©tail."
+                   style="-fx-font-size: 13px;
+                          -fx-text-fill: #4e4e4e;"/>
+
+            <!-- Sujet -->
+            <Label text="Sujet"
+                   style="-fx-font-size: 14px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #2e7d32;"/>
+
+            <TextField fx:id="txtSujet"
+                       promptText="Ex: ProblÃ¨me de livraison..."
+                       style="-fx-background-radius: 12;
+                              -fx-border-radius: 12;
+                              -fx-border-color: rgba(0,0,0,0.2);
+                              -fx-border-width: 1;
+                              -fx-padding: 10;
+                              -fx-font-size: 13px;"/>
+
+            <!-- Message -->
+            <Label text="Message"
+                   style="-fx-font-size: 14px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #2e7d32;"/>
+
+            <TextArea fx:id="txtMessage"
+                      promptText="DÃ©crivez votre problÃ¨me..."
+                      prefHeight="180"
+                      wrapText="true"
+                      style="-fx-background-radius: 12;
+                             -fx-border-radius: 12;
+                             -fx-border-color: rgba(0,0,0,0.2);
+                             -fx-border-width: 1;
+                             -fx-padding: 10;
+                             -fx-font-size: 13px;"/>
+
+            <!-- ERROR MESSAGE -->
+            <Label fx:id="lblError"
+                   text=""
+                   style="-fx-font-size: 13px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: red;"/>
+
+            <!-- BUTTONS -->
+            <HBox spacing="15" alignment="CENTER_RIGHT">
+
+                <Button text="Annuler"
+                        onAction="#handleCancel"
+                        style="-fx-background-color: #c62828;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-padding: 10 25;
+                               -fx-background-radius: 12;
+                               -fx-cursor: hand;"/>
+
+                <Button text="Envoyer"
+                        onAction="#handleSend"
+                        style="-fx-background-color: #2e7d32;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-padding: 10 25;
+                               -fx-background-radius: 12;
+                               -fx-cursor: hand;
+                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0.2, 0, 3);"/>
+            </HBox>
+
+        </VBox>
+
+    </StackPane>
+
+</AnchorPane>
+

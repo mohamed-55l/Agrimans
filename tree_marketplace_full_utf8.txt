@@ -1,0 +1,28 @@
+﻿Structure du dossier
+Le numÚro de sÚrie du volume est 2EDB-C4F1
+C:\USERS\DMOHA\ONEDRIVE\DESKTOP\PIJAVA\AGRIMANS\GESTION MARKETPLACE
+\---src
+    \---main
+        +---java
+        |   \---com
+        |       \---marketplace
+        |           |   Main.java
+        |           |   
+        |           +---components
+        |           +---controller
+        |           +---model
+        |           +---repository
+        |           +---service
+        |           \---utils
+        \---resources
+            +---css
+            |       styleeeeeee.css
+            |       
+            \---views
+                    cart.fxml
+                    chatbot.fxml
+                    dashboard.fxml
+                    login.fxml
+                    products.fxml
+                    register.fxml
+                    

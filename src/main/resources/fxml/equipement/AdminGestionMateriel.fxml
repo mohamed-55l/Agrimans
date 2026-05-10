@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      spacing="0"
+      style="-fx-background-color: transparent; -fx-padding: 28 30;">
+
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-padding: 0 0 20 0;">
+        <VBox spacing="4">
+            <Label text="🚜  Gestion des Équipements"
+                   style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+            <Label text="Équipements · Demandes · Avis — tout en un seul endroit"
+                   style="-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
+        </VBox>
+    </HBox>
+
+    <TabPane styleClass="tab-pane-modern"
+             tabClosingPolicy="UNAVAILABLE"
+             VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+        <tabs>
+            <Tab text="🚜  Équipements">
+                <VBox style="-fx-background-color: transparent;">
+                    <fx:include source="/fxml/equipement/equipement.fxml" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </Tab>
+
+            <Tab text="📋  Demandes à traiter">
+                <VBox style="-fx-background-color: transparent;">
+                    <fx:include source="/fxml/demande/admin_demandes.fxml" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </Tab>
+
+            <Tab text="⭐  Avis Utilisateurs">
+                <VBox style="-fx-background-color: transparent;">
+                    <fx:include source="/fxml/review/review.fxml" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </Tab>
+        </tabs>
+    </TabPane>
+
+</VBox>

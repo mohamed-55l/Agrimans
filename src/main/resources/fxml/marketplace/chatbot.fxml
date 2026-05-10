@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="500" prefWidth="350"
+            style="-fx-background-color: white;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: #2E7D32; -fx-padding: 12;">
+            <Label text="🤖" style="-fx-font-size: 24px;"/>
+            <Label text="Agrimans Assistant" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Clear" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 3; -fx-padding: 3 8;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background: transparent;">
+            <VBox fx:id="chatContainer" spacing="10" style="-fx-padding: 10;"/>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="8" style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: #ddd; -fx-border-width: 1 0 0 0;">
+            <TextField fx:id="messageField" promptText="Ask me about products, seasons, prices..." HBox.hgrow="ALWAYS"
+                       style="-fx-padding: 8; -fx-background-radius: 20; -fx-border-color: #ddd; -fx-border-radius: 20;"/>
+            <Button text="Send" 
+                    style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 20;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

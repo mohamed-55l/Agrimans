@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="650"
+      prefWidth="900"
+      style="-fx-background-color: #0f6b3b;"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="modules.user.controllers.LoginController">
+
+   <!-- ================= TITLE BAR ================= -->
+   <HBox alignment="CENTER_RIGHT"
+         onMousePressed="#handleMousePressed"
+         onMouseDragged="#handleMouseDragged"
+         prefHeight="40"
+         style="-fx-background-color: #1e1e1e;">
+
+      <Label text="AGRI Samir"
+             HBox.hgrow="ALWAYS"
+             style="-fx-text-fill: white;
+                      -fx-padding: 0 0 0 15;
+                      -fx-font-weight: bold;" />
+
+      <Button text="â€”" onAction="#handleMinimize"/>
+      <Button text="â˜" onAction="#handleMaximize"/>
+      <Button text="âœ•" onAction="#handleClose"/>
+
+   </HBox>
+
+   <!-- ================= MAIN CONTENT ================= -->
+   <StackPane VBox.vgrow="ALWAYS">
+
+      <HBox maxHeight="520"
+            maxWidth="850"
+            style="-fx-background-color: white;
+                     -fx-background-radius: 25;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.3, 0, 8);">
+
+         <!-- ================= LEFT SIDE LOGIN ================= -->
+         <VBox fx:id="loginBox"
+               alignment="CENTER_LEFT"
+               prefWidth="450"
+               spacing="15"
+               style="-fx-padding: 60;">
+
+            <Label text="Bienvenue"
+                   style="-fx-text-fill: #555555; -fx-font-size: 16px;" />
+
+            <Label text="Se connecter"
+                   style="-fx-font-size: 36px; -fx-font-weight: bold;" />
+
+            <!-- Email -->
+            <Label text="Adresse email" />
+            <TextField fx:id="emailField"
+                       prefWidth="320"
+                       promptText="Votre email"
+                       style="-fx-background-radius: 8;
+                                  -fx-border-radius: 8;
+                                  -fx-border-color: #cfcfcf;
+                                  -fx-padding: 10;" />
+
+            <!-- Password -->
+            <Label text="Mot de passe" />
+            <PasswordField fx:id="passwordField"
+                           prefWidth="320"
+                           promptText="Mot de passe"
+                           style="-fx-background-radius: 8;
+                                      -fx-border-radius: 8;
+                                      -fx-border-color: #cfcfcf;
+                                      -fx-padding: 10;" />
+
+            <!-- Forgot password -->
+            <Hyperlink text="Mot de passe oubliÃ© ?"
+                       onAction="#goToResetPassword"
+                       style="-fx-text-fill: #0f6b3b;" />
+
+            <!-- CAPTCHA -->
+            <Label fx:id="captchaLabel"
+                   style="-fx-font-weight: bold;" />
+
+            <TextField fx:id="captchaField"
+                       prefWidth="200"
+                       promptText="Votre rÃ©ponse"
+                       style="-fx-background-radius: 8;
+                                  -fx-border-radius: 8;
+                                  -fx-border-color: #cfcfcf;
+                                  -fx-padding: 8;" />
+
+            <!-- ================= OTP BOX ================= -->
+            <VBox fx:id="otpBox"
+                  spacing="5"
+                  visible="false"
+                  managed="false">
+
+               <Separator prefWidth="320"/>
+
+               <Label text="Code de vÃ©rification (OTP)"
+                      style="-fx-font-weight: bold;" />
+
+               <TextField fx:id="otpField"
+                          prefWidth="200"
+                          promptText="Entrez le code reÃ§u"
+                          style="-fx-background-radius: 8;
+                                      -fx-border-radius: 8;
+                                      -fx-border-color: #cfcfcf;
+                                      -fx-padding: 8;" />
+
+            </VBox>
+
+            <!-- Message -->
+            <Label fx:id="messageLabel"
+                   wrapText="true"
+                   style="-fx-font-size: 13px;
+                              -fx-font-weight: bold;" />
+
+            <!-- Login Button -->
+            <Button fx:id="loginButton"
+                    text="Se connecter"
+                    prefHeight="45"
+                    prefWidth="320"
+                    onAction="#handleLogin"
+                    style="-fx-background-color: #0f6b3b;
+                               -fx-text-fill: white;
+                               -fx-font-size: 15px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 10;" />
+
+            <!-- Register -->
+            <HBox spacing="5">
+               <Label text="Vous n'avez pas de compte ?"
+                      style="-fx-text-fill: #666666;" />
+               <Hyperlink text="S'inscrire"
+                          onAction="#goToRegister"
+                          style="-fx-text-fill: #0f6b3b;
+                                      -fx-font-weight: bold;" />
+            </HBox>
+
+         </VBox>
+
+         <!-- ================= RIGHT SIDE IMAGE ================= -->
+         <VBox alignment="CENTER"
+               prefWidth="450"
+               style="-fx-background-color: #0f6b3b;
+                         -fx-background-radius: 0 25 25 0;">
+
+            <ImageView fitHeight="520"
+                       preserveRatio="true">
+               <image>
+                  <Image url="@../../image/login.png"/>
+               </image>
+            </ImageView>
+
+         </VBox>
+
+      </HBox>
+
+   </StackPane>
+
+</VBox>
+

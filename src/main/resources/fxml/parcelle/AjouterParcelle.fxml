@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.parcelle.controllers.AjouterParcelleController"
+            styleClass="background">
+
+    <children>
+
+        <!-- CARD -->
+        <VBox spacing="20"
+              alignment="CENTER"
+              maxWidth="500"
+              styleClass="card"
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+
+            <Label text="🌾 Ajouter une Parcelle"
+                   styleClass="title"/>
+
+            <GridPane hgap="15" vgap="18" alignment="CENTER">
+
+                <columnConstraints>
+                    <ColumnConstraints minWidth="140" maxWidth="160"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <!-- Nom -->
+                <Label text="Nom :"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="nomField"
+                           promptText="Nom de la parcelle"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"/>
+
+                <!-- Superficie -->
+                <Label text="Superficie (ha) :"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="superficieField"
+                           promptText="Ex: 12.5"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="1"/>
+
+                <!-- Localisation -->
+                <Label text="Localisation :"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="localisationField"
+                           promptText="Ville ou région"
+                           GridPane.rowIndex="2"
+                           GridPane.columnIndex="1"/>
+
+                <!-- Type de sol -->
+                <Label text="Type de sol :"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="typeSolField"
+                           promptText="Argileux, Sablonneux..."
+                           GridPane.rowIndex="3"
+                           GridPane.columnIndex="1"/>
+
+                <!-- Utilisateur -->
+                <Label text="Utilisateur ID :"
+                       GridPane.rowIndex="4"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="utilisateurIdField"
+                           promptText="ID utilisateur"
+                           GridPane.rowIndex="4"
+                           GridPane.columnIndex="1"/>
+
+                <!-- Latitude -->
+                <Label text="Latitude :"
+                       GridPane.rowIndex="5"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="latitudeField"
+                           promptText="Ex: 36.8065"
+                           GridPane.rowIndex="5"
+                           GridPane.columnIndex="1"/>
+
+                <!-- Longitude -->
+                <Label text="Longitude :"
+                       GridPane.rowIndex="6"
+                       GridPane.columnIndex="0"
+                       alignment="CENTER_RIGHT"/>
+
+                <TextField fx:id="longitudeField"
+                           promptText="Ex: 10.1815"
+                           GridPane.rowIndex="6"
+                           GridPane.columnIndex="1"/>
+
+            </GridPane>
+
+            <Button text="Ajouter Parcelle"
+                    styleClass="btn-primary"
+                    onAction="#ajouterParcelle"/>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>

@@ -6,62 +6,79 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="core.ui.AdminLayoutController"
-            prefWidth="1200" prefHeight="700"
-            style="-fx-background-color: #F0E8D8;">
+            prefWidth="1366" prefHeight="768"
+            styleClass="main-background"
+            stylesheets="@../../css/admin-dark.css">
 
-    <!-- MENU GAUCHE -->
+    <!-- SIDEBAR GAUCHE -->
     <left>
-        <VBox spacing="20" prefWidth="200"
-              style="-fx-background-color: #2E3D27; -fx-padding: 20;">
+        <ScrollPane fitToWidth="true" pannable="true" styleClass="sidebar-scroll" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <VBox prefWidth="255" styleClass="sidebar" spacing="0">
 
-            <padding>
-                <Insets top="30" right="15" bottom="30" left="15"/>
-            </padding>
+                <!-- En-tête logo -->
+                <VBox alignment="CENTER" spacing="8"
+                      style="-fx-background-color: #060D1A; -fx-padding: 28 20 22 20; -fx-border-color: #1E3A5F; -fx-border-width: 0 0 1 0;">
+                    <Label text="🌾" style="-fx-font-size: 44px; -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.5), 14, 0.5, 0, 0);"/>
+                    <Label text="AGRIMANS" style="-fx-font-size: 19px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9; -fx-letter-spacing: 3px;"/>
+                    <Label text="Admin Dashboard" style="-fx-font-size: 10px; -fx-text-fill: #10B981; -fx-font-weight: 700; -fx-letter-spacing: 1px;"/>
+                </VBox>
 
-            <!-- Profil Admin -->
-            <VBox alignment="CENTER" spacing="10">
-                <Label text="👑" style="-fx-font-size: 40px;"/>
-                <Label fx:id="lblUserInfo" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <!-- Profil Admin -->
+                <VBox alignment="CENTER" spacing="6"
+                      style="-fx-background-color: #0B1120; -fx-padding: 18 20; -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
+                    <StackPane style="-fx-background-radius: 50; -fx-background-color: rgba(16,185,129,0.15); -fx-padding: 14; -fx-min-width: 56; -fx-min-height: 56; -fx-max-width: 56; -fx-max-height: 56;">
+                        <Label text="👑" style="-fx-font-size: 26px;"/>
+                    </StackPane>
+                    <Label fx:id="lblUserInfo" styleClass="user-info-label" style="-fx-padding: 4 0 0 0;"/>
+                    <Label text="Super Admin" style="-fx-font-size: 10px; -fx-text-fill: #10B981; -fx-font-weight: 700;"/>
+                </VBox>
+
+                <!-- Navigation -->
+                <VBox spacing="2" style="-fx-padding: 14 10 16 10;" VBox.vgrow="ALWAYS">
+
+                    <Label text="VUE D'ENSEMBLE" styleClass="sidebar-section-title"/>
+                    <Button text="📊   Tableau de Bord"     onAction="#goDashboard"            styleClass="sidebar-btn"/>
+                    <Button text="👥   Utilisateurs"         onAction="#goUtilisateurs"          styleClass="sidebar-btn"/>
+
+                    <Label text="GESTION AGRICOLE" styleClass="sidebar-section-title"/>
+                    <Button text="🚜   Équipements"          onAction="#goEquipements"           styleClass="sidebar-btn"/>
+                    <Button text="🐾   Animaux"              onAction="#goAnimaux"               styleClass="sidebar-btn"/>
+                    <Button text="🌱   Parcelles"            onAction="#goParcelles"             styleClass="sidebar-btn"/>
+
+                    <Label text="OPÉRATIONS" styleClass="sidebar-section-title"/>
+                    <Button text="📋   Demandes Location"    onAction="#goDemandes"              styleClass="sidebar-btn"/>
+                    <Button text="⭐   Évaluations"          onAction="#goReviews"               styleClass="sidebar-btn"/>
+                    <Button text="🌾   Production"           onAction="#goProduction"            styleClass="sidebar-btn"/>
+                    <Button text="📦   Stock"                onAction="#goStock"                 styleClass="sidebar-btn"/>
+                    <Button text="💰   Ventes"               onAction="#goVentes"                styleClass="sidebar-btn"/>
+                    <Button text="🛒   Marketplace"          onAction="#goMarketplaceDashboard"  styleClass="sidebar-btn"/>
+
+                    <Label text="INTELLIGENCE &amp; OUTILS" styleClass="sidebar-section-title"/>
+                    <Button text="🌤️   Météo Agricole"      onAction="#goMeteo"                 styleClass="sidebar-btn"/>
+                    <Button text="🗺️   Garage &amp; Carte"  onAction="#goCarte"                 styleClass="sidebar-btn"/>
+                    <Button text="🤖   Assistant IA"         onAction="#goChatbot"               styleClass="sidebar-btn"/>
+                    <Button text="🧠   Analyse Sentiments"   onAction="#goSentiment"             styleClass="sidebar-btn"/>
+
+                </VBox>
+
+                <!-- Déconnexion -->
+                <VBox style="-fx-padding: 16 12 20 12; -fx-background-color: #060D1A; -fx-border-color: #1E293B; -fx-border-width: 1 0 0 0;">
+                    <Button text="🚪   Déconnexion" onAction="#logout"
+                            styleClass="button, btn-logout"
+                            prefWidth="231" maxWidth="231"/>
+                </VBox>
+
             </VBox>
-
-            <Separator style="-fx-background-color: #4B8B3B;"/>
-
-            <!-- Menu simplifié (juste Dashboard) -->
-            <VBox spacing="10">
-                <Button text="📊 Dashboard" onAction="#goDashboard"
-                        style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                        prefWidth="170" maxWidth="170"/>
-            </VBox>
-
-            <Region VBox.vgrow="ALWAYS"/>
-
-            <!-- Déconnexion -->
-            <Button text="🚪 Déconnexion" onAction="#logout"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                    prefWidth="170" maxWidth="170"/>
-
-            <Button text="🤖 Chatbot" onAction="#goChatbot"
-                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                    prefWidth="170" maxWidth="170"/>
-
-            <Button text="🌤️ Météo" onAction="#goMeteo"
-                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                    prefWidth="170" maxWidth="170"/>
-
-            <Button text="🗺️ Carte" onAction="#goCarte"
-                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                    prefWidth="170" maxWidth="170"/>
-
-            <Button text="🧠 Sentiment" onAction="#goSentiment"
-                    style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 12;"
-                    prefWidth="170" maxWidth="170"/>
-
-        </VBox>
+        </ScrollPane>
     </left>
 
     <!-- CONTENU CENTRAL -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-padding: 20;"/>
+        <ScrollPane fitToWidth="true" fitToHeight="true" pannable="true"
+                    styleClass="content-scroll"
+                    hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <StackPane fx:id="contentArea" styleClass="content-pane"/>
+        </ScrollPane>
     </center>
 
 </BorderPane>

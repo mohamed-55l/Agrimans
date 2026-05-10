@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.animal.controllers.AnimalController"
+      spacing="20"
+      style="-fx-background-color: transparent; -fx-padding: 28 30;">
+
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="4">
+            <Label text="🐾  Gestion des Animaux"
+                   style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+            <Label text="Gérez le bétail et les animaux de la ferme"
+                   style="-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Tableau -->
+    <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+        <TableView fx:id="tableAnimal" prefHeight="260"
+                   style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <columns>
+                <TableColumn fx:id="colId"     text="ID"              prefWidth="55"/>
+                <TableColumn fx:id="colNom"    text="Nom"             prefWidth="130"/>
+                <TableColumn fx:id="colEspece" text="Espèce"          prefWidth="130"/>
+                <TableColumn fx:id="colRace"   text="Race"            prefWidth="130"/>
+                <TableColumn fx:id="colPoids"  text="Poids (KG)"      prefWidth="90"/>
+                <TableColumn fx:id="colEtat"   text="État de Santé"   prefWidth="130"/>
+                <TableColumn fx:id="colUser"   text="Propriétaire"    prefWidth="110"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Formulaire -->
+    <VBox spacing="16"
+          style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="🐄" style="-fx-font-size: 18px;"/>
+            <Label text="Détails / Nouvel Animal"
+                   style="-fx-font-size: 15px; -fx-font-weight: 800; -fx-text-fill: #10B981;"/>
+        </HBox>
+
+        <GridPane hgap="15" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints minWidth="110"/>
+                <ColumnConstraints minWidth="260"/>
+                <ColumnConstraints minWidth="200"/>
+            </columnConstraints>
+
+            <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfNom" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       styleClass="text-field" prefWidth="260" promptText="Nom de l'animal"/>
+            <Label fx:id="lblNomError" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" text=" "/>
+
+            <Label text="Espèce :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfEspece" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       styleClass="text-field" prefWidth="260" promptText="Ex: Vache, Mouton"/>
+            <Label fx:id="lblEspeceError" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" text=" "/>
+
+            <Label text="Race :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfRace" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       styleClass="text-field" prefWidth="260"/>
+
+            <Label text="Poids (kg) :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfPoids" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                       styleClass="text-field" prefWidth="260" promptText="Ex: 50.5"/>
+            <Label fx:id="lblPoidsError" GridPane.rowIndex="3" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" text=" "/>
+
+            <Label text="État de santé :" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <ComboBox fx:id="cbEtat" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                      styleClass="combo-box" prefWidth="260" promptText="Sélectionner l'état"/>
+        </GridPane>
+
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+            <Button text="➕  Ajouter"    onAction="#ajouterAnimal"
+                    onMouseEntered="#handleButtonEnter" onMouseExited="#handleButtonExit"
+                    styleClass="button, btn-primary"   prefWidth="145"/>
+            <Button text="✏️  Modifier"   onAction="#modifierAnimal"
+                    onMouseEntered="#handleButtonEnter" onMouseExited="#handleButtonExit"
+                    styleClass="button, btn-secondary" prefWidth="145"/>
+            <Button text="🗑️  Supprimer"  onAction="#supprimerAnimal"
+                    onMouseEntered="#handleButtonEnter" onMouseExited="#handleButtonExit"
+                    styleClass="button, btn-danger"    prefWidth="145"/>
+        </HBox>
+    </VBox>
+
+</VBox>

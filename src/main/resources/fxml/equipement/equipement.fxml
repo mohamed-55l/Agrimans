@@ -7,85 +7,96 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="modules.equipement.controllers.EquipementController"
       spacing="20"
-      style="-fx-background-color: transparent;">
+      style="-fx-background-color: transparent; -fx-padding: 28 30;">
 
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-
-    <!-- Titre -->
-    <Label text="⚙️ Gestion des Équipements (Admin)"
-           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="4">
+            <Label text="🚜  Gestion des Équipements"
+                   style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+            <Label text="Ajoutez, modifiez ou supprimez les équipements agricoles"
+                   style="-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
+        </VBox>
+    </HBox>
 
     <!-- Tableau -->
-    <TableView fx:id="tableEquipement"
-               prefHeight="250"
-               style="-fx-background-color: white; -fx-background-radius: 10;">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
-            <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
-            <TableColumn fx:id="colType" text="Type" prefWidth="150"/>
-            <TableColumn fx:id="colPrix" text="Prix (DT)" prefWidth="120"/>
-            <TableColumn fx:id="colEtat" text="État" prefWidth="100"/>
-            <TableColumn text="Propriétaire ID" prefWidth="120"/>
-        </columns>
-    </TableView>
+    <VBox style="-fx-background-color: #1E293B; -fx-background-radius: 16;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+        <TableView fx:id="tableEquipement" prefHeight="270"
+                   style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <columns>
+                <TableColumn fx:id="colId"           text="ID"           prefWidth="65"/>
+                <TableColumn fx:id="colNom"          text="Nom"          prefWidth="180"/>
+                <TableColumn fx:id="colType"         text="Type"         prefWidth="160"/>
+                <TableColumn fx:id="colPrix"         text="Prix (DT)"    prefWidth="130"/>
+                <TableColumn fx:id="colEtat"         text="État"         prefWidth="120"/>
+                <TableColumn fx:id="colGarage"       text="Garage"       prefWidth="120"/>
+                <TableColumn fx:id="colProprietaire" text="Agriculteur"  prefWidth="140"/>
+            </columns>
+        </TableView>
+    </VBox>
 
     <!-- Formulaire -->
-    <TitledPane text="Ajouter / Modifier un équipement" expanded="true">
-        <GridPane hgap="15" vgap="10" style="-fx-padding: 15;">
+    <VBox spacing="16"
+          style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="⚙️" style="-fx-font-size: 18px;"/>
+            <Label text="Ajouter / Modifier un Équipement"
+                   style="-fx-font-size: 15px; -fx-font-weight: 800; -fx-text-fill: #10B981;"/>
+        </HBox>
+
+        <GridPane hgap="20" vgap="14">
             <columnConstraints>
-                <ColumnConstraints minWidth="100"/>
-                <ColumnConstraints minWidth="250"/>
-                <ColumnConstraints minWidth="200"/>
+                <ColumnConstraints minWidth="130" maxWidth="130"/>
+                <ColumnConstraints minWidth="280" hgrow="ALWAYS"/>
+                <ColumnConstraints minWidth="220"/>
             </columnConstraints>
 
-            <!-- Nom -->
-            <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField fx:id="tfNom" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfNom" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       styleClass="text-field" promptText="Ex: Tracteur John Deere"/>
             <Label fx:id="lblNomError" GridPane.rowIndex="0" GridPane.columnIndex="2"
-                   textFill="red" visible="false"/>
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" visible="false"/>
 
-            <!-- Type -->
-            <Label text="Type:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="tfType" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Type :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfType" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       styleClass="text-field" promptText="Ex: Tracteur, Semoir..."/>
             <Label fx:id="lblTypeError" GridPane.rowIndex="1" GridPane.columnIndex="2"
-                   textFill="red" visible="false"/>
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" visible="false"/>
 
-            <!-- Prix -->
-            <Label text="Prix (DT):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <TextField fx:id="tfPrix" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Prix (DT) :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
+            <TextField fx:id="tfPrix" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       styleClass="text-field" promptText="Ex: 1500.00"/>
             <Label fx:id="lblPrixError" GridPane.rowIndex="2" GridPane.columnIndex="2"
-                   textFill="red" visible="false"/>
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" visible="false"/>
 
-            <!-- État -->
-            <Label text="État:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label text="État :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
             <ComboBox fx:id="cbEtat" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                      prefWidth="250"/>
+                      styleClass="combo-box" prefWidth="280"/>
             <Label fx:id="lblEtatError" GridPane.rowIndex="3" GridPane.columnIndex="2"
-                   textFill="red" visible="false"/>
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" visible="false"/>
 
-            <!-- 👉 NOUVEAU: Propriétaire (ComboBox des agriculteurs) -->
-            <Label text="Propriétaire:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <Label text="Agriculteur :" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                   style="-fx-font-weight: 700; -fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
             <ComboBox fx:id="cbProprietaire" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                      prefWidth="250" promptText="Sélectionner un agriculteur"/>
+                      styleClass="combo-box" prefWidth="280" promptText="Sélectionner un agriculteur"/>
             <Label fx:id="lblProprietaireError" GridPane.rowIndex="4" GridPane.columnIndex="2"
-                   textFill="red" visible="false"/>
-
+                   style="-fx-text-fill: #F87171; -fx-font-size: 11px;" visible="false"/>
         </GridPane>
-    </TitledPane>
 
-    <!-- Boutons -->
-    <HBox spacing="15" alignment="CENTER">
-        <Button text="➕ Ajouter" onAction="#ajouterEquipement"
-                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
-                prefWidth="120"/>
-        <Button text="✏️ Modifier" onAction="#modifierEquipement"
-                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
-                prefWidth="120"/>
-        <Button text="🗑️ Supprimer" onAction="#supprimerEquipement"
-                style="-fx-background-color: #2E3D27; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
-                prefWidth="120"/>
-    </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+            <Button text="➕  Ajouter"    onAction="#ajouterEquipement"   styleClass="button, btn-primary"   prefWidth="145"/>
+            <Button text="✏️  Modifier"   onAction="#modifierEquipement"  styleClass="button, btn-secondary" prefWidth="145"/>
+            <Button text="🗑️  Supprimer"  onAction="#supprimerEquipement" styleClass="button, btn-danger"    prefWidth="145"/>
+        </HBox>
+    </VBox>
 
 </VBox>

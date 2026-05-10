@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="700" prefWidth="1100"
+            stylesheets="@../../css/style.css"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.user.controllers.HomeController">
+    <top>
+        <HBox fx:id="titleBar" styleClass="title-bar" alignment="CENTER_RIGHT">
+
+            <Label text="AGRI Samir" styleClass="app-title" HBox.hgrow="ALWAYS"/>
+
+            <Button fx:id="minBtn" text="â€”" styleClass="window-btn"/>
+            <Button fx:id="maxBtn" text="â˜" styleClass="window-btn"/>
+            <Button fx:id="closeBtn" text="âœ•" styleClass="close-btn"/>
+
+        </HBox>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <VBox spacing="25" styleClass="sidebar">
+            <Label text="AGRI Samir" styleClass="logo"/>
+
+            <Button text="ðŸ  Accueil" styleClass="menu-btn"/>
+            <Button text="ðŸŒ¾ Production" styleClass="menu-btn"/>
+            <Button text="ðŸ“¦ Stock" styleClass="menu-btn"/>
+            <Button text="ðŸ’° Ventes" styleClass="menu-btn"/>
+            <Button text="âš™ ParamÃ¨tres" styleClass="menu-btn"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Button text="ðŸšª DÃ©connexion" styleClass="logout-btn" onAction="#handleLogout"/>
+        </VBox>
+    </left>
+
+    <!-- Content -->
+    <center>
+        <VBox spacing="25" styleClass="content-area">
+
+            <Label text="Tableau de bord" styleClass="title"/>
+
+            <HBox spacing="20">
+                <VBox styleClass="card">
+                    <Label text="Production Totale"/>
+                    <Label text="1250 Kg" styleClass="card-value"/>
+                </VBox>
+
+                <VBox styleClass="card">
+                    <Label text="Stock Disponible"/>
+                    <Label text="430 Kg" styleClass="card-value"/>
+                </VBox>
+
+                <VBox styleClass="card">
+                    <Label text="Ventes Aujourd'hui"/>
+                    <Label text="320 DT" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <VBox styleClass="big-card">
+                <Label text="ActivitÃ© rÃ©cente"/>
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

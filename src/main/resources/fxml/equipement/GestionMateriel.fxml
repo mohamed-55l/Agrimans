@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane xmlns:fx="http://javafx.com/fxml"
+         styleClass="tab-pane-modern"
+         tabClosingPolicy="UNAVAILABLE"
+         VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+    
+    <tabs>
+        <Tab text="⚙️ Équipement Disponible">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/equipement/user_equipement.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+        
+        <Tab text="📋 Mes Demandes">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/demande/user_demande.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+        
+        <Tab text="⭐ Mes Évaluations">
+            <VBox style="-fx-background-color: transparent;">
+                <fx:include source="/fxml/review/user_review.fxml" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </Tab>
+    </tabs>
+
+</TabPane>

@@ -1,0 +1,11 @@
+﻿mvn : The JAVA_HOME environment variable is not defined 
+correctly, 
+Au caractère Ligne:1 : 1
++ mvn compile > compile_out.txt 2> compile_errors.txt
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (The JAVA_H 
+   OME e...ned correctly, :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+this environment variable is needed to run this 
+program. 

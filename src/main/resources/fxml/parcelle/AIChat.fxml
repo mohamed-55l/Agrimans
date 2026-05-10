@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="modules.parcelle.controllers.AIChatController"
+            stylesheets="@../css/admin-dark.css"
+            styleClass="main-background">
+
+    <VBox spacing="15"
+          AnchorPane.topAnchor="20"
+          AnchorPane.leftAnchor="30"
+          AnchorPane.rightAnchor="30"
+          AnchorPane.bottomAnchor="30">
+
+        <!-- En-tête -->
+        <VBox spacing="5">
+            <Label text="🤖 Assistant Agricole IA" styleClass="page-title"/>
+            <Label text="Posez une question sur les cultures, la météo ou les parcelles" styleClass="page-subtitle"/>
+        </VBox>
+
+        <!-- zone conversation -->
+        <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="15">
+            <TextArea fx:id="chatArea"
+                      wrapText="true"
+                      editable="false"
+                      promptText="La réponse de l'IA apparaîtra ici..."
+                      VBox.vgrow="ALWAYS"
+                      style="-fx-control-inner-background: #0F172A; -fx-font-size: 14px;"/>
+
+            <!-- zone question -->
+            <HBox spacing="12">
+                <TextField fx:id="questionField"
+                           promptText="Ex : Quelle culture planter avec un sol argileux ?"
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-padding: 12;"/>
+                <Button text="Envoyer"
+                        onAction="#envoyerQuestion"
+                        styleClass="btn-primary"
+                        style="-fx-padding: 12 25; -fx-font-size: 14px;"/>
+            </HBox>
+        </VBox>
+
+    </VBox>
+</AnchorPane>

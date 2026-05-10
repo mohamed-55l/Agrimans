@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="modules.equipement.controllers.EquipementController"
+      spacing="20"
+      style="-fx-background-color: transparent;">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="⚙️ Gestion des Équipements"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27; -fx-font-family: 'Segoe UI';"/>
+
+    <!-- Tableau -->
+    <TableView fx:id="tableEquipement"
+               prefHeight="250"
+               style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+            <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
+            <TableColumn fx:id="colType" text="Type" prefWidth="150"/>
+            <TableColumn fx:id="colPrix" text="Prix (DT)" prefWidth="120"/>
+            <TableColumn fx:id="colEtat" text="État" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <!-- Formulaire avec validation -->
+    <TitledPane text="Nouvel Équipement" expanded="true"
+                style="-fx-text-fill: #4B8B3B; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';">
+
+        <GridPane hgap="15" vgap="10" style="-fx-padding: 15;">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100"/>
+                <ColumnConstraints minWidth="250"/>
+                <ColumnConstraints minWidth="200"/>
+            </columnConstraints>
+
+            <!-- Ligne 0: Nom -->
+            <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <TextField fx:id="tfNom"
+                       GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       prefWidth="250"
+                       promptText="Nom de l'équipement"
+                       style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblNomError"
+                   GridPane.rowIndex="0" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "/>
+
+            <!-- Ligne 1: Type -->
+            <Label text="Type:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <TextField fx:id="tfType"
+                       GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       prefWidth="250"
+                       promptText="Type d'équipement"
+                       style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblTypeError"
+                   GridPane.rowIndex="1" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "/>
+
+            <!-- Ligne 2: Prix -->
+            <Label text="Prix (DT):" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <TextField fx:id="tfPrix"
+                       GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       prefWidth="250"
+                       promptText="Ex: 1299.99"
+                       style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblPrixError"
+                   GridPane.rowIndex="2" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "/>
+
+            <!-- Ligne 3: État -->
+            <Label text="État:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
+            <ComboBox fx:id="cbEtat"
+                      GridPane.rowIndex="3" GridPane.columnIndex="1"
+                      prefWidth="250"
+                      promptText="Sélectionner l'état"
+                      style="-fx-background-radius: 5;"/>
+            <Label fx:id="lblEtatError"
+                   GridPane.rowIndex="3" GridPane.columnIndex="2"
+                   style="-fx-text-fill: #e74c3c; -fx-font-size: 11px;"
+                   visible="false"
+                   text=" "/>
+
+        </GridPane>
+    </TitledPane>
+
+    <!-- Boutons d'action -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="➕ Ajouter"
+                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
+                onAction="#ajouterEquipement"
+                onMouseEntered="#handleButtonEnter"
+                onMouseExited="#handleButtonExit"
+                prefWidth="120"/>
+
+        <Button text="✏️ Modifier"
+                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
+                onAction="#modifierEquipement"
+                onMouseEntered="#handleButtonEnter"
+                onMouseExited="#handleButtonExit"
+                prefWidth="120"/>
+
+        <Button text="🗑️ Supprimer"
+                style="-fx-background-color: #2E3D27; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;"
+                onAction="#supprimerEquipement"
+                onMouseEntered="#handleButtonEnter"
+                onMouseExited="#handleButtonExit"
+                prefWidth="120"/>
+    </HBox>
+
+    <!-- Indicateurs de validation -->
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="✅ Champs obligatoires"
+               style="-fx-text-fill: #4B8B3B; -fx-font-size: 11px;"/>
+        <Label text="⚠️ Validation en temps réel"
+               style="-fx-text-fill: #e67e22; -fx-font-size: 11px;"/>
+    </HBox>
+
+</VBox>

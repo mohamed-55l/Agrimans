@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="520"
+            prefWidth="900"
+            stylesheets="@../../css/style.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="modules.user.controllers.RegisterController">
+
+    <!-- TITLE BAR -->
+    <HBox fx:id="titleBar"
+          alignment="CENTER_RIGHT"
+          styleClass="title-bar"
+          onMouseDragged="#handleMouseDragged"
+          onMousePressed="#handleMousePressed"
+          prefHeight="40"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          AnchorPane.topAnchor="0">
+
+        <Label text="AGRI Samir"
+               styleClass="app-title"
+               HBox.hgrow="ALWAYS"/>
+
+        <Button fx:id="minBtn"
+                text="â€”"
+                styleClass="window-btn"
+                onAction="#handleMinimize"/>
+
+        <Button fx:id="maxBtn"
+                text="â˜"
+                styleClass="window-btn"
+                onAction="#handleMaximize"/>
+
+        <Button fx:id="closeBtn"
+                text="âœ•"
+                styleClass="close-btn"
+                onAction="#handleClose"/>
+    </HBox>
+
+    <!-- BACKGROUND -->
+    <StackPane style="-fx-background-color:#0f6b3b;"
+               AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               AnchorPane.topAnchor="40">
+
+        <!-- MAIN CARD -->
+        <HBox maxHeight="Infinity"
+              maxWidth="Infinity"
+              spacing="0"
+              style="-fx-background-color:white;
+                     -fx-background-radius:25;
+                     -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.25),12,0.3,0,5);"
+              StackPane.alignment="CENTER">
+
+            <!-- LEFT 70% -->
+            <VBox spacing="18"
+                  style="-fx-padding:45;"
+                  HBox.hgrow="ALWAYS">
+
+                <Label text="S'inscrire"
+                       style="-fx-font-size:32px; -fx-font-weight:bold;" />
+
+                <Label text="CrÃ©ez votre compte"
+                       style="-fx-text-fill:#777777;" />
+
+                <HBox spacing="40">
+
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                        <Label text="Nom et prÃ©nom"/>
+                        <TextField fx:id="nameField"/>
+                        <Label fx:id="errName" textFill="red"/>
+
+                        <Label text="Adresse email"/>
+                        <TextField fx:id="emailField"/>
+                        <Label fx:id="errEmail" textFill="red"/>
+
+                        <Label text="TÃ©lÃ©phone"/>
+                        <TextField fx:id="phoneField"/>
+                        <Label fx:id="errPhone" textFill="red"/>
+
+                    </VBox>
+
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                        <Label text="Mot de passe"/>
+                        <PasswordField fx:id="passwordField"/>
+                        <Label fx:id="errPassword" textFill="red"/>
+
+                        <Label text="Confirmer mot de passe"/>
+                        <PasswordField fx:id="confirmepasswordField"/>
+                        <Label fx:id="errConfirm" textFill="red"/>
+
+                    </VBox>
+
+                </HBox>
+
+                <Label text="Code de vÃ©rification"/>
+
+                <HBox spacing="10">
+                    <TextField fx:id="verificationCodeField"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="sendCodeBtn"
+                            text="Envoyer code"
+                            maxWidth="Infinity"
+                            HBox.hgrow="ALWAYS"
+                            onAction="#handleSendCode"/>
+                </HBox>
+
+                <Label fx:id="errCode" textFill="red"/>
+                <Label fx:id="timerLabel" textFill="red"/>
+                <Label fx:id="errGeneral" textFill="red"/>
+
+                <Button fx:id="registerBtn"
+                        text="Register"
+                        maxWidth="Infinity"
+                        onAction="#handleRegister"/>
+
+                <HBox spacing="5">
+                    <Label text="Vous avez dÃ©jÃ  un compte ?"/>
+                    <Hyperlink text="Se connecter"
+                               onAction="#goToLogin"/>
+                </HBox>
+
+            </VBox>
+
+            <!-- RIGHT 30% -->
+            <VBox alignment="CENTER"
+                  prefWidth="350"
+                  style="-fx-background-color:#0f6b3b;
+                         -fx-background-radius:0 25 25 0;">
+
+                <ImageView fitWidth="280"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@../../image/login.png"/>
+                    </image>
+                </ImageView>
+
+            </VBox>
+
+        </HBox>
+
+    </StackPane>
+
+</AnchorPane>

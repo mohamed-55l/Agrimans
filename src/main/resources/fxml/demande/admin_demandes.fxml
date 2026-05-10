@@ -6,57 +6,67 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="modules.demande.controllers.AdminDemandeController"
-      spacing="20" style="-fx-background-color: transparent; -fx-padding: 20;"
+      spacing="22"
+      style="-fx-background-color: transparent; -fx-padding: 28 30;"
       prefWidth="1000" prefHeight="700">
 
     <!-- Titre -->
-    <Label text="📋 Gestion des demandes d'équipement"
-           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-
-    <Separator/>
-
-    <!-- Filtre -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Filtrer par statut :" style="-fx-font-weight: bold;"/>
-        <ComboBox fx:id="cbFiltreStatut" prefWidth="150"/>
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <VBox spacing="4">
+            <Label text="📋  Gestion des Demandes"
+                   style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+            <Label text="Acceptez ou refusez les demandes d'équipement des agriculteurs"
+                   style="-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
+        </VBox>
         <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Label text="Filtrer :"
+                   style="-fx-font-weight: 700; -fx-font-size: 12px; -fx-text-fill: #94A3B8;"/>
+            <ComboBox fx:id="cbFiltreStatut" prefWidth="170"
+                      style="-fx-background-color: #0F172A; -fx-border-color: #334155; -fx-border-radius: 10;
+                             -fx-border-width: 1.5; -fx-background-radius: 10; -fx-text-fill: #E2E8F0;"/>
+        </HBox>
     </HBox>
 
-    <!-- Tableau des demandes -->
-    <TableView fx:id="tableDemandes" prefHeight="400">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="colEquipement" text="Équipement" prefWidth="150"/>
-            <TableColumn fx:id="colAgriculteur" text="Agriculteur" prefWidth="150"/>
-            <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
-            <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
-            <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
-            <TableColumn fx:id="colReponse" text="Réponse" prefWidth="150"/>
-            <TableColumn fx:id="colAction" text="Actions" prefWidth="150"/>
-        </columns>
-    </TableView>
+    <!-- Tableau -->
+    <VBox VBox.vgrow="ALWAYS"
+          style="-fx-background-color: #1E293B; -fx-background-radius: 16;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);">
+        <TableView fx:id="tableDemandes" prefHeight="460" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <columns>
+                <TableColumn fx:id="colId"           text="ID"           prefWidth="55"/>
+                <TableColumn fx:id="colEquipement"   text="Équipement"   prefWidth="165"/>
+                <TableColumn fx:id="colAgriculteur"  text="Agriculteur"  prefWidth="155"/>
+                <TableColumn fx:id="colDescription"  text="Description"  prefWidth="200"/>
+                <TableColumn fx:id="colDate"         text="Date"         prefWidth="110"/>
+                <TableColumn fx:id="colStatut"       text="Statut"       prefWidth="110"/>
+                <TableColumn fx:id="colReponse"      text="Réponse"      prefWidth="155"/>
+                <TableColumn fx:id="colAction"       text="Actions"      prefWidth="155"/>
+            </columns>
+        </TableView>
+    </VBox>
 
-    <!-- Zone de réponse -->
-    <TitledPane text="Traiter la demande sélectionnée" expanded="true">
-        <VBox spacing="15" style="-fx-padding: 15;">
-
-            <Label fx:id="lblDemandeSelectionnee" text="Aucune demande sélectionnée"
-                   style="-fx-font-weight: bold; -fx-text-fill: #666;"/>
-
-            <Label text="Votre réponse :" style="-fx-font-weight: bold;"/>
-            <TextArea fx:id="taReponse" prefRowCount="3"
-                      promptText="Saisissez votre réponse pour l'agriculteur..."/>
-
-            <HBox spacing="15" alignment="CENTER">
-                <Button text="✅ Accepter" onAction="#traiterAccepte"
-                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
-                        prefWidth="150"/>
-                <Button text="❌ Refuser" onAction="#traiterRefus"
-                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"
-                        prefWidth="150"/>
-            </HBox>
-
-        </VBox>
-    </TitledPane>
+    <!-- Actions -->
+    <HBox spacing="14" alignment="CENTER_RIGHT"
+          style="-fx-background-color: #1E293B; -fx-background-radius: 14; -fx-padding: 16 20;
+                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 14;">
+        <Label text="Sélectionnez une demande en attente puis :"
+               style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✅  Accepter"
+                onAction="#traiterAccepte"
+                prefWidth="145" prefHeight="40"
+                style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-size: 13px;
+                       -fx-font-weight: 700; -fx-background-radius: 10; -fx-cursor: hand;
+                       -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.4), 8, 0, 0, 3);"/>
+        <Button text="❌  Rejeter"
+                onAction="#traiterRefus"
+                prefWidth="145" prefHeight="40"
+                style="-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-size: 13px;
+                       -fx-font-weight: 700; -fx-background-radius: 10; -fx-cursor: hand;
+                       -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.4), 8, 0, 0, 3);"/>
+    </HBox>
 
 </VBox>

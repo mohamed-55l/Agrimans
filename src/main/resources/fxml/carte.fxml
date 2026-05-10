@@ -11,69 +11,64 @@
 <?import javafx.scene.chart.NumberAxis?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="modules.carte.controllers.CarteController"
-            style="-fx-background-color: #F0E8D8;">
+            stylesheets="@css/admin-dark.css"
+            styleClass="main-background">
 
     <!-- TOP: Contrôles -->
     <top>
-        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #2E3D27;">
-            <Label text="🗺️ Carte des équipements"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        <VBox spacing="15" style="-fx-padding: 20 30;">
+            <Label text="🗺️ Carte des équipements" styleClass="page-title"/>
 
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Garage:" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Garage:" style="-fx-text-fill: #94A3B8; -fx-font-weight: bold;"/>
                 <ComboBox fx:id="cbGarages" prefWidth="300"/>
-                <Button text="➕ Nouveau garage" onAction="#ajouterGarage"
-                        style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15;"/>
-                <Button text="📦 Assigner équipement" onAction="#assignerEquipement"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15;"/>
-                <Button text="🔄 Actualiser" onAction="#actualiser"
-                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15;"/>
+                <Button text="➕ Nouveau garage" onAction="#ajouterGarage" styleClass="btn-primary"/>
+                <Button text="📦 Assigner équipement" onAction="#assignerEquipement" styleClass="btn-info"/>
+                <Button text="🔄 Actualiser" onAction="#actualiser" styleClass="btn-secondary"/>
             </HBox>
         </VBox>
     </top>
 
     <!-- CENTER: Contenu avec onglets -->
     <center>
-        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane-modern" style="-fx-padding: 0 30 30 30;">
 
             <!-- Onglet Carte -->
             <Tab fx:id="tabCarte" text="🗺️ Carte">
-                <BorderPane>
+                <BorderPane style="-fx-padding: 15 0 0 0;">
                     <left>
-                        <VBox spacing="15" prefWidth="300" style="-fx-background-color: white; -fx-padding: 15;">
-                            <Label text="📋 Détails du garage"
-                                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                        <VBox spacing="15" prefWidth="350" styleClass="card" style="-fx-margin-right: 20;">
+                            <Label text="📋 Détails du garage" styleClass="card-title"/>
 
-                            <GridPane hgap="10" vgap="5">
-                                <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblGarageNom" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                            <GridPane hgap="10" vgap="12">
+                                <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-text-fill: #94A3B8;"/>
+                                <Label fx:id="lblGarageNom" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
 
-                                <Label text="Adresse:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblGarageAdresse" GridPane.rowIndex="1" GridPane.columnIndex="1" wrapText="true"/>
+                                <Label text="Adresse:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-text-fill: #94A3B8;"/>
+                                <Label fx:id="lblGarageAdresse" GridPane.rowIndex="1" GridPane.columnIndex="1" wrapText="true" style="-fx-text-fill: #CBD5E1;"/>
 
-                                <Label text="Capacité:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblGarageCapacite" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Label text="Capacité:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-text-fill: #94A3B8;"/>
+                                <Label fx:id="lblGarageCapacite" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-text-fill: #CBD5E1;"/>
 
-                                <Label text="Taux:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblTauxOccupation" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                <Label text="Taux:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-text-fill: #94A3B8;"/>
+                                <Label fx:id="lblTauxOccupation" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #10B981;"/>
 
-                                <Label text="Responsable:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblGarageResponsable" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                                <Label text="Responsable:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-text-fill: #94A3B8;"/>
+                                <Label fx:id="lblGarageResponsable" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-text-fill: #CBD5E1;"/>
 
-                                <Label text="Téléphone:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblGarageTelephone" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                                <Label text="Téléphone:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-text-fill: #94A3B8;"/>
+                                <Label fx:id="lblGarageTelephone" GridPane.rowIndex="5" GridPane.columnIndex="1" style="-fx-text-fill: #CBD5E1;"/>
                             </GridPane>
 
                             <Separator/>
 
-                            <Label text="📍 Équipements du garage"
-                                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                            <Label text="📍 Équipements du garage" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #E2E8F0;"/>
 
-                            <TableView fx:id="tableEquipements" prefHeight="300">
+                            <TableView fx:id="tableEquipements" styleClass="modern-table" VBox.vgrow="ALWAYS">
                                 <columns>
                                     <TableColumn fx:id="colIcone" text="" prefWidth="40"/>
-                                    <TableColumn fx:id="colNom" text="Nom" prefWidth="100"/>
-                                    <TableColumn fx:id="colType" text="Type" prefWidth="80"/>
+                                    <TableColumn fx:id="colNom" text="Nom" prefWidth="120"/>
+                                    <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
                                     <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
                                     <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="120"/>
                                 </columns>
@@ -82,113 +77,101 @@
                     </left>
 
                     <center>
-                        <WebView fx:id="webView" prefHeight="600"/>
+                        <VBox styleClass="card" style="-fx-padding: 0; -fx-margin-left: 20;">
+                            <WebView fx:id="webView" VBox.vgrow="ALWAYS" style="-fx-background-radius: 16;"/>
+                        </VBox>
                     </center>
                 </BorderPane>
             </Tab>
 
-            <!-- Onglet Liste des garages (UN SEUL) -->
+            <!-- Onglet Liste des garages -->
             <Tab fx:id="tabListe" text="📋 Liste des garages">
-                <VBox spacing="15" style="-fx-padding: 20;">
+                <VBox spacing="15" style="-fx-padding: 20 0 0 0;">
+                    <VBox styleClass="card" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 15 0;">
+                            <Label text="📋 Gestion des garages" styleClass="card-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="➕ Nouveau garage" onAction="#ajouterGarage" styleClass="btn-primary"/>
+                        </HBox>
 
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="📋 Gestion des garages"
-                               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="➕ Nouveau garage" onAction="#ajouterGarage"
-                                style="-fx-background-color: #4B8B3B; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
-                    </HBox>
-
-                    <TableView fx:id="tableGarages" prefHeight="400">
-                        <columns>
-                            <TableColumn fx:id="colGarageId" text="ID" prefWidth="50"/>
-                            <TableColumn fx:id="colGarageNom" text="Nom" prefWidth="150"/>
-                            <TableColumn fx:id="colGarageAdresse" text="Adresse" prefWidth="200"/>
-                            <TableColumn fx:id="colGarageCapacite" text="Capacité" prefWidth="80"/>
-                            <TableColumn fx:id="colGarageOccupation" text="Occupation" prefWidth="80"/>
-                            <TableColumn fx:id="colGarageResponsable" text="Responsable" prefWidth="120"/>
-                            <TableColumn fx:id="colGarageTelephone" text="Téléphone" prefWidth="120"/>
-                            <TableColumn fx:id="colGarageAction" text="Actions" prefWidth="100"/>
-                        </columns>
-                    </TableView>
-
-                    <Label text="(Double-cliquez sur un garage pour le voir sur la carte)"
-                           style="-fx-text-fill: #666; -fx-font-style: italic;"/>
-
+                        <TableView fx:id="tableGarages" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colGarageId" text="ID" prefWidth="50"/>
+                                <TableColumn fx:id="colGarageNom" text="Nom" prefWidth="150"/>
+                                <TableColumn fx:id="colGarageAdresse" text="Adresse" prefWidth="250"/>
+                                <TableColumn fx:id="colGarageCapacite" text="Capacité" prefWidth="80"/>
+                                <TableColumn fx:id="colGarageOccupation" text="Occupation" prefWidth="100"/>
+                                <TableColumn fx:id="colGarageResponsable" text="Responsable" prefWidth="150"/>
+                                <TableColumn fx:id="colGarageTelephone" text="Téléphone" prefWidth="120"/>
+                                <TableColumn fx:id="colGarageAction" text="Actions" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                        <Label text="ℹ️ Double-cliquez sur un garage pour le voir sur la carte" style="-fx-text-fill: #64748B; -fx-font-style: italic; -fx-padding: 10 0 0 0;"/>
+                    </VBox>
                 </VBox>
             </Tab>
 
-
-
-
-
-
-
-
-
-            <!-- Onglet Statistiques -->
             <!-- Onglet Statistiques -->
             <Tab fx:id="tabStats" text="📊 Statistiques">
-                <ScrollPane fitToWidth="true" style="-fx-background: transparent;">
-                    <VBox spacing="20" style="-fx-padding: 20;">
+                <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-padding: 15 0 0 0;">
+                    <VBox spacing="20">
 
-                        <!-- Titre -->
-                        <Label text="📊 Statistiques des garages et équipements"
-                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E3D27;"/>
-
-                        <Separator/>
+                        <Label text="Statistiques Globales" styleClass="dashboard-section-title"/>
 
                         <!-- Cartes de statistiques générales -->
-                        <HBox spacing="15" alignment="CENTER">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <HBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="15" alignment="CENTER_LEFT">
+                                <StackPane styleClass="kpi-icon-box, icon-blue">
+                                    <Label text="🏠" styleClass="kpi-icon"/>
+                                </StackPane>
+                                <VBox spacing="2" alignment="CENTER_LEFT">
+                                    <Label text="TOTAL GARAGES" styleClass="kpi-title"/>
+                                    <Label fx:id="lblTotalGarages" text="0" styleClass="kpi-value"/>
+                                </VBox>
+                            </HBox>
 
-                            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-                                  prefWidth="160" alignment="CENTER" spacing="10">
-                                <Label text="🏠" style="-fx-font-size: 30px;"/>
-                                <Label text="Total Garages" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
-                                <Label fx:id="lblTotalGarages" text="0"
-                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                            </VBox>
+                            <HBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="15" alignment="CENTER_LEFT">
+                                <StackPane styleClass="kpi-icon-box, icon-green">
+                                    <Label text="⚙️" styleClass="kpi-icon"/>
+                                </StackPane>
+                                <VBox spacing="2" alignment="CENTER_LEFT">
+                                    <Label text="ÉQUIPEMENTS" styleClass="kpi-title"/>
+                                    <Label fx:id="lblTotalEquipementsGarages" text="0" styleClass="kpi-value"/>
+                                </VBox>
+                            </HBox>
 
-                            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                                  prefWidth="160" alignment="CENTER" spacing="10">
-                                <Label text="⚙️" style="-fx-font-size: 30px;"/>
-                                <Label text="Équipements" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
-                                <Label fx:id="lblTotalEquipementsGarages" text="0"
-                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
-                            </VBox>
+                            <HBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="15" alignment="CENTER_LEFT">
+                                <StackPane styleClass="kpi-icon-box, icon-yellow">
+                                    <Label text="📦" styleClass="kpi-icon"/>
+                                </StackPane>
+                                <VBox spacing="2" alignment="CENTER_LEFT">
+                                    <Label text="CAPACITÉ TOTALE" styleClass="kpi-title"/>
+                                    <Label fx:id="lblCapaciteTotale" text="0" styleClass="kpi-value"/>
+                                </VBox>
+                            </HBox>
 
-                            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                                  prefWidth="160" alignment="CENTER" spacing="10">
-                                <Label text="📦" style="-fx-font-size: 30px;"/>
-                                <Label text="Capacité totale" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
-                                <Label fx:id="lblCapaciteTotale" text="0"
-                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
-                            </VBox>
-
-                            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;"
-                                  prefWidth="160" alignment="CENTER" spacing="10">
-                                <Label text="📊" style="-fx-font-size: 30px;"/>
-                                <Label text="Occupation moy." style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
-                                <Label fx:id="lblMoyenneOccupation" text="0%"
-                                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
-                            </VBox>
-
+                            <HBox styleClass="kpi-card" HBox.hgrow="ALWAYS" spacing="15" alignment="CENTER_LEFT">
+                                <StackPane styleClass="kpi-icon-box, icon-purple">
+                                    <Label text="📊" styleClass="kpi-icon"/>
+                                </StackPane>
+                                <VBox spacing="2" alignment="CENTER_LEFT">
+                                    <Label text="OCCUPATION MOY." styleClass="kpi-title"/>
+                                    <Label fx:id="lblMoyenneOccupation" text="0%" styleClass="kpi-value"/>
+                                </VBox>
+                            </HBox>
                         </HBox>
 
                         <!-- Graphiques -->
                         <HBox spacing="20">
-
                             <!-- Graphique circulaire -->
-                            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
-                                <Label text="📊 Répartition des équipements"
-                                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                                <PieChart fx:id="pieChartOccupation" prefHeight="300"/>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="card">
+                                <Label text="📊 Répartition des équipements" styleClass="card-title"/>
+                                <PieChart fx:id="pieChartOccupation" prefHeight="300" style="-fx-text-fill: white;"/>
                             </VBox>
 
                             <!-- Graphique à barres -->
-                            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
-                                <Label text="📈 Taux d'occupation par garage"
-                                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="card">
+                                <Label text="📈 Taux d'occupation par garage" styleClass="card-title"/>
                                 <BarChart fx:id="barChartGarages" prefHeight="300">
                                     <xAxis>
                                         <CategoryAxis fx:id="xAxis" label="Garages"/>
@@ -198,47 +181,24 @@
                                     </yAxis>
                                 </BarChart>
                             </VBox>
-
                         </HBox>
 
                         <!-- Statistiques complémentaires -->
                         <HBox spacing="20">
-
-                            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
-                                <Label text="🏆 Garage le plus plein"
-                                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                                <Label fx:id="lblGaragePlusPlein" text="Aucun"
-                                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e67e22;"/>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="card">
+                                <Label text="🏆 Garage le plus plein" styleClass="card-title"/>
+                                <Label fx:id="lblGaragePlusPlein" text="Aucun" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #F59E0B;"/>
                             </VBox>
 
-                            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
-                                <Label text="🕊️ Garage le plus vide"
-                                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4B8B3B;"/>
-                                <Label fx:id="lblGaragePlusVide" text="Aucun"
-                                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="card">
+                                <Label text="🕊️ Garage le plus vide" styleClass="card-title"/>
+                                <Label fx:id="lblGaragePlusVide" text="Aucun" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #3B82F6;"/>
                             </VBox>
-
-                        </HBox>
-
-                        <!-- Légende -->
-                        <HBox spacing="20" alignment="CENTER" style="-fx-padding: 10;">
-                            <HBox spacing="5"><Label text="●" style="-fx-text-fill: #4B8B3B;"/> <Label text="Taux occupation"/></HBox>
-                            <HBox spacing="5"><Label text="●" style="-fx-text-fill: #3498db;"/> <Label text="Capacité"/></HBox>
                         </HBox>
 
                     </VBox>
                 </ScrollPane>
             </Tab>
-
         </TabPane>
     </center>
-
-    <!-- BOTTOM: Retour -->
-    <bottom>
-        <HBox alignment="CENTER" style="-fx-padding: 10;">
-            <Button text="🔙 Retour au Dashboard" onAction="#retourDashboard"
-                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20;"/>
-        </HBox>
-    </bottom>
-
 </BorderPane>
