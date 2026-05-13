@@ -47,6 +47,7 @@
                     <Button text="🌤️   Météo Agricole" onAction="#goMeteo" styleClass="sidebar-btn"/>
                     <Button text="🗺️   Carte &amp; Garage" onAction="#goCarte" styleClass="sidebar-btn"/>
                     <Button text="🧠   Analyse Sentiments" onAction="#goSentiment" styleClass="sidebar-btn"/>
+                    <Button text="🌱   Parcelles" onAction="#goParcelles" styleClass="sidebar-btn"/>
 
                     <Region prefHeight="30"/>
 

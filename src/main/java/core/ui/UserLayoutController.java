@@ -98,6 +98,15 @@ public class UserLayoutController {
         }
     }
 
+    @FXML
+    private void goParcelles() {
+        try {
+            chargerPage("/fxml/parcelle/GestionTerres.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la gestion des parcelles");
+        }
+    }
+
     private void chargerPage(String fxml) throws IOException {
         Parent page = FXMLLoader.load(getClass().getResource(fxml));
         contentArea.getChildren().clear();

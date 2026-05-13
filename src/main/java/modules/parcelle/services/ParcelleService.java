@@ -87,6 +87,49 @@ public class ParcelleService {
         return list;
     }
 
+    public List<Parcelle> afficherParcellesByUserId(int utilisateurId) {
+        List<Parcelle> list = new ArrayList<>();
+
+        if (conn == null) {
+            System.err.println("[ParcelleService] Connection BDD nulle — afficherParcellesByUserId ignoré.");
+            return list;
+        }
+
+        String sql = """
+                SELECT p.*, COALESCE(u.full_name, 'Inconnu') AS utilisateur_nom
+                FROM parcelle p
+                LEFT JOIN user u
+                ON p.utilisateur_id = u.id
+                WHERE p.utilisateur_id = ?
+                """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, utilisateurId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Parcelle p = new Parcelle(
+                            rs.getInt("id_parcelle"),
+                            rs.getString("nom"),
+                            rs.getDouble("superficie"),
+                            rs.getString("localisation"),
+                            rs.getString("type_sol"),
+                            rs.getInt("utilisateur_id"),
+                            rs.getDouble("latitude"),
+                            rs.getDouble("longitude")
+                    );
+
+                    String nom = rs.getString("utilisateur_nom");
+                    p.setUtilisateurNom(nom != null ? nom : "Inconnu");
+                    list.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     // UPDATE
     public void modifierParcelle(Parcelle p) {
 

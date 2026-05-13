@@ -2,6 +2,8 @@ package modules.parcelle.controllers;
 
 import javafx.collections.*;
 import javafx.collections.transformation.*;
+import core.session.SessionManager;
+import core.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -81,9 +83,31 @@ public class ListeParcelleController {
 
     @FXML
     private void refreshTable() {
-        List<Parcelle> list = service.afficherParcelles();
+        List<Parcelle> list;
+        if (SessionManager.isAdmin()) {
+            list = service.afficherParcelles();
+        } else {
+            list = service.afficherParcellesByUserId(SessionManager.getCurrentUserId());
+        }
         masterData = FXCollections.observableArrayList(list);
         activerRecherche();
+    }
+
+    @FXML
+    private void openAjouterParcelle() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/parcelle/AjouterParcelle.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Ajouter une parcelle");
+            stage.show();
+            stage.setOnHidden(event -> refreshTable());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void activerRecherche() {
@@ -128,6 +152,11 @@ public class ListeParcelleController {
         Parcelle selected = tableParcelle.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
+        if (!SessionManager.isAdmin() && selected.getUtilisateurId() != SessionManager.getCurrentUserId()) {
+            AlertUtils.showError("Erreur", "Vous ne pouvez pas supprimer une parcelle qui n'est pas à vous.");
+            return;
+        }
+
         service.supprimerParcelle(selected.getIdParcelle());
         refreshTable();
     }
@@ -136,6 +165,11 @@ public class ListeParcelleController {
     private void openModifier() {
         Parcelle selected = tableParcelle.getSelectionModel().getSelectedItem();
         if (selected == null) return;
+
+        if (!SessionManager.isAdmin() && selected.getUtilisateurId() != SessionManager.getCurrentUserId()) {
+            AlertUtils.showError("Erreur", "Vous ne pouvez pas modifier une parcelle qui n'est pas à vous.");
+            return;
+        }
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/parcelle/ModifierParcelle.fxml"));

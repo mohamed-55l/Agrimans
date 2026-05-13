@@ -1,5 +1,6 @@
 package modules.parcelle.controllers;
 
+import core.session.SessionManager;
 import javafx.collections.*;
 import javafx.collections.transformation.*;
 import javafx.fxml.FXML;
@@ -46,10 +47,32 @@ public class ListeCultureController {
     @FXML
     private void refreshTable() {
 
-        List<Culture> cultures = cultureService.afficherCultures();
+        List<Culture> cultures;
+        if (SessionManager.isAdmin()) {
+            cultures = cultureService.afficherCultures();
+        } else {
+            cultures = cultureService.afficherCulturesByUserId(SessionManager.getCurrentUserId());
+        }
         masterData = FXCollections.observableArrayList(cultures);
 
         activerRecherche();
+    }
+
+    @FXML
+    private void openAjouterCulture() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/parcelle/AjoutCulture.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Ajouter une culture");
+            stage.show();
+            stage.setOnHidden(event -> refreshTable());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 🔍 Méthode recherche

@@ -18,6 +18,7 @@
                    style="-fx-font-size:20px; -fx-font-weight:bold;" />
 
             <HBox spacing="10">
+                <Button text="Ajouter" onAction="#openAjouterCulture"/>
                 <Button text="Actualiser" onAction="#refreshTable"/>
                 <Button text="Modifier" onAction="#openModifier"/>
                 <Button text="Supprimer" onAction="#supprimerCulture"/>

@@ -1,5 +1,6 @@
 package modules.parcelle.controllers;
 
+import core.session.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import modules.parcelle.models.Culture;
@@ -36,7 +37,12 @@ public class Add_Culture_Controller {
     }
 
     private void loadParcelles() {
-        List<Parcelle> parcelles = parcelleService.afficherParcelles();
+        List<Parcelle> parcelles;
+        if (SessionManager.isAdmin()) {
+            parcelles = parcelleService.afficherParcelles();
+        } else {
+            parcelles = parcelleService.afficherParcellesByUserId(SessionManager.getCurrentUserId());
+        }
         parcelleCombo.getItems().addAll(parcelles);
     }
 

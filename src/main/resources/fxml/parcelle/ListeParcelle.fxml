@@ -20,6 +20,7 @@
 
         <!-- Boutons -->
         <HBox spacing="10">
+            <Button text="Ajouter" onAction="#openAjouterParcelle"/>
             <Button text="Actualiser" onAction="#refreshTable"/>
             <Button text="Modifier" onAction="#openModifier"/>
             <Button text="Supprimer" onAction="#supprimerParcelle"/>

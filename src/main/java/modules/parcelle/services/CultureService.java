@@ -75,6 +75,44 @@ public class CultureService {
         return list;
     }
 
+    public List<Culture> afficherCulturesByUserId(int utilisateurId) {
+        List<Culture> list = new ArrayList<>();
+
+        if (conn == null) {
+            System.err.println("[CultureService] Connection BDD nulle — afficherCulturesByUserId ignoré.");
+            return list;
+        }
+
+        String sql = """
+                SELECT c.*
+                FROM culture c
+                JOIN parcelle p ON c.parcelle_id = p.id_parcelle
+                WHERE p.utilisateur_id = ?
+                """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, utilisateurId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Culture c = new Culture(
+                            rs.getInt("id_culture"),
+                            rs.getString("nom"),
+                            rs.getString("type_culture"),
+                            toLocalDate(rs.getDate("date_plantation")),
+                            toLocalDate(rs.getDate("date_recolte_prevue")),
+                            rs.getString("etat_culture"),
+                            rs.getInt("parcelle_id")
+                    );
+                    list.add(c);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     // UPDATE
     public void modifierCulture(Culture c) {
         if (conn == null) { System.err.println("[CultureService] Connection BDD nulle — modifierCulture ignoré."); return; }
