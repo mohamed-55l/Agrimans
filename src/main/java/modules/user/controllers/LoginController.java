@@ -1,201 +1,181 @@
 package modules.user.controllers;
 
-import core.database.DBConnection;
-import core.session.SessionManager;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import modules.user.models.User;
-import modules.user.services.UserService;
-import org.mindrot.jbcrypt.BCrypt;
+import modules.user.utils.DBConnection;
+import modules.user.utils.PasswordCryp;
+import core.session.SessionManager;
+import javafx.animation.PauseTransition;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.util.Duration;
 
-import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Random;
 
-public class LoginController {
+public class LoginController extends BaseController {
 
-    // ── Champs liés à login-view.fxml ───────────────────────────────────────
-    @FXML private TextField   emailField;
+    @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
-    @FXML private Label       captchaLabel;
-    @FXML private TextField   captchaField;
-    @FXML private VBox        otpBox;
-    @FXML private TextField   otpField;
-    @FXML private Label       messageLabel;
-    @FXML private Button      loginButton;
+    @FXML private TextField captchaField;
+    @FXML private Label captchaLabel;
+    @FXML private Label messageLabel;
+    @FXML private Button loginButton;
 
-    // ── Window drag ──────────────────────────────────────────────────────────
-    private double xOffset, yOffset;
-
-    private final UserService userService = new UserService();
-    private String captchaAnswer;
-    private String generatedOtp;
+    private int captchaResult;
+    private int failedAttempts = 0;
+    private boolean isBlocked = false;
 
     @FXML
     public void initialize() {
         generateCaptcha();
+        messageLabel.setText("");
+        loginButton.setDisable(true);
+
+        // Listeners to validate form in real-time
+        emailField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        passwordField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        captchaField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
     }
 
-    // ── Génération CAPTCHA ───────────────────────────────────────────────────
+    private void validateForm() {
+        boolean valid = !emailField.getText().trim().isEmpty()
+                && !passwordField.getText().isEmpty()
+                && !captchaField.getText().trim().isEmpty();
+        loginButton.setDisable(!valid);
+    }
+
     private void generateCaptcha() {
-        int a = new Random().nextInt(10) + 1;
-        int b = new Random().nextInt(10) + 1;
-        captchaAnswer = String.valueOf(a + b);
-        if (captchaLabel != null) captchaLabel.setText("Combien font  " + a + " + " + b + " ?");
+        Random random = new Random();
+        int a = random.nextInt(9) + 1;
+        int b = random.nextInt(9) + 1;
+        captchaResult = a + b;
+        captchaLabel.setText("Combien font " + a + " + " + b + " ?");
     }
 
-    // ── Connexion ────────────────────────────────────────────────────────────
-    @FXML
-    private void handleLogin() {
-        String email    = emailField.getText().trim();
-        String password = passwordField.getText();
+    private boolean validateCaptcha() {
+        try {
+            return Integer.parseInt(captchaField.getText()) == captchaResult;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-        // Validation basique
-        if (email.isEmpty() || password.isEmpty()) {
-            showError("Veuillez remplir tous les champs.");
+    @FXML
+    private void handleLogin(ActionEvent event) {
+        if (isBlocked) {
+            showError("Bloqué 30 secondes.");
             return;
         }
 
-        // Vérification CAPTCHA
-        if (captchaField != null && captchaLabel != null) {
-            String rep = captchaField.getText().trim();
-            if (!rep.equals(captchaAnswer)) {
-                showError("Réponse CAPTCHA incorrecte.");
-                generateCaptcha();
-                captchaField.clear();
-                return;
-            }
+        if (!validateCaptcha()) {
+            showError("Captcha incorrect");
+            generateCaptcha();
+            return;
         }
 
-        // Authentification en base
+        setLoading(true);
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                authenticate(event);
+                return null;
+            }
+        };
+        new Thread(task).start();
+    }
+
+    private void authenticate(ActionEvent event) {
         try (Connection conn = DBConnection.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(
-                "SELECT * FROM user WHERE email = ?");
-            ps.setString(1, email);
+            String sql = "SELECT id, password_hash, role, phone FROM user WHERE email=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, emailField.getText());
             ResultSet rs = ps.executeQuery();
 
             if (!rs.next()) {
-                showError("Email ou mot de passe incorrect.");
-                generateCaptcha();
+                loginFailed();
                 return;
             }
 
             String hash = rs.getString("password_hash");
-            boolean passwordOk = false;
 
-            if (hash != null) {
-                // jBCrypt ne supporte pas $2y$ (PHP) → on convertit en $2a$
-                String normalizedHash = hash.startsWith("$2y$")
-                    ? "$2a$" + hash.substring(4)
-                    : hash;
-
-                if (normalizedHash.startsWith("$2a$") || normalizedHash.startsWith("$2b$")) {
-                    try { passwordOk = BCrypt.checkpw(password, normalizedHash); }
-                    catch (Exception ignored) { passwordOk = false; }
-                } else {
-                    // Texte clair (anciens comptes de test)
-                    passwordOk = hash.equals(password);
-                }
-            }
-
-            if (!passwordOk) {
-                showError("Email ou mot de passe incorrect.");
-                generateCaptcha();
+            // Check password compatibility with PasswordCryp (supports PHP $2y$)
+            if (!PasswordCryp.checkPassword(passwordField.getText(), hash)) {
+                loginFailed();
                 return;
             }
 
-            // Utilisateur authentifié
+            // Successful Login
+            failedAttempts = 0;
+            String role = rs.getString("role");
+
             User user = new User();
             user.setId(rs.getInt("id"));
-            user.setFullName(rs.getString("full_name"));
-            user.setEmail(rs.getString("email"));
-            user.setRole(rs.getString("role"));
+            user.setEmail(emailField.getText());
+            user.setRole(role);
+            SessionManager.setCurrentUser(user);
 
-            System.out.println("✅ Connexion: " + user.getEmail() + " [" + user.getRole() + "]");
-            SessionManager.login(user);
+            // Redirection based on Role
+            javafx.application.Platform.runLater(() -> {
+                String targetFxml;
+                if ("ADMIN".equalsIgnoreCase(role)) {
+                    targetFxml = "/fxml/user/admin-dashboard.fxml";
+                } else {
+                    targetFxml = "/fxml/layout/user_layout.fxml";
+                }
+                switchScene(targetFxml, (Node) event.getSource());
+            });
 
-            // Redirection
-            String fxmlPath = user.isAdmin()
-                ? "/fxml/layout/admin_layout.fxml"
-                : "/fxml/layout/user_layout.fxml";
-
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root, user.isAdmin() ? 1366 : 1200, user.isAdmin() ? 768 : 700));
-            stage.centerOnScreen();
-            stage.show();
-
-        } catch (SQLException | IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            showError("Erreur technique : " + e.getMessage());
+            javafx.application.Platform.runLater(() -> showError("Erreur système: " + e.getMessage()));
+        } finally {
+            javafx.application.Platform.runLater(() -> setLoading(false));
         }
     }
 
-    // ── Navigation ───────────────────────────────────────────────────────────
-    @FXML
-    private void goToRegister() {
-        navigateTo("/fxml/user/register-view.fxml");
+    private void loginFailed() {
+        failedAttempts++;
+        javafx.application.Platform.runLater(() -> {
+            showError("Email ou mot de passe incorrect (" + failedAttempts + "/3)");
+            setLoading(false);
+        });
+        if (failedAttempts >= 3) block();
     }
 
-    @FXML
-    private void goToResetPassword() {
-        navigateTo("/fxml/user/reset-password-view.fxml");
+    private void block() {
+        isBlocked = true;
+        PauseTransition pause = new PauseTransition(Duration.seconds(30));
+        pause.setOnFinished(e -> {
+            isBlocked = false;
+            failedAttempts = 0;
+            messageLabel.setText("");
+        });
+        pause.play();
     }
 
-    private void navigateTo(String fxmlPath) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.centerOnScreen();
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showError("Impossible de charger la page.");
-        }
+    private void setLoading(boolean loading) {
+        loginButton.setDisable(loading);
+        loginButton.setText(loading ? "Connexion..." : "Se connecter");
     }
 
-    // ── Window controls ──────────────────────────────────────────────────────
-    @FXML private void handleMinimize() {
-        getStage().setIconified(true);
-    }
-
-    @FXML private void handleMaximize() {
-        Stage s = getStage();
-        s.setMaximized(!s.isMaximized());
-    }
-
-    @FXML private void handleClose() {
-        getStage().close();
-    }
-
-    @FXML private void handleMousePressed(MouseEvent e) {
-        xOffset = e.getSceneX();
-        yOffset = e.getSceneY();
-    }
-
-    @FXML private void handleMouseDragged(MouseEvent e) {
-        Stage s = getStage();
-        s.setX(e.getScreenX() - xOffset);
-        s.setY(e.getScreenY() - yOffset);
-    }
-
-    // ── Helpers ──────────────────────────────────────────────────────────────
     private void showError(String msg) {
-        if (messageLabel != null) {
-            messageLabel.setText(msg);
-            messageLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
-            messageLabel.setVisible(true);
-        }
+        messageLabel.setStyle("-fx-text-fill:red;");
+        messageLabel.setText(msg);
     }
 
-    private Stage getStage() {
-        return (Stage) emailField.getScene().getWindow();
+    @FXML
+    private void goToRegister(ActionEvent event) {
+        switchScene("/fxml/user/register-view.fxml", (Node) event.getSource());
+    }
+
+    @FXML
+    private void goToResetPassword(ActionEvent event) {
+        switchScene("/fxml/user/reset-password-view.fxml", (Node) event.getSource());
     }
 }

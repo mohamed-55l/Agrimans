@@ -10,7 +10,7 @@ public class SessionManager {
     }
 
     private static SessionManager instance;
-    private User currentUser;
+    private static User currentUser;
 
     private SessionManager() {}
 
@@ -85,4 +85,11 @@ public class SessionManager {
         User user = getCurrentUser();
         return user != null ? user.getPrenom() + " " + user.getNom() : "Non connecté";
     }
+
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+
 }

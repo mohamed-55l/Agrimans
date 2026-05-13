@@ -1,5 +1,6 @@
 package modules.dashboard.controllers;
 
+import modules.user.controllers.BaseController;
 import core.session.SessionManager;
 import core.utils.AlertUtils;
 import javafx.collections.FXCollections;
@@ -30,7 +31,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class UserDashboardController implements Initializable {
+public class UserDashboardController extends BaseController implements Initializable {
 
     // =====================================================
     // STATISTIQUES

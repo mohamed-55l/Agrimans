@@ -11,24 +11,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="modules.user.controllers.LoginController">
 
-   <!-- ================= TITLE BAR ================= -->
-   <HBox alignment="CENTER_RIGHT"
-         onMousePressed="#handleMousePressed"
-         onMouseDragged="#handleMouseDragged"
-         prefHeight="40"
-         style="-fx-background-color: #1e1e1e;">
 
-      <Label text="AGRI Samir"
-             HBox.hgrow="ALWAYS"
-             style="-fx-text-fill: white;
-                      -fx-padding: 0 0 0 15;
-                      -fx-font-weight: bold;" />
-
-      <Button text="â€”" onAction="#handleMinimize"/>
-      <Button text="â˜" onAction="#handleMaximize"/>
-      <Button text="âœ•" onAction="#handleClose"/>
-
-   </HBox>
 
    <!-- ================= MAIN CONTENT ================= -->
    <StackPane VBox.vgrow="ALWAYS">

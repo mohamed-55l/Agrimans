@@ -6,41 +6,11 @@
 
 <AnchorPane prefHeight="520"
             prefWidth="900"
-            stylesheets="@../../css/style.css"
+            stylesheets="@../../fxml/user/style.css"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="modules.user.controllers.RegisterController">
 
-    <!-- TITLE BAR -->
-    <HBox fx:id="titleBar"
-          alignment="CENTER_RIGHT"
-          styleClass="title-bar"
-          onMouseDragged="#handleMouseDragged"
-          onMousePressed="#handleMousePressed"
-          prefHeight="40"
-          AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0"
-          AnchorPane.topAnchor="0">
-
-        <Label text="AGRI Samir"
-               styleClass="app-title"
-               HBox.hgrow="ALWAYS"/>
-
-        <Button fx:id="minBtn"
-                text="â€”"
-                styleClass="window-btn"
-                onAction="#handleMinimize"/>
-
-        <Button fx:id="maxBtn"
-                text="â˜"
-                styleClass="window-btn"
-                onAction="#handleMaximize"/>
-
-        <Button fx:id="closeBtn"
-                text="âœ•"
-                styleClass="close-btn"
-                onAction="#handleClose"/>
-    </HBox>
 
     <!-- BACKGROUND -->
     <StackPane style="-fx-background-color:#0f6b3b;"

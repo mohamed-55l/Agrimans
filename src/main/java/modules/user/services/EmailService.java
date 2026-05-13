@@ -10,7 +10,7 @@ public class EmailService {
     private static final String FROM = "zidisamir993@gmail.com";
 
     // ⚠ App Password Gmail (16 caractères, sans espaces)
-    private static final String APP_PASSWORD = "lnbtihnaumvaxrqc";
+    private static final String APP_PASSWORD = "iwvumgnfcowzdgcv";
 
     public static boolean sendOTP(String toEmail, String otpCode) {
 

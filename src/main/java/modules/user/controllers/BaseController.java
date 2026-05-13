@@ -22,35 +22,21 @@ public class BaseController {
     }
 
     // ================= SWITCH SCENE =================
-
-    protected void switchScene(String fxmlFile, Node source) {
-
+    protected void switchScene(String fxmlPath, Node source) {
         try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/user/" + fxmlFile)
-            );
+            // نبعثو الـ fxmlPath طول كإسم كامل يبدا بـ /
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 
             Parent root = loader.load();
-
             BaseController controller = loader.getController();
-
-            Stage currentStage =
-                    (Stage) source.getScene().getWindow();
+            Stage currentStage = (Stage) source.getScene().getWindow();
 
             controller.setStage(currentStage);
-
             currentStage.setScene(new Scene(root));
-
-        }
-        catch (IOException e) {
-
+        } catch (IOException e) {
             e.printStackTrace();
-
         }
-
     }
-
     // ================= WINDOW CONTROLS =================
 
     @javafx.fxml.FXML

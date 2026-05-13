@@ -2,62 +2,71 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="modules.user.controllers.AdminDashboardController"
-      spacing="20"
-      style="-fx-background-color: transparent; -fx-padding: 28 30;">
+<ScrollPane fitToWidth="true"
+            style="-fx-background-color: #0F172A; -fx-background: #0F172A;"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="modules.user.controllers.AdminDashboardController">
 
-    <!-- En-tête -->
-    <VBox spacing="4">
-        <Label text="👥  Gestion des Utilisateurs"
-               style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
-        <Label text="Gérez les comptes, recherchez et modifiez les utilisateurs"
-               style="-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;"/>
-    </VBox>
+    <content>
+        <VBox spacing="25" style="-fx-background-color: #0F172A;">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
 
-    <!-- Bloc principal -->
-    <VBox spacing="16"
-          style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-padding: 24;
-                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0, 0, 4);"
-          VBox.vgrow="ALWAYS">
+            <!-- En-tête مع زر Logout -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="👥  Gestion des Utilisateurs"
+                           style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: white;"/>
+                    <Label text="Consultez، recherchez et modifiez les comptes utilisateurs."
+                           style="-fx-font-size: 14px; -fx-text-fill: #94A3B8;"/>
+                </VBox>
 
-        <!-- Barre de recherche -->
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <TextField fx:id="searchField"
-                       promptText="🔍  Rechercher par ID, Nom, Email, Téléphone ou Rôle..."
-                       prefWidth="520"
-                       style="-fx-background-color: #0F172A; -fx-border-color: #334155;
-                              -fx-border-radius: 10; -fx-border-width: 1.5; -fx-background-radius: 10;
-                              -fx-padding: 10 14; -fx-font-size: 13px; -fx-text-fill: #E2E8F0;
-                              -fx-prompt-text-fill: #475569;"/>
-            <Button text="🔍  Rechercher" onAction="#handleSearch"
-                    style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: 700;
-                           -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;
-                           -fx-font-size: 13px;"/>
-            <Button text="↺  Réinitialiser" onAction="#resetSearch"
-                    style="-fx-background-color: #1E293B; -fx-text-fill: #10B981;
-                           -fx-border-color: #10B981; -fx-border-width: 1.5; -fx-border-radius: 10;
-                           -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;
-                           -fx-font-size: 13px; -fx-font-weight: 700;"/>
-        </HBox>
+                <Button text="🚪 Déconnexion" onAction="#handleLogout"
+                        style="-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            </HBox>
 
-        <!-- Tableau -->
-        <TableView fx:id="usersTable" VBox.vgrow="ALWAYS" prefHeight="520"
-                   style="-fx-background-color: transparent; -fx-border-color: transparent;">
-            <columns>
-                <TableColumn fx:id="colId"     text="ID"           prefWidth="65"/>
-                <TableColumn fx:id="colName"   text="Nom Complet"  prefWidth="180"/>
-                <TableColumn fx:id="colEmail"  text="Email"        prefWidth="250"/>
-                <TableColumn fx:id="colPhone"  text="Téléphone"    prefWidth="150"/>
-                <TableColumn fx:id="colRole"   text="Rôle"         prefWidth="120"/>
-                <TableColumn fx:id="colUpdate" text="Modifier"     prefWidth="120"/>
-                <TableColumn fx:id="colDelete" text="Supprimer"    prefWidth="120"/>
-            </columns>
-        </TableView>
+            <!-- CONTAINER PRINCIPAL (يسمح بالتبديل بين الجدول والفورم) -->
+            <StackPane fx:id="contentPane">
 
-    </VBox>
+                <!-- VUE LISTE (الجدول) -->
+                <VBox fx:id="usersView" spacing="20"
+                      style="-fx-background-color: #1E293B; -fx-background-radius: 15; -fx-padding: 25;
+                             -fx-border-color: #334155; -fx-border-radius: 15;">
 
-</VBox>
+                    <!-- Barre de recherche -->
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchField"
+                                   promptText="🔍  Rechercher un utilisateur..."
+                                   HBox.hgrow="ALWAYS"
+                                   style="-fx-background-color: #0F172A; -fx-border-color: #334155;
+                                          -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 12;"/>
+                        <Button text="Rechercher" onAction="#handleSearch"
+                                style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold;
+                                       -fx-background-radius: 10; -fx-padding: 12 25;"/>
+                        <Button text="↺" onAction="#resetSearch"
+                                style="-fx-background-color: transparent; -fx-text-fill: #94A3B8;
+                                       -fx-border-color: #334155; -fx-border-radius: 10; -fx-padding: 12 15;"/>
+                    </HBox>
+
+                    <!-- Tableau (ثبت في الـ TableColumn IDs) -->
+                    <TableView fx:id="usersTable" prefHeight="500" fixedCellSize="50">
+                        <columns>
+                            <TableColumn fx:id="colId"     text="ID"           prefWidth="60"/>
+                            <TableColumn fx:id="colName"   text="Nom Complet"  prefWidth="180"/>
+                            <TableColumn fx:id="colEmail"  text="Email"        prefWidth="220"/>
+                            <TableColumn fx:id="colPhone"  text="Téléphone"    prefWidth="130"/>
+                            <TableColumn fx:id="colRole"   text="Rôle"         prefWidth="100"/>
+                            <TableColumn fx:id="colUpdate" text="Action"       prefWidth="120"/>
+                            <TableColumn fx:id="colDelete" text="Supprimer"    prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </StackPane>
+        </VBox>
+    </content>
+</ScrollPane>

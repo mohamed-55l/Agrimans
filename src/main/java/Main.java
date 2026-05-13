@@ -18,7 +18,7 @@ public class Main extends Application {
             admin.setRole("ADMIN");
             SessionManager.login(admin);
 
-            String fxmlPath = "/fxml/layout/admin_layout.fxml";
+            String fxmlPath = "/fxml/user/login-view.fxml";
             
             System.out.println("🚀 Démarrage de l'application avec : " + fxmlPath);
             

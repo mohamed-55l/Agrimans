@@ -1,5 +1,6 @@
 package core.ui;
 
+import modules.user.controllers.BaseController;
 import core.session.SessionManager;
 import core.utils.AlertUtils;
 import javafx.fxml.FXML;
@@ -10,7 +11,7 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
-public class AdminLayoutController {
+public class AdminLayoutController extends BaseController{
 
     @FXML private StackPane contentArea;
     @FXML private Label lblUserInfo;
