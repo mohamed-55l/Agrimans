@@ -42,6 +42,31 @@
 
                     <Region prefHeight="15"/>
 
+                    <!-- ═══ MARKETPLACE ═══ -->
+                    <Label text="BOUTIQUE" styleClass="sidebar-section-title"/>
+                    <Button text="🛒   Marketplace" onAction="#goMarketplace"
+                            style="-fx-background-color: rgba(16,185,129,0.18);
+                                   -fx-text-fill: #10B981;
+                                   -fx-font-size: 13px; -fx-font-weight: bold;
+                                   -fx-alignment: CENTER_LEFT; -fx-padding: 12 16;
+                                   -fx-background-radius: 8; -fx-border-color: rgba(16,185,129,0.35);
+                                   -fx-border-width: 1; -fx-border-radius: 8;"
+                            maxWidth="Infinity"/>
+                    <Button text="🛍️   Mon Panier" onAction="#goCart"
+                            styleClass="sidebar-btn"/>
+
+                    <Region prefHeight="15"/>
+
+                    <!-- ═══ GESTION EXPLOITATION ═══ -->
+                    <Label text="GESTION EXPLOITATION" styleClass="sidebar-section-title"/>
+                    <Button text="🌱   Terres &amp; Cultures" onAction="#goGestionTerres" styleClass="sidebar-btn"/>
+                    <Button text="🐄   Mes Animaux" onAction="#goAnimaux" styleClass="sidebar-btn"/>
+                    <Button text="🌾   Production" onAction="#goProduction" styleClass="sidebar-btn"/>
+                    <Button text="📦   Stock" onAction="#goStock" styleClass="sidebar-btn"/>
+                    <Button text="💰   Ventes" onAction="#goVentes" styleClass="sidebar-btn"/>
+
+                    <Region prefHeight="15"/>
+
                     <Label text="OUTILS &amp; SERVICES" styleClass="sidebar-section-title"/>
                     <Button text="🤖   Assistant IA" onAction="#goChatbot" styleClass="sidebar-btn"/>
                     <Button text="🌤️   Météo Agricole" onAction="#goMeteo" styleClass="sidebar-btn"/>
