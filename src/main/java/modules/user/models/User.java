@@ -1,114 +1,69 @@
 package modules.user.models;
 
-import java.time.LocalDateTime;
-
-/**
- * Modèle représentant un utilisateur
- */
 public class User {
-        // --- Added for compatibility with controllers ---
-        public String getFullName() {
-            return (prenom != null ? prenom : "") + " " + (nom != null ? nom : "").trim();
-        }
 
-        public void setFullName(String fullName) {
-            if (fullName == null) {
-                this.nom = "";
-                this.prenom = "";
-            } else {
-                String[] parts = fullName.trim().split(" ", 2);
-                if (parts.length == 2) {
-                    this.prenom = parts[0];
-                    this.nom = parts[1];
-                } else if (parts.length == 1) {
-                    this.prenom = parts[0];
-                    this.nom = "";
-                }
-            }
-        }
-
-        public String getPhone() {
-            return telephone;
-        }
-
-        public void setPhone(String phone) {
-            this.telephone = phone;
-        }
     private int id;
-    private String nom;
-    private String prenom;
+    private String fullName;
     private String email;
-    private String password;
-    private String telephone;
-    private String role; // ADMIN ou AGRICULTEUR
-    private LocalDateTime dateCreation;
-    private boolean actif;
+    private String phone;
+    private String role;
+    private String passwordHash;
+    private String createdAt;
 
-    // Constructeurs
-    public User() {}
-
-    public User(int id, String nom, String prenom, String email, String role) {
+    public User(int id, String fullName, String email, String phone, String role) {
         this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
+        this.fullName = fullName;
         this.email = email;
+        this.phone = phone;
         this.role = role;
     }
 
-    public User(String nom, String prenom, String email, String password, String telephone, String role) {
-        this.nom = nom;
-        this.prenom = prenom;
+    // Optionnel : constructeur complet
+    public User(int id, String fullName, String email, String phone, String role, String passwordHash, String createdAt) {
+        this.id = id;
+        this.fullName = fullName;
         this.email = email;
-        this.password = password;
-        this.telephone = telephone;
+        this.phone = phone;
         this.role = role;
-        this.actif = true;
-        this.dateCreation = LocalDateTime.now();
+        this.passwordHash = passwordHash;
+        this.createdAt = createdAt;
     }
 
-    // Getters et Setters
+    public User() {
+
+    }
+
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
-
-    public String getPrenom() { return prenom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
-
+    public String getFullName() { return fullName; }
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
-
+    public String getPhone() { return phone; }
     public String getRole() { return role; }
+    public String getPasswordHash() { return passwordHash; }
+    public String getCreatedAt() { return createdAt; }
+
+    public void setId(int id) { this.id = id; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
     public void setRole(String role) { this.role = role; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 
-    public LocalDateTime getDateCreation() { return dateCreation; }
-    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
-
-    public boolean isActif() { return actif; }
-    public void setActif(boolean actif) { this.actif = actif; }
-
-    // Méthodes utilitaires
-    public String getNomComplet() {
-        return prenom + " " + nom;
+    public String getPrenom() {
+        return fullName;
     }
 
-    public boolean isAdmin() {
-        return "ADMIN".equals(role);
+    public String getNom() {
+        return fullName;
     }
 
-    public boolean isAgriculteur() {
-        return "AGRICULTEUR".equals(role);
+    public void setNom(String nomComplet) {
+        this.fullName = nomComplet;
     }
 
-    @Override
-    public String toString() {
-        return getNomComplet() + " (" + role + ")";
+    public void setPrenom(String s) {
+        this.fullName = s;
     }
+
+
 }

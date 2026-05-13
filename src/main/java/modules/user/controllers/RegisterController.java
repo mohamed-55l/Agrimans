@@ -1,7 +1,7 @@
 package modules.user.controllers;
 
 
-import core.database.DBConnection;
+import modules.user.utils.DBConnection;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -208,11 +208,11 @@ public class RegisterController extends BaseController {
         try (Connection conn = DBConnection.getConnection()) {
 
             String sql = """
-            INSERT INTO email_otp (email, code, expiry)
-            VALUES (?, ?, ?)
+            INSERT INTO user (email, verification_code, verification_expiry, is_verified)
+            VALUES (?, ?, ?, FALSE)
             ON DUPLICATE KEY UPDATE
-                code = VALUES(code),
-                expiry = VALUES(expiry)
+                verification_code = VALUES(verification_code),
+                verification_expiry = VALUES(verification_expiry)
         """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -353,4 +353,8 @@ public class RegisterController extends BaseController {
 
         return false;
     }
+
+
+
+
 }
