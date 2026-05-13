@@ -1,126 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="modules.marketplace.controllers.ProductController"
-            prefHeight="600" prefWidth="1000"
-            style="-fx-background-color: #f8f9fa;">
+            prefHeight="720" prefWidth="1100"
+            style="-fx-background-color: #0F172A;">
 
-    <!-- Top Navigation Bar -->
+    <!-- ══ Top Navigation Bar ══════════════════════════════════════ -->
     <top>
-        <VBox>
-            <HBox alignment="CENTER_LEFT" spacing="12"
-                  style="-fx-background-color: white; -fx-padding: 8 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);">
+        <VBox style="-fx-background-color: #1E293B; -fx-border-color: #334155; -fx-border-width: 0 0 1 0;">
+
+            <!-- Main nav row -->
+            <HBox alignment="CENTER_LEFT" spacing="14"
+                  style="-fx-padding: 14 24; -fx-background-color: #1E293B;">
+
+                <!-- Branding -->
                 <Label text="🌾" style="-fx-font-size: 22px;"/>
-                <Label text="AGRIMANS" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
-                <Label text="Marketplace" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FFA000;"/>
+                <Label text="AGRIMANS" style="-fx-font-size: 17px; -fx-font-weight: 900; -fx-text-fill: #10B981;"/>
+                <Label text="Marketplace" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #64748B;"/>
+
                 <Region HBox.hgrow="ALWAYS"/>
-                <Label fx:id="userNameLabel" text="Welcome" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 10;"/>
-                <Button text="🛒 Cart" onAction="#openCart"
-                        style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 4; -fx-font-size: 13px; -fx-cursor: hand;"/>
-                <Label fx:id="cartCountLabel" text="(0)" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 0 5 0 0;"/>
-                <Button text="🤖 Chat" onAction="#openChatbot"
-                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 4; -fx-font-size: 13px; -fx-cursor: hand;"/>
-                <Button text="🚪 Logout" onAction="#handleLogout"
-                        style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 4; -fx-font-size: 13px; -fx-cursor: hand;"/>
+
+                <!-- User name -->
+                <Label fx:id="userNameLabel" text="Bienvenue"
+                       style="-fx-font-size: 13px; -fx-text-fill: #94A3B8; -fx-font-weight: 500;"/>
+
+                <!-- Currency selector — like Symfony dropdown -->
+                <ComboBox fx:id="currencySelector"
+                          style="-fx-background-color: #0F172A; -fx-text-base-color: #F1F5F9;
+                                 -fx-border-color: #334155; -fx-border-radius: 8; -fx-background-radius: 8;
+                                 -fx-padding: 4 8; -fx-font-size: 12px; -fx-font-weight: bold;
+                                 -fx-pref-width: 80px;"/>
+
+                <!-- Cart button with badge -->
+                <StackPane>
+                    <Button text="🛒  Panier" onAction="#openCart"
+                            style="-fx-background-color: rgba(16,185,129,0.15);
+                                   -fx-text-fill: #10B981;
+                                   -fx-border-color: rgba(16,185,129,0.4);
+                                   -fx-border-width: 1; -fx-border-radius: 9;
+                                   -fx-background-radius: 9;
+                                   -fx-font-weight: bold; -fx-font-size: 13px;
+                                   -fx-padding: 8 16; -fx-cursor: hand;"/>
+                    <!-- Cart count badge -->
+                    <Label fx:id="cartCountLabel" text="0"
+                           style="-fx-background-color: #EF4444; -fx-text-fill: white;
+                                  -fx-font-size: 9px; -fx-font-weight: bold;
+                                  -fx-padding: 1 5; -fx-background-radius: 10;
+                                  -fx-min-width: 18px; -fx-alignment: CENTER;"
+                           StackPane.alignment="TOP_RIGHT"
+                           visible="false"/>
+                </StackPane>
+
+                <!-- Chatbot -->
+                <Button text="🤖  Assistant IA" onAction="#openChatbot"
+                        style="-fx-background-color: rgba(59,130,246,0.15);
+                               -fx-text-fill: #60A5FA;
+                               -fx-border-color: rgba(59,130,246,0.4);
+                               -fx-border-width: 1; -fx-border-radius: 9;
+                               -fx-background-radius: 9;
+                               -fx-font-weight: bold; -fx-font-size: 13px;
+                               -fx-padding: 8 16; -fx-cursor: hand;"/>
             </HBox>
 
-            <!-- Tabs -->
-            <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: white;">
-                <!-- Products Tab -->
-                <Tab text="Products">
-                    <BorderPane>
-                        <top>
-                            <HBox spacing="10" style="-fx-padding: 15 15 5 15;">
-                                <TextField fx:id="searchField" promptText="Search products..." HBox.hgrow="ALWAYS"
-                                           style="-fx-padding: 8 12; -fx-background-radius: 20; -fx-border-color: #ddd; -fx-border-radius: 20; -fx-font-size: 13px;"/>
-                                <ComboBox fx:id="categoryFilter" prefWidth="130"
-                                          style="-fx-padding: 3; -fx-background-radius: 20; -fx-font-size: 13px;"/>
-                            </HBox>
-                        </top>
-                        <center>
-                            <ScrollPane fitToWidth="true" fitToHeight="true"
-                                        style="-fx-background: transparent; -fx-padding: 0;">
-                                <FlowPane fx:id="productsContainer"
-                                          hgap="8" vgap="8"
-                                          style="-fx-padding: 8; -fx-background-color: transparent;"/>
-                            </ScrollPane>
-                        </center>
-                    </BorderPane>
-                </Tab>
+            <!-- ── Search / Filter bar — mirrors Symfony filter form ── -->
+            <HBox spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-padding: 10 24 14 24; -fx-background-color: #1E293B;">
 
-                <!-- My Inventory Tab -->
-                <Tab fx:id="sellerTab" text="My Inventory">
-                    <BorderPane>
-                        <top>
-                            <VBox spacing="10" style="-fx-padding: 15;">
-                                <HBox spacing="10">
-                                    <TextField fx:id="sellerSearchField" promptText="Search your products..." HBox.hgrow="ALWAYS"
-                                               style="-fx-padding: 8 12; -fx-background-radius: 20; -fx-border-color: #ddd; -fx-border-radius: 20; -fx-font-size: 13px;"/>
-                                    <Button text="+ Add Product" onAction="#showAddProductForm"
-                                            style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 20; -fx-font-size: 13px; -fx-cursor: hand;"/>
-                                </HBox>
+                <Label text="🏪  Marketplace Agrimans"
+                       style="-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
 
-                                <!-- Add Product Form with Calendar Integration -->
-                                <VBox fx:id="addProductForm" spacing="8"
-                                      style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;"
-                                      managed="false" visible="false">
-                                    <Label text="Add New Product" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
-                                    <GridPane hgap="10" vgap="10">
-                                        <TextField fx:id="nameField" promptText="Product Name" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-padding: 8; -fx-font-size: 13px;"/>
-                                        <TextArea fx:id="descField" promptText="Description" prefRowCount="3" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-padding: 8; -fx-font-size: 13px;"/>
-                                        <TextField fx:id="priceField" promptText="Price ($)" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-padding: 8; -fx-font-size: 13px;"/>
-                                        <TextField fx:id="quantityField" promptText="Quantity (kg)" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-padding: 8; -fx-font-size: 13px;"/>
-                                        <ComboBox fx:id="categoryField" promptText="Category" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-padding: 5; -fx-font-size: 13px;"/>
-                                        <TextField fx:id="supplierField" promptText="Supplier" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-padding: 8; -fx-font-size: 13px;"/>
-                                        <TextField fx:id="imageField" promptText="Image Emoji (e.g., 🍎)" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-padding: 8; -fx-font-size: 13px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
 
-                                        <!-- Expiry Date Row with Calendar Buttons -->
-                                        <DatePicker fx:id="expiryDatePicker" promptText="Expiry Date" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-size: 13px;"/>
+                <!-- Search box -->
+                <TextField fx:id="searchField"
+                           promptText="🔍  Rechercher produit, fournisseur..."
+                           prefWidth="260"
+                           style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                  -fx-prompt-text-fill: #475569;
+                                  -fx-border-color: #334155; -fx-border-radius: 9;
+                                  -fx-background-radius: 9; -fx-padding: 9 14;
+                                  -fx-font-size: 13px;"/>
 
-                                        <HBox spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="1" alignment="CENTER_RIGHT">
-                                            <Button fx:id="checkSeasonBtn" text="📅 Check Season" onAction="#checkSeasonalInfo"
-                                                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 10; -fx-background-radius: 4; -fx-font-size: 11px; -fx-cursor: hand;"/>
-                                            <Button fx:id="plantingCalBtn" text="🌱 Planting Calendar" onAction="#showPlantingCalendar"
-                                                    style="-fx-background-color: #FFA000; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 10; -fx-background-radius: 4; -fx-font-size: 11px; -fx-cursor: hand;"/>
-                                        </HBox>
-
-                                        <!-- Holiday Info Row -->
-                                        <HBox spacing="5" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2" alignment="CENTER">
-                                            <Button fx:id="holidayBtn" text="🎉 Check Holidays" onAction="#showHolidays"
-                                                    style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 15; -fx-background-radius: 4; -fx-font-size: 11px; -fx-cursor: hand;"/>
-                                        </HBox>
-                                    </GridPane>
-
-                                    <!-- Calendar Info Display Area -->
-                                    <VBox fx:id="calendarInfoBox" spacing="5" style="-fx-background-color: #E8F5E9; -fx-padding: 10; -fx-background-radius: 4; -fx-border-color: #2E7D32; -fx-border-radius: 4;" managed="false" visible="false">
-                                        <Label text="📅 Calendar Information" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
-                                        <Label fx:id="calendarInfoLabel" wrapText="true" style="-fx-font-size: 11px;"/>
-                                    </VBox>
-
-                                    <HBox spacing="10" alignment="CENTER">
-                                        <Button fx:id="saveProductBtn" text="Save Product" onAction="#handleSaveProduct"
-                                                style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 4; -fx-font-size: 13px; -fx-cursor: hand;"/>
-                                        <Button text="Cancel" onAction="#hideAddProductForm"
-                                                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 4; -fx-font-size: 13px; -fx-cursor: hand;"/>
-                                    </HBox>
-                                </VBox>
-
-                                <ScrollPane fitToWidth="true" fitToHeight="true"
-                                            style="-fx-background: transparent; -fx-padding: 0;">
-                                    <FlowPane fx:id="sellerProductsContainer"
-                                              hgap="8" vgap="8"
-                                              style="-fx-padding: 8; -fx-background-color: transparent;"/>
-                                </ScrollPane>
-                            </VBox>
-                        </top>
-                    </BorderPane>
-                </Tab>
-            </TabPane>
+                <!-- Category filter -->
+                <ComboBox fx:id="categoryFilter"
+                          prefWidth="180"
+                          style="-fx-background-color: #0F172A; -fx-text-base-color: #F1F5F9;
+                                 -fx-border-color: #334155; -fx-border-radius: 9;
+                                 -fx-background-radius: 9; -fx-padding: 4 8;
+                                 -fx-font-size: 13px;"/>
+            </HBox>
         </VBox>
     </top>
+
+    <!-- ══ Products Grid ═══════════════════════════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true"
+                    style="-fx-background-color: transparent; -fx-border-color: transparent;
+                           -fx-background: #0F172A;">
+            <FlowPane fx:id="productsContainer"
+                      hgap="18" vgap="18"
+                      style="-fx-padding: 22 24; -fx-background-color: transparent;">
+            </FlowPane>
+        </ScrollPane>
+    </center>
+
 </BorderPane>

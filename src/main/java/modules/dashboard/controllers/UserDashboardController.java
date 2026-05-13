@@ -224,21 +224,24 @@ public class UserDashboardController implements Initializable {
     // =====================================================
 
     private void chargerStatistiques() {
-        try {
-            Map<String, Object> stats = dashboardService.getUserStats(userId);
+        Map<String, Object> stats = dashboardService.getUserStats(userId);
 
-            lblMesEquipements.setText(String.valueOf(stats.get("mesEquipements")));
-            lblMesReviews.setText(String.valueOf(stats.get("mesReviews")));
-            lblMesPannes.setText(String.valueOf(stats.get("mesPannes")));
-            lblValeurTotale.setText(stats.get("valeurTotale") + " DT");
+        lblMesEquipements.setText(String.valueOf(stats.get("mesEquipements")));
+        lblMesReviews.setText(String.valueOf(stats.get("mesReviews")));
+        lblMesPannes.setText(String.valueOf(stats.get("mesPannes")));
+        lblValeurTotale.setText(stats.get("valeurTotale") + " DT");
 
-            long demandesEnCours = demandeService.getByAgriculteurId(userId).stream()
-                    .filter(d -> "EN_ATTENTE".equals(d.getStatut()))
-                    .count();
-            lblDemandesEnCours.setText(String.valueOf(demandesEnCours));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        // Demandes en cours — safe fallback if table doesn't exist yet
+        if (lblDemandesEnCours != null) {
+            try {
+                long demandesEnCours = demandeService.getByAgriculteurId(userId).stream()
+                        .filter(d -> "EN_ATTENTE".equals(d.getStatut()))
+                        .count();
+                lblDemandesEnCours.setText(String.valueOf(demandesEnCours));
+            } catch (Exception e) {
+                System.err.println("⚠️  Table 'demande' introuvable – veuillez exécuter le SQL de création.");
+                lblDemandesEnCours.setText("0");
+            }
         }
     }
 

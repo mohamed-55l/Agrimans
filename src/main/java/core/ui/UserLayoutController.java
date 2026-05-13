@@ -5,9 +5,12 @@ import core.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -43,6 +46,33 @@ public class UserLayoutController {
             chargerPage("/fxml/demande/user_demande.fxml");
         } catch (IOException e) {
             AlertUtils.showError("Erreur", "Impossible de charger la page des demandes");
+        }
+    }
+
+    // ── MARKETPLACE (user can browse & buy) ──────────────────────────────────
+    @FXML
+    private void goMarketplace() {
+        try {
+            chargerPage("/fxml/marketplace/products.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger le Marketplace : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goCart() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/marketplace/cart.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Mon Panier — Agrimans");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(true);
+            stage.show();
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible d'ouvrir le panier : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -95,6 +125,51 @@ public class UserLayoutController {
             chargerPage("/fxml/meteo.fxml");
         } catch (IOException e) {
             AlertUtils.showError("Erreur", "Impossible de charger la météo");
+        }
+    }
+
+    @FXML
+    private void goGestionTerres() {
+        try {
+            chargerPage("/fxml/parcelle/GestionTerres.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la gestion des terres");
+        }
+    }
+
+    @FXML
+    private void goAnimaux() {
+        try {
+            chargerPage("/fxml/animal/user_animal.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la gestion des animaux");
+        }
+    }
+
+    @FXML
+    private void goProduction() {
+        try {
+            chargerPage("/fxml/production/production.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger la production");
+        }
+    }
+
+    @FXML
+    private void goStock() {
+        try {
+            chargerPage("/fxml/stock/stock.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger le stock");
+        }
+    }
+
+    @FXML
+    private void goVentes() {
+        try {
+            chargerPage("/fxml/ventes/ventes.fxml");
+        } catch (IOException e) {
+            AlertUtils.showError("Erreur", "Impossible de charger les ventes");
         }
     }
 

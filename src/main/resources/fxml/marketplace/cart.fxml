@@ -1,45 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15"
-      prefWidth="800"
-      prefHeight="600"
-      xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="modules.marketplace.controllers.CartController"
-      stylesheets="@../../css/style.css"
-      style="-fx-padding: 20;">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="modules.marketplace.controllers.CartController"
+           prefWidth="860" prefHeight="680"
+           style="-fx-background-color: #0F172A;">
 
-    <!-- Header with Back Button -->
-    <HBox spacing="15" alignment="CENTER_LEFT">
-        <Button text="← Back to Products"
-                onAction="#backToProducts"
-                style="-fx-background-color: #6C63FF; -fx-text-fill: white;"/>
-        <Pane HBox.hgrow="ALWAYS"/>
-        <Label text="My Shopping Cart"
-               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-    </HBox>
+    <VBox spacing="0" style="-fx-background-color: #0F172A; -fx-padding: 0;">
 
-    <TableView fx:id="cartTable" prefHeight="400">
-        <columns>
-            <TableColumn fx:id="colProduct" text="Product" prefWidth="250"/>
-            <TableColumn fx:id="colQuantity" text="Quantity" prefWidth="100"/>
-            <TableColumn fx:id="colPrice" text="Price" prefWidth="100"/>
-            <TableColumn fx:id="colTotal" text="Total" prefWidth="120"/>
-            <TableColumn fx:id="colAction" text="Action" prefWidth="100"/>
-        </columns>
-    </TableView>
+        <!-- ══ Header ══════════════════════════════════════════════ -->
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #1E293B; -fx-padding: 18 24;
+                     -fx-border-color: #334155; -fx-border-width: 0 0 1 0;">
 
-    <HBox spacing="15" alignment="CENTER_RIGHT">
-        <Label text="Total:" style="-fx-font-size: 16px;"/>
-        <Label fx:id="totalLabel"
-               style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
-        <Pane HBox.hgrow="ALWAYS"/>
-        <Button text="Checkout"
-                styleClass="button-primary"
-                onAction="#handleCheckout"
-                prefWidth="120"/>
-    </HBox>
-</VBox>
+            <Button text="← Retour" onAction="#backToProducts"
+                    style="-fx-background-color: transparent; -fx-text-fill: #94A3B8;
+                           -fx-border-color: #475569; -fx-border-radius: 8;
+                           -fx-background-radius: 8; -fx-padding: 7 14; -fx-cursor: hand;
+                           -fx-font-size: 12px; -fx-font-weight: bold;"/>
+
+            <VBox spacing="2">
+                <Label text="🛒  Mon Panier"
+                       style="-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #F1F5F9;"/>
+                <Label fx:id="cartCountLabel" text="0 article(s)"
+                       style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Currency selector — mirrors Symfony currency dropdown -->
+            <VBox spacing="4" alignment="CENTER_RIGHT">
+                <Label text="Devise" style="-fx-font-size: 10px; -fx-text-fill: #64748B; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="currencyCombo"
+                          style="-fx-background-color: #0F172A; -fx-text-base-color: #F1F5F9;
+                                 -fx-border-color: #334155; -fx-border-radius: 8; -fx-background-radius: 8;
+                                 -fx-padding: 4 8; -fx-font-size: 13px; -fx-font-weight: bold;
+                                 -fx-pref-width: 90px;"/>
+            </VBox>
+        </HBox>
+
+        <!-- ══ Content ═════════════════════════════════════════════ -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;">
+            <VBox spacing="16" style="-fx-padding: 20 24;">
+
+                <!-- Empty state — mirrors Symfony empty cart block -->
+                <VBox fx:id="emptyCartPane" spacing="16" alignment="CENTER"
+                      style="-fx-background-color: #1E293B; -fx-background-radius: 16;
+                             -fx-border-color: #334155; -fx-border-radius: 16; -fx-padding: 60 40;"
+                      visible="false" managed="false">
+                    <Label text="🛒" style="-fx-font-size: 56px; -fx-opacity: 0.3;"/>
+                    <Label text="Votre panier est vide"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.5);"/>
+                    <Label text="Explorez notre marketplace pour trouver des produits frais !"
+                           style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.35); -fx-wrap-text: true;"
+                           wrapText="true"/>
+                    <Button text="→  Explorer la Boutique" onAction="#backToProducts"
+                            style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold;
+                                   -fx-background-radius: 10; -fx-padding: 10 24; -fx-cursor: hand;
+                                   -fx-font-size: 13px;"/>
+                </VBox>
+
+                <!-- Filled cart -->
+                <VBox fx:id="filledCartPane" spacing="16"
+                      visible="false" managed="false">
+
+                    <!-- Column headers -->
+                    <HBox spacing="12" alignment="CENTER_LEFT"
+                          style="-fx-padding: 0 16; -fx-opacity: 0.55;">
+                        <Label text="Produit" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94A3B8;" HBox.hgrow="ALWAYS"/>
+                        <Label text="Prix unitaire" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94A3B8; -fx-min-width: 90px; -fx-alignment: CENTER;"/>
+                        <Label text="Quantité" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94A3B8; -fx-min-width: 120px; -fx-alignment: CENTER;"/>
+                        <Label text="Sous-total" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94A3B8; -fx-min-width: 100px; -fx-alignment: CENTER_RIGHT;"/>
+                        <Label text="" style="-fx-min-width: 40px;"/>
+                    </HBox>
+
+                    <!-- Cart rows (built in Java) -->
+                    <VBox fx:id="cartItemsContainer" spacing="10"/>
+
+                    <!-- ── Total + Actions ─────────────────────────── -->
+                    <VBox spacing="12"
+                          style="-fx-background-color: #1E293B; -fx-background-radius: 16;
+                                 -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
+                                 -fx-padding: 20 24;">
+
+                        <!-- Totals -->
+                        <HBox alignment="CENTER_RIGHT" spacing="16">
+                            <Label text="TOTAL :"
+                                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #94A3B8;"/>
+                            <VBox spacing="2" alignment="CENTER_RIGHT">
+                                <Label fx:id="totalTNDLabel" text="0.00 TND"
+                                       style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #10B981;"/>
+                                <Label fx:id="totalConvertedLabel" text=""
+                                       style="-fx-font-size: 13px; -fx-text-fill: #94A3B8;"
+                                       visible="false"/>
+                            </VBox>
+                        </HBox>
+
+                        <Separator style="-fx-background-color: #334155;"/>
+
+                        <!-- Action buttons — mirrors Symfony: Vider / Voir facture / Payer -->
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+
+                            <!-- Vider le panier -->
+                            <Button text="🗑  Vider le panier" onAction="#handleClearCart"
+                                    style="-fx-background-color: transparent;
+                                           -fx-text-fill: #F87171;
+                                           -fx-border-color: rgba(239,68,68,0.5);
+                                           -fx-border-width: 1; -fx-border-radius: 8;
+                                           -fx-background-radius: 8;
+                                           -fx-font-size: 12px; -fx-font-weight: bold;
+                                           -fx-padding: 9 18; -fx-cursor: hand;"/>
+
+                            <Region HBox.hgrow="ALWAYS"/>
+
+                            <!-- Checkout -->
+                            <Button text="💳  Payer" onAction="#handleCheckout"
+                                    style="-fx-background-color: #10B981; -fx-text-fill: white;
+                                           -fx-font-weight: 900; -fx-font-size: 14px;
+                                           -fx-background-radius: 10; -fx-padding: 11 28;
+                                           -fx-cursor: hand;
+                                           -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.4), 8, 0, 0, 3);"/>
+                        </HBox>
+
+                        <!-- Exchange rate hint -->
+                        <Label fx:id="currencyLabel"
+                               text="💡 Les prix sont affichés en TND. Changez la devise en haut à droite."
+                               style="-fx-font-size: 11px; -fx-text-fill: #475569; -fx-wrap-text: true;"
+                               wrapText="true"/>
+                    </VBox>
+
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+
+</StackPane>

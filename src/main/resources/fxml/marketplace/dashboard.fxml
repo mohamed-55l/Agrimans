@@ -69,69 +69,227 @@
         </ScrollPane>
     </VBox>
 
-    <!-- Overlay Formulaire Ajout Produit -->
+    <!-- ════════════════════════════════════════════════════════════
+         OVERLAY: Ajouter un Produit
+    ════════════════════════════════════════════════════════════ -->
     <VBox fx:id="addProductOverlay" alignment="CENTER"
-          style="-fx-background-color: rgba(0,0,0,0.6);" visible="false">
-        <VBox spacing="15" maxWidth="500"
-              style="-fx-background-color: #1E293B; -fx-padding: 25; -fx-background-radius: 16;
-                     -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 16;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);">
-            <Label text="Ajouter un Nouveau Produit"
-                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+          style="-fx-background-color: rgba(0,0,0,0.65);" visible="false">
+        <VBox spacing="15" maxWidth="520"
+              style="-fx-background-color: #1E293B; -fx-padding: 28; -fx-background-radius: 18;
+                     -fx-border-color: #334155; -fx-border-width: 1; -fx-border-radius: 18;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 24, 0, 0, 6);">
 
-            <GridPane hgap="10" vgap="15">
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT">
+                <Label text="➕  Ajouter un Nouveau Produit"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕" onAction="#hideAddProductForm"
+                        style="-fx-background-color: transparent; -fx-text-fill: #64748B;
+                               -fx-font-size: 16px; -fx-cursor: hand; -fx-border-color: transparent;"/>
+            </HBox>
+
+            <GridPane hgap="12" vgap="14">
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="50" />
-                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
                 </columnConstraints>
-                
+
+                <!-- Nom -->
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="Nom du produit" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <TextField fx:id="nameField" promptText="Ex: Tomates bio" style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Nom du produit *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="nameField" promptText="Ex: Tomates bio"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
                 </VBox>
-                
+
+                <!-- Catégorie -->
                 <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label text="Catégorie" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <ComboBox fx:id="categoryField" promptText="Sélectionner..." maxWidth="Infinity" style="-fx-background-color: #0F172A; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-base-color: #F1F5F9;"/>
+                    <Label text="Catégorie *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="categoryField" promptText="Sélectionner..." maxWidth="Infinity"
+                              style="-fx-background-color: #0F172A; -fx-border-color: #334155;
+                                     -fx-border-radius: 7; -fx-background-radius: 7; -fx-text-base-color: #F1F5F9;"/>
                 </VBox>
 
+                <!-- Description -->
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                    <Label text="Description" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <TextArea fx:id="descField" promptText="Description du produit..." prefRowCount="3" wrapText="true" style="-fx-control-inner-background: #0F172A; -fx-text-fill: #F1F5F9; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Description * (min. 10 caractères)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="descField" promptText="Description du produit..." prefRowCount="3" wrapText="true"
+                              style="-fx-control-inner-background: #0F172A; -fx-text-fill: #F1F5F9;
+                                     -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7;"/>
                 </VBox>
 
+                <!-- Prix -->
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                    <Label text="Prix (TND)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <TextField fx:id="priceField" promptText="0.00" style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Prix (TND) *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="priceField" promptText="0.00"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
                 </VBox>
 
+                <!-- Quantité -->
                 <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <Label text="Quantité (kg)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <TextField fx:id="quantityField" promptText="0" style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Quantité (kg) *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="quantityField" promptText="0"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
                 </VBox>
 
+                <!-- Fournisseur -->
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                    <Label text="Producteur / Fournisseur" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <TextField fx:id="supplierField" promptText="Nom du fournisseur" style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Producteur / Fournisseur" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="supplierField" promptText="Nom du fournisseur"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
                 </VBox>
 
+                <!-- Date expiration -->
                 <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                    <Label text="Date d'expiration" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <DatePicker fx:id="expiryDatePicker" promptText="JJ/MM/AAAA" maxWidth="Infinity" style="-fx-control-inner-background: #0F172A; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Date d'expiration (min. demain)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <DatePicker fx:id="expiryDatePicker" promptText="JJ/MM/AAAA" maxWidth="Infinity"
+                                style="-fx-control-inner-background: #0F172A; -fx-border-color: #334155;
+                                       -fx-border-radius: 7; -fx-background-radius: 7;"/>
                 </VBox>
-                
+
+                <!-- Image emoji -->
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
-                    <Label text="Emoji Image (Optionnel)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
-                    <TextField fx:id="imageField" promptText="🍎" style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9; -fx-border-color: #334155; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                    <Label text="Emoji / Image (Optionnel)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="imageField" promptText="🍎"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
                 </VBox>
             </GridPane>
 
-            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+            <!-- Buttons -->
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 6 0 0 0;">
                 <Button text="Annuler" onAction="#hideAddProductForm"
-                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8; -fx-border-color: #64748B; -fx-border-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-font-weight: bold;"/>
-                <Button text="Enregistrer" onAction="#handleSaveProduct"
-                        style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8;
+                               -fx-border-color: #64748B; -fx-border-radius: 8; -fx-padding: 9 22; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                <Button text="✔  Enregistrer" onAction="#handleSaveProduct"
+                        style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-padding: 9 22; -fx-cursor: hand;
+                               -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.35), 6, 0, 0, 2);"/>
             </HBox>
         </VBox>
     </VBox>
+
+    <!-- ════════════════════════════════════════════════════════════
+         OVERLAY: Modifier un Produit  (mirrors Symfony edit.html.twig)
+    ════════════════════════════════════════════════════════════ -->
+    <VBox fx:id="editProductOverlay" alignment="CENTER"
+          style="-fx-background-color: rgba(0,0,0,0.65);" visible="false">
+        <VBox spacing="15" maxWidth="560"
+              style="-fx-background-color: #1E293B; -fx-padding: 28; -fx-background-radius: 18;
+                     -fx-border-color: #3B82F6; -fx-border-width: 1; -fx-border-radius: 18;
+                     -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 24, 0, 0, 6);">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="3">
+                    <Label text="✏  Modifier le produit"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #60A5FA;"/>
+                    <Label fx:id="editProductTitle" text=""
+                           style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕" onAction="#hideEditProductForm"
+                        style="-fx-background-color: transparent; -fx-text-fill: #64748B;
+                               -fx-font-size: 16px; -fx-cursor: hand; -fx-border-color: transparent;"/>
+            </HBox>
+
+            <GridPane hgap="12" vgap="14">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <!-- Nom -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Nom du produit *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="editNameField" promptText="Nom du produit"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
+                </VBox>
+
+                <!-- Catégorie -->
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Catégorie *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="editCategoryField" promptText="Sélectionner..." maxWidth="Infinity"
+                              style="-fx-background-color: #0F172A; -fx-border-color: #334155;
+                                     -fx-border-radius: 7; -fx-background-radius: 7; -fx-text-base-color: #F1F5F9;"/>
+                </VBox>
+
+                <!-- Description -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                    <Label text="Description * (min. 10 caractères)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="editDescField" promptText="Description..." prefRowCount="3" wrapText="true"
+                              style="-fx-control-inner-background: #0F172A; -fx-text-fill: #F1F5F9;
+                                     -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7;"/>
+                </VBox>
+
+                <!-- Prix -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <Label text="Prix (TND) *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="editPriceField" promptText="0.00"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
+                </VBox>
+
+                <!-- Quantité -->
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <Label text="Quantité (kg) *" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="editQuantityField" promptText="0"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
+                </VBox>
+
+                <!-- Fournisseur -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                    <Label text="Producteur / Fournisseur" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="editSupplierField" promptText="Nom du fournisseur"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
+                </VBox>
+
+                <!-- Date expiration -->
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <Label text="Date d'expiration (min. demain)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <DatePicker fx:id="editExpiryDatePicker" promptText="JJ/MM/AAAA" maxWidth="Infinity"
+                                style="-fx-control-inner-background: #0F172A; -fx-border-color: #334155;
+                                       -fx-border-radius: 7; -fx-background-radius: 7;"/>
+                </VBox>
+
+                <!-- Image emoji -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                    <Label text="Emoji / Image (Optionnel)" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="editImageField" promptText="🍎"
+                               style="-fx-background-color: #0F172A; -fx-text-fill: #F1F5F9;
+                                      -fx-border-color: #334155; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 8;"/>
+                </VBox>
+            </GridPane>
+
+            <!-- Danger zone (like Symfony edit.html.twig) -->
+            <VBox spacing="6"
+                  style="-fx-background-color: rgba(239,68,68,0.06);
+                         -fx-border-color: rgba(239,68,68,0.25);
+                         -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12;">
+                <Label text="⚠  Zone de danger"
+                       style="-fx-text-fill: #F87171; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label text="La suppression est définitive et irréversible."
+                       style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- Buttons -->
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 6 0 0 0;">
+                <Button text="Annuler" onAction="#hideEditProductForm"
+                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8;
+                               -fx-border-color: #64748B; -fx-border-radius: 8; -fx-padding: 9 22; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                <Button text="✔  Mettre à jour" onAction="#handleUpdateProduct"
+                        style="-fx-background-color: #3B82F6; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-padding: 9 22; -fx-cursor: hand;
+                               -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.35), 6, 0, 0, 2);"/>
+            </HBox>
+        </VBox>
+    </VBox>
+
 </StackPane>

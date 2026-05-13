@@ -74,6 +74,44 @@ public class ProductService {
         }
     }
 
+    public void updateProductQuantity(int productId, int newQuantity) {
+        String sql = "UPDATE products SET quantity=? WHERE id=?";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return;
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, newQuantity);
+                pstmt.setInt(2, productId);
+                pstmt.executeUpdate();
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public void updateProduct(Product product) {
+        String sql = "UPDATE products SET name=?, description=?, price=?, quantity=?, category=?, supplier=?, image=?, expiry_date=? WHERE id=?";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) { System.err.println("[ProductService] Connection BDD nulle."); return; }
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, product.getName());
+                pstmt.setString(2, product.getDescription());
+                pstmt.setFloat(3, product.getPrice());
+                pstmt.setInt(4, product.getQuantity());
+                pstmt.setString(5, product.getCategory());
+                pstmt.setString(6, product.getSupplier());
+                pstmt.setString(7, product.getImage());
+                if (product.getExpiryDate() != null) {
+                    pstmt.setDate(8, product.getExpiryDate());
+                } else {
+                    pstmt.setNull(8, Types.DATE);
+                }
+                pstmt.setInt(9, product.getId());
+                pstmt.executeUpdate();
+                System.out.println("[ProductService] Produit mis à jour id=" + product.getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteProduct(int id) {
         String sql = "DELETE FROM products WHERE id = ?";
         try (Connection conn = DBConnection.getConnection()) {
@@ -81,11 +119,13 @@ public class ProductService {
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, id);
                 pstmt.executeUpdate();
+                System.out.println("[ProductService] Produit supprimé id=" + id);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private Product extractFromResultSet(ResultSet rs) throws SQLException {
         return new Product(

@@ -116,6 +116,18 @@ public class CartService {
         }
     }
 
+    public void updateQuantity(int cartItemId, int newQuantity) {
+        String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return;
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, newQuantity);
+                pstmt.setInt(2, cartItemId);
+                pstmt.executeUpdate();
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
     public void removeFromCart(int cartItemId) {
         String sql = "DELETE FROM cart_items WHERE id = ?";
         try (Connection conn = DBConnection.getConnection()) {
